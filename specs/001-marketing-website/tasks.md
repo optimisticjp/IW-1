@@ -79,8 +79,8 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 
 ### Flagship homepage narrative (US1)
 
-- [ ] T021 [US1] Author realistic placeholder homepage copy/data in `src/content/site/home.*` (flagged `placeholder: true`).
-  - ↳ Dep: T010 · Verify: copy reads human and ecommerce-specific; flags present · Satisfies: FR-033, Principle VI · Phase 1
+- [ ] T021 [US1] Author realistic placeholder homepage copy/data as a plain typed module `src/data/home.ts` (flagged `placeholder: true`). Use a plain data module here so the homepage builds without the Phase-2 content-collection config (`src/content/config.ts`, T036); content collections begin in Phase 2.
+  - ↳ Dep: T010 · Verify: copy reads human and ecommerce-specific; flags present; homepage builds with no `src/content/` dependency · Satisfies: FR-033, Principle VI · Phase 1
 - [ ] T022 [US1] Build Hero + positioning section (`src/components/sections/Hero.astro`, mounted in `src/pages/index.astro`) — first-screen ecommerce relevance + "disconnected leaks / connected compounds".
   - ↳ Dep: T007, T008, T016, T021 · Verify: message clear above the fold at 360px & desktop · Satisfies: FR-001, SC-001 · Phase 1
 - [ ] T023 [US1] Build "cost of disconnected growth" section using brand objects + leaking Line state.
@@ -102,7 +102,7 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 - [ ] T031 [US1] Build reusable `CTASection` (final proposal invitation) in `src/components/modules/`.
   - ↳ Dep: T008 · Verify: contextual, non-aggressive CTA; reachable · Satisfies: FR-019, SC-006 · Phase 1
 - [ ] T032 [US1] Assemble `src/pages/index.astro`: wire the Line as the connecting scroll spine across sections, keep calm reading sections between signatures, add homepage metadata + Organization JSON-LD.
-  - ↳ Dep: T022–T031, T014, T016 · Verify: one connected argument top→bottom; one `<h1>`; valid JSON-LD · Satisfies: FR-002, FR-003, FR-035 · Phase 1
+  - ↳ Dep: T022–T031, T014, T016 · Verify: one connected argument top→bottom (problem + value proposition graspable in a single scan); one `<h1>`; valid JSON-LD · Satisfies: FR-002, FR-003, FR-035, SC-002 · Phase 1
 - [ ] T033 [US6] Homepage responsive + inclusive pass at 360/390/768/1024/desktop — no horizontal overflow, reduced-motion parity, keyboard operability.
   - ↳ Dep: T032 · Verify: zero overflow at 5 widths; keyboard reaches all controls; motion info present statically · Satisfies: FR-045, FR-046, SC-009, SC-010, SC-011 · Phase 1
 - [ ] T034 [P] Add foundational tests in `tests/unit/`: nav config integrity (six primary destinations, quiet secondary), `lib/seo.ts` output completeness, and homepage build smoke.
@@ -123,13 +123,13 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 - [ ] T036 Create content-collection schemas `src/content/config.ts` (zod for `services`, `caseStudies`, `insights`, `testimonials`, `logos`, `site`) per contracts/content-collections.md.
   - ↳ Dep: T014 · Verify: `astro sync` types generate; invalid entry fails build · Satisfies: FR-032, content-collections contract · Phase 2
 - [ ] T037 [US3] Author `services` entries: five priority (`kind: priority`) + Retention & Intelligence (`kind: pillar`) in `src/content/services/` with realistic placeholder copy (flagged).
-  - ↳ Dep: T036 · Verify: seven entries validate; five priority slugs present · Satisfies: FR-006, FR-008 · Phase 2
+  - ↳ Dep: T036 · Verify: seven entries validate; five priority slugs present; entries are substantial (no thin keyword-only pages) · Satisfies: FR-006, FR-008, FR-010 · Phase 2
 - [ ] T038 [US3] Build `ServiceLayout.astro` template (hero, problem, cause/effect, connections, capabilities, proof, related case studies, CTA) in `src/layouts/`.
   - ↳ Dep: T036, T007, T008, T020 · Verify: renders a service with a connection block + CTA · Satisfies: FR-011, FR-012 · Phase 2
 - [ ] T039 [US3] Build dynamic route `src/pages/services/[slug].astro` rendering all seven entries.
   - ↳ Dep: T037, T038 · Verify: all seven URLs build and render · Satisfies: FR-006 · Phase 2
 - [ ] T040 [P] [US3] Build reusable `ServiceModule` + capability modules in `src/components/modules/`.
-  - ↳ Dep: T008 · Verify: modules reused across services without per-page CSS · Satisfies: FR-011 · Phase 2
+  - ↳ Dep: T008 · Verify: modules reused across services without per-page CSS; supporting capabilities represented within pages · Satisfies: FR-011, FR-013 · Phase 2
 - [ ] T041 [US3] Place contextual proof + reusable `CTASection` across service pages.
   - ↳ Dep: T031, T020, T039 · Verify: each service page shows proof-beside-claim + a CTA · Satisfies: FR-012 · Phase 2
 - [ ] T042 [US3][US4] Implement contextual cross-linking (service `connections` → other pillars; `relatedCaseStudies` placeholders).
@@ -199,13 +199,13 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 - [ ] T063 [US2] Build submission adapter `src/lib/forms/submit.ts` + `providers/mock.ts` (env-selected, default mock; simulates success/failure) + `spam.ts` (honeypot + submit-timing).
   - ↳ Dep: T062 · Verify: mock returns success and (toggled) retryable failure; no network/persistence · Satisfies: FR-025, FR-026, proposal-form contract · Phase 4
 - [ ] T064 [US2] Build `ProposalForm` island (grouped fields; inline field-level validation; states idle→validating→submitting→success→error/retry; `aria-live` status; required privacy ack; client duplicate guard; honeypot).
-  - ↳ Dep: T062, T063, T009 · Verify: keyboard-only completion; errors announced; data preserved on failure · Satisfies: FR-020, FR-022, FR-023, FR-024, FR-025, FR-026, FR-027 · Phase 4
+  - ↳ Dep: T062, T063, T009 · Verify: keyboard-only completion; errors announced; data preserved on failure; success/validation/failure/duplicate/spam/privacy behaviors all present · Satisfies: FR-020, FR-022, FR-023, FR-024, FR-025, FR-026, FR-027, SC-007 · Phase 4
 - [ ] T065 [US2] Build Request a Proposal page `src/pages/request-a-proposal.astro` (premium, consultative layout hosting the form).
   - ↳ Dep: T064 · Verify: page renders form; ≤3 interactions from homepage · Satisfies: FR-019, FR-020, SC-006 · Phase 4
 - [ ] T066 [US5] Build Contact page `src/pages/contact.astro` + `ContactForm` variation (general / creator / partner inquiry contexts) reusing form primitives.
   - ↳ Dep: T064 · Verify: contact submit works with same validation/spam/privacy standards · Satisfies: FR-028 · Phase 4
 - [ ] T067 [US2] Polish success/failure/retry UX + expected-response-communication copy in the form island.
-  - ↳ Dep: T064 · Verify: success states next steps + response window; retry recovers · Satisfies: FR-023, FR-024 · Phase 4
+  - ↳ Dep: T064 · Verify: success states next steps + response window; retry recovers; form completable with valid data in under 3 minutes · Satisfies: FR-023, FR-024, SC-008 · Phase 4
 - [ ] T068 Build `LegalLayout.astro` + Privacy Policy, Terms, Cookie Policy, Accessibility Statement pages in `src/pages/legal/` (realistic placeholder legal copy, `TODO(content)`).
   - ↳ Dep: T007, T014 · Verify: four legal pages render with one `<h1>` each · Satisfies: FR-056, FR-007 · Phase 4
 - [ ] T069 [US2] Add privacy notice near proposal/contact forms + link to Privacy Policy.
@@ -244,15 +244,15 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 - [ ] T080 [US6] Keyboard-navigation + form-accessibility review (focus order, `aria`, announcements) across the critical path.
   - ↳ Dep: all interactive · Verify: full keyboard completion; visible focus everywhere · Satisfies: SC-010 · Phase 5
 - [ ] T081 [P] Contrast review (both environments) + semantic-structure/heading-order review.
-  - ↳ Dep: T004, all pages · Verify: AA contrast; one `<h1>`/page, logical order · Satisfies: SC-012, SC-014 · Phase 5
+  - ↳ Dep: T004, all pages · Verify: AA contrast; one `<h1>`/page, logical order; no information conveyed by color or motion alone · Satisfies: SC-012, SC-014, FR-050 · Phase 5
 - [ ] T082 Accessibility verification — axe automated + manual (WCAG 2.1 AA) on key templates (home, service, case study, proposal, legal).
   - ↳ Dep: T080, T081 · Verify: zero critical a11y failures · Satisfies: SC-012 · Phase 5
 - [ ] T083 Performance — Lighthouse mobile testing + image/font optimization + layout-shift review (target ≥90).
-  - ↳ Dep: all · Verify: mobile Lighthouse ≥90 on home/service/proposal; CLS ~0 · Satisfies: SC-013, FR-052 · Phase 5
+  - ↳ Dep: all · Verify: mobile Lighthouse ≥90 on home/service/proposal; CLS ~0 (images/media cause no layout shift; mobile is not a compressed desktop) · Satisfies: SC-013, FR-051, FR-052, FR-047 · Phase 5
 - [ ] T084 SEO validation (per-page checklist, sitemap, robots, canonical, OG, single `<h1>`) + broken-link review.
-  - ↳ Dep: T070, T071 · Verify: per-page SEO checklist 100%; no broken links · Satisfies: SC-014 · Phase 5
+  - ↳ Dep: T070, T071 · Verify: per-page SEO checklist 100%; no broken links; no keyword stuffing / duplicate thin pages; single English site (no country-duplicate pages) · Satisfies: SC-014, FR-044 · Phase 5
 - [ ] T085 Security review (`/owasp-security`): no secrets, safe error handling, spam guard, env handling; document the provider server-side-validation pre-launch gate.
-  - ↳ Dep: T063, T068 · Verify: zero critical findings; adapter gate documented · Satisfies: SC-015, FR-053 · Phase 5
+  - ↳ Dep: T063, T068 · Verify: zero critical findings; adapter gate documented; no hardcoded secrets and env vars handled safely · Satisfies: SC-015, FR-053, FR-054 · Phase 5
 - [ ] T086 Content-integrity review — dev-only audit enumerating every `placeholder`/`assetStatus: pending`/`TODO(content)`; confirm no placeholder reads as approved proof; produce a pre-launch content report.
   - ↳ Dep: T076 · Verify: audit lists all pending items; zero fabricated-as-verified proof · Satisfies: SC-016, FR-016 · Phase 5
 - [ ] T087 [P] Cross-browser review (current Chromium/Firefox/WebKit).
@@ -260,7 +260,7 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 - [ ] T088 [P] Code review on the full diff (`/review-local-changes` or `/code-review`); fix findings.
   - ↳ Dep: all · Verify: review findings resolved · Satisfies: Working Style (CLAUDE.md) · Phase 5
 - [ ] T089 Final visual review — flagship quality; recognizably Infinite Weblinks (original, not a Clay copy) + capability-evidence mapping (each sold capability demonstrated somewhere).
-  - ↳ Dep: all · Verify: reviewer sign-off; capability→evidence map complete · Satisfies: SC-018, SC-019 · Phase 5
+  - ↳ Dep: all · Verify: reviewer sign-off; original layouts/objects/colors/copy/interactions (not a Clay copy, not generic SaaS/template); capability→evidence map complete · Satisfies: SC-018, SC-019, FR-040 · Phase 5
 - [ ] T090 Convergence readiness — run `/speckit-converge` to assess build vs spec/plan, log residual gaps, and sign off the Definition-of-Done checklist.
   - ↳ Dep: T076–T089 · Verify: converge report produced; DoD items checked · Satisfies: Principle XIV · Phase 5
 
