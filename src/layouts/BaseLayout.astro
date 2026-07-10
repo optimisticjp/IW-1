@@ -1,0 +1,115 @@
+---
+import '../styles/global.css';
+import SkipLink from '../components/layout/SkipLink.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import { buildSeo, type SeoInput } from '../lib/seo';
+import { organizationSchema, webSiteSchema, jsonLd } from '../lib/schema';
+
+interface Props {
+  seo: SeoInput;
+  /** include Organization + WebSite JSON-LD (site-wide, used on home) */
+  siteSchema?: boolean;
+}
+const { seo, siteSchema = false } = Astro.props;
+const meta = buildSeo(seo, Astro.site ?? 'https://www.infiniteweblinks.example');
+const structured = siteSchema
+  ? jsonLd(
+      organizationSchema(Astro.site ?? 'https://www.infiniteweblinks.example'),
+      webSiteSchema(Astro.site ?? 'https://www.infiniteweblinks.example')
+    )
+  : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Synchronous JS flag: gates reveal/Line hidden states so content is
+         always visible when JavaScript is disabled (progressive enhancement). -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={meta.canonical} />
+    <meta name="robots" content={meta.robots} />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content={meta.ogType} />
+    <meta property="og:site_name" content="Infinite Weblinks" />
+    <meta property="og:title" content={meta.ogTitle} />
+    <meta property="og:description" content={meta.ogDescription} />
+    <meta property="og:url" content={meta.canonical} />
+    <meta property="og:image" content={meta.ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta.ogTitle} />
+    <meta name="twitter:description" content={meta.ogDescription} />
+    <meta name="twitter:image" content={meta.ogImage} />
+
+    <meta name="theme-color" content="#17130c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {structured && <script type="application/ld+json" set:html={structured} />}
+  </head>
+  <body>
+    <SkipLink />
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+
+    <script>
+      // Shared controller: scroll-reveal (object assembly) + Line draw.
+      // Fully progressive — if it never runs, content is already visible;
+      // under reduced motion the CSS keeps everything in its resting state.
+      const prefersReduced = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      // Compute exact path length for each Line so the draw is crisp.
+      document.querySelectorAll<SVGPathElement>('.line__draw').forEach((p) => {
+        try {
+          const len = p.getTotalLength();
+          p.style.setProperty('--len', String(Math.ceil(len)));
+        } catch {
+          /* getTotalLength unsupported — CSS fallback length applies */
+        }
+      });
+
+      const reveals = document.querySelectorAll('.u-reveal');
+      const lines = document.querySelectorAll('.line');
+
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        reveals.forEach((el) => el.classList.add('is-in'));
+        lines.forEach((el) => el.classList.add('is-drawn'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-in', 'is-drawn');
+              obs.unobserve(entry.target);
+            }
+          },
+          // threshold 0 + a slight bottom margin: fire as soon as any part
+          // crosses into view. Robust for elements taller than the viewport.
+          { rootMargin: '0px 0px -8% 0px', threshold: 0 }
+        );
+        reveals.forEach((el) => io.observe(el));
+        lines.forEach((el) => io.observe(el));
+
+        // Safety net: reveal anything still hidden shortly after load (e.g. if
+        // an element began fully in view above the trigger line).
+        window.addEventListener('load', () => {
+          requestAnimationFrame(() => {
+            document.querySelectorAll('.u-reveal:not(.is-in)').forEach((el) => {
+              const r = el.getBoundingClientRect();
+              if (r.top < window.innerHeight) el.classList.add('is-in', 'is-drawn');
+            });
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

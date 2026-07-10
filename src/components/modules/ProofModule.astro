@@ -1,0 +1,39 @@
+---
+// Proof placed next to the claim it supports. Pending metrics are flagged in
+// data (assetStatus) and marked dev-only via PlaceholderBadge — never a public
+// label. Numbers read as representative until approved case studies land.
+import PlaceholderBadge from './PlaceholderBadge.astro';
+interface Props {
+  value: string;
+  label: string;
+  system: string;
+  assetStatus: 'pending' | 'approved';
+}
+const { value, label, system, assetStatus } = Astro.props;
+---
+<figure class="proof">
+  {assetStatus === 'pending' && <PlaceholderBadge note={`Metric pending: ${label}`} />}
+  <div class="proof__value">{value}</div>
+  <figcaption class="proof__label">{label}</figcaption>
+  <p class="proof__system u-mono">{system}</p>
+</figure>
+<style>
+  .proof {
+    position: relative;
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.4rem 1.4rem 1.2rem;
+    background: var(--bg-raised);
+    border: var(--bw) solid var(--rule);
+    border-top: var(--bw-2) solid var(--accent);
+    border-radius: var(--r-2);
+  }
+  .proof__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+  }
+  .proof__label { font-weight: 600; font-size: var(--fs-small); }
+  .proof__system { color: var(--fg-faint); }
+</style>

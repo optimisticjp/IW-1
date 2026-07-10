@@ -1,0 +1,48 @@
+---
+// Placeholder client-logo wall. Marks are generated abstract wordmarks so the
+// wall looks complete without inventing real client brands; flagged dev-only.
+import PlaceholderBadge from './PlaceholderBadge.astro';
+interface Props { count?: number; note?: string; }
+const { count = 6, note = 'Selected brands we’ve worked with' } = Astro.props;
+// Neutral, clearly-generic placeholder wordmarks (not real companies).
+const marks = ['NORTHBOUND', 'Vela&Co', 'HARVEST', 'lumen', 'Meridian', 'FORM', 'Atlas Goods', 'Peckham'];
+const shown = marks.slice(0, count);
+---
+<div class="wall" role="group" aria-label={note}>
+  <p class="wall__note u-mono">{note}</p>
+  <ul class="wall__grid">
+    {shown.map((m) => (
+      <li class="wall__item">
+        <PlaceholderBadge note="Client logo pending" />
+        <span class="wall__mark">{m}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+<style>
+  .wall { display: grid; gap: 1rem; }
+  .wall__note { color: var(--fg-faint); }
+  .wall__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+    background: var(--rule);
+    border: var(--bw) solid var(--rule);
+    border-radius: var(--r-2); overflow: hidden;
+  }
+  .wall__item {
+    position: relative;
+    display: grid; place-items: center;
+    padding: 1.2rem 0.75rem;
+    background: var(--bg);
+    min-height: 72px;
+  }
+  .wall__mark {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--fg-muted);
+    font-size: var(--fs-body);
+  }
+  @media (min-width: 560px) { .wall__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 900px) { .wall__grid { grid-template-columns: repeat(6, 1fr); } }
+</style>

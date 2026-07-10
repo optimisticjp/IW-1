@@ -1,0 +1,253 @@
+---
+// Sticky site header (T011) + accessible mobile navigation island (T012).
+import { primaryNav, proposalCta, isActive } from '../../data/nav';
+import Button from '../ui/Button.astro';
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="hdr" data-env="paper">
+  <div class="hdr__bar">
+    <a class="brand" href="/" aria-label="Infinite Weblinks — home">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 40 24" width="40" height="24">
+          <path d="M4 12 C 10 2 16 22 22 12 S 34 2 36 12" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="4" cy="12" r="3" fill="var(--fg)"/>
+          <circle cx="36" cy="12" r="3" fill="var(--accent-2)"/>
+        </svg>
+      </span>
+      <span class="brand__word">Infinite&nbsp;Weblinks</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Primary">
+      <ul class="nav-desktop__list">
+        {primaryNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="nav-desktop__link"
+              aria-current={isActive(item, pathname) ? 'page' : undefined}
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hdr__cta">
+      <Button href={proposalCta.href} variant="primary" size="md">{proposalCta.label}</Button>
+    </div>
+
+    <button
+      class="hdr__toggle"
+      id="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      aria-label="Open menu"
+    >
+      <span class="hdr__toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+
+  <!-- Mobile navigation panel -->
+  <div class="mnav" id="mobile-nav" data-env="ink" hidden>
+    <nav class="mnav__inner" aria-label="Primary (mobile)">
+      <ul class="mnav__list">
+        {primaryNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="mnav__link"
+              aria-current={isActive(item, pathname) ? 'page' : undefined}
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a href={proposalCta.href} class="mnav__cta">{proposalCta.label} <span aria-hidden="true">→</span></a>
+      <ul class="mnav__quiet">
+        <li><a href="/for-creators">For creators</a></li>
+        <li><a href="/partners">Partners &amp; white-label</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: color-mix(in oklab, var(--c-paper) 88%, transparent);
+    backdrop-filter: saturate(1.2) blur(10px);
+    border-bottom: var(--bw) solid var(--rule);
+  }
+  .hdr__bar {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: 0.7rem var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.12rem;
+    letter-spacing: -0.01em;
+    margin-right: auto;
+  }
+  .brand__mark { line-height: 0; }
+
+  .nav-desktop { display: none; }
+  .nav-desktop__list {
+    display: flex;
+    gap: clamp(1rem, 0.4rem + 1.6vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-desktop__link {
+    position: relative;
+    color: var(--fg);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--fs-small);
+    padding: 0.35rem 0;
+  }
+  .nav-desktop__link::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: var(--bw-2);
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .nav-desktop__link:hover::after,
+  .nav-desktop__link[aria-current='page']::after { transform: scaleX(1); }
+
+  .hdr__cta { display: none; }
+
+  .hdr__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    margin-left: auto;
+    border-radius: var(--r-2);
+    border: var(--bw) solid var(--rule-strong);
+  }
+  .hdr__toggle-bars { display: grid; gap: 4px; width: 20px; }
+  .hdr__toggle-bars i {
+    display: block; height: 2px; background: var(--fg); border-radius: 2px;
+    transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-1);
+  }
+  .hdr__toggle[aria-expanded='true'] .hdr__toggle-bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hdr__toggle[aria-expanded='true'] .hdr__toggle-bars i:nth-child(2) { opacity: 0; }
+  .hdr__toggle[aria-expanded='true'] .hdr__toggle-bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* Mobile panel */
+  .mnav {
+    position: fixed;
+    inset: 0;
+    top: 0;
+    z-index: var(--z-nav);
+    background: var(--bg);
+    color: var(--fg);
+    padding: 5rem var(--gutter) 2rem;
+    overflow-y: auto;
+    animation: mnav-in var(--dur-2) var(--ease-out);
+  }
+  .mnav[hidden] { display: none; }
+  @keyframes mnav-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  .mnav__inner { display: grid; gap: 1.5rem; max-width: 30rem; margin-inline: auto; }
+  .mnav__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
+  .mnav__link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--fs-h3);
+    color: var(--fg);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    border-bottom: var(--bw) solid var(--rule);
+  }
+  .mnav__link[aria-current='page'] { color: var(--accent); }
+  .mnav__cta {
+    display: inline-flex; align-items: center; gap: 0.5em;
+    background: var(--accent); color: var(--accent-ink);
+    padding: 0.9rem 1.4rem; border-radius: var(--r-pill);
+    font-weight: 600; text-decoration: none; justify-self: start;
+    min-height: 44px;
+  }
+  .mnav__quiet { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.2rem; }
+  .mnav__quiet a { color: var(--fg-muted); font-size: var(--fs-small); }
+
+  @media (min-width: 900px) {
+    .nav-desktop { display: block; margin-inline: auto; }
+    .hdr__cta { display: block; }
+    .hdr__toggle { display: none; }
+    .mnav { display: none !important; }
+  }
+</style>
+
+<script>
+  // Accessible mobile-nav disclosure: aria-expanded, Esc to close, focus
+  // trap while open, focus returned to the toggle, body scroll locked.
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  if (toggle && panel) {
+    const getFocusable = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+      );
+
+    const open = () => {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+      document.body.style.overflow = 'hidden';
+      getFocusable()[0]?.focus();
+    };
+
+    const close = (returnFocus = true) => {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+      document.body.style.overflow = '';
+      if (returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      toggle.getAttribute('aria-expanded') === 'true' ? close() : open();
+    });
+
+    // Close after navigating to an in-page or new link.
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) close(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (panel.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      if (e.key === 'Tab') {
+        const f = getFocusable();
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+
+    // Close if resized up to desktop.
+    const mq = window.matchMedia('(min-width: 900px)');
+    mq.addEventListener('change', (ev) => { if (ev.matches && !panel.hidden) close(false); });
+  }
+</script>

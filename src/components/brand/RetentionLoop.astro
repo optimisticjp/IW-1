@@ -1,0 +1,16 @@
+---
+// Retention Loop — one order becomes many; value returns.
+interface Props { class?: string; }
+const { class: className = '' } = Astro.props;
+---
+<svg class:list={['obj', className]} viewBox="0 0 128 128" aria-hidden="true" role="presentation">
+  <path d="M96 40 A 40 40 0 1 0 104 72" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M96 26 L98 44 L80 42 Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="16" fill="var(--accent-2)" stroke="var(--fg)" stroke-width="2.5"/>
+  <path d="M57 64 l5 5 l10 -11" fill="none" stroke="var(--accent-ink, #fff)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24" cy="64" r="4.5" fill="var(--saffron, #f4a72c)"/>
+  <circle cx="104" cy="64" r="4.5" fill="var(--saffron, #f4a72c)"/>
+</svg>
+<style>
+  .obj { width: 100%; height: auto; max-width: 128px; }
+</style>

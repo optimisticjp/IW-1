@@ -1,0 +1,40 @@
+---
+import Section from '../layout/Section.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+import Line from '../brand/Line.astro';
+
+interface Props {
+  kicker: string;
+  heading: string;
+  body?: string;
+  cta: { label: string; href: string };
+  reassurance?: string;
+  env?: 'paper' | 'ink';
+  id?: string;
+}
+const { kicker, heading, body, cta, reassurance, env = 'ink', id } = Astro.props;
+---
+
+<Section env={env} id={id} width="wide" pad="loose" class="cta" labelledby={id ? `${id}-h` : undefined}>
+  <div class="cta__line" aria-hidden="true"><Line variant="arc" /></div>
+  <div class="cta__inner u-reveal">
+    <Eyebrow>{kicker}</Eyebrow>
+    <h2 id={id ? `${id}-h` : undefined} class="cta__head">{heading}</h2>
+    {body && <p class="cta__body">{body}</p>}
+    <div class="cta__actions">
+      <Button href={cta.href} variant="primary" size="lg">{cta.label}</Button>
+    </div>
+    {reassurance && <p class="cta__reassure">{reassurance}</p>}
+  </div>
+</Section>
+
+<style>
+  .cta { text-align: center; overflow: hidden; }
+  .cta__line { position: absolute; inset-inline: 0; top: 0; opacity: 0.4; z-index: -1; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h2); }
+  .cta__body { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 34rem; }
+  .cta__actions { margin-top: 0.5rem; }
+  .cta__reassure { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); letter-spacing: 0.02em; }
+</style>

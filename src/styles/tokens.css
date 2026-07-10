@@ -1,0 +1,118 @@
+/* =========================================================================
+   Infinite Weblinks — Design Tokens
+   Editorial-tech. Warm paper + warm near-black environments, vermilion
+   signature accent, deep green support, rationed bright accents.
+   Exact values are adjustable while the approved direction is preserved.
+   ========================================================================= */
+
+:root {
+  /* --- Color primitives ------------------------------------------------ */
+  --c-paper: #f4ecdd;          /* warm light foundation */
+  --c-paper-2: #efe3d0;        /* deeper paper */
+  --c-cream: #fbf6ee;          /* lightest raised surface */
+  --c-ink: #17130c;            /* warm near-black foundation */
+  --c-ink-2: #221b12;          /* raised ink surface */
+  --c-ink-3: #322619;          /* ink hairline base */
+
+  --c-vermilion: #ee4423;      /* signature accent */
+  --c-vermilion-deep: #c8330f; /* accessible link on paper */
+  --c-vermilion-soft: #ff6a44; /* accent on ink */
+
+  --c-green: #0e5a41;          /* deep supporting accent */
+  --c-green-bright: #38b98a;   /* support accent on ink */
+
+  --c-saffron: #f4a72c;        /* rationed bright accent */
+  --c-cobalt: #2f57da;         /* rationed bright accent (spark) */
+
+  /* --- Semantic defaults (paper environment) --------------------------- */
+  --bg: var(--c-paper);
+  --bg-raised: var(--c-cream);
+  --bg-inset: var(--c-paper-2);
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 64%, var(--c-paper));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 44%, var(--c-paper));
+  --rule: color-mix(in oklab, var(--c-ink) 15%, var(--c-paper));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 30%, var(--c-paper));
+  --link: var(--c-vermilion-deep);
+  --accent: var(--c-vermilion);
+  --accent-ink: #ffffff;       /* text on accent */
+  --accent-2: var(--c-green);
+  --spark: var(--c-cobalt);
+  --focus: var(--c-cobalt);
+
+  /* --- Type families (Phase 1: swappable system-stack placeholders) ---- */
+  /* TODO(content): validate + self-host final variable typefaces. */
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua',
+    Palatino, 'Georgia', 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    'Apple Color Emoji', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code',
+    Menlo, Consolas, monospace;
+
+  /* --- Fluid type scale (mobile → desktop) ----------------------------- */
+  --fs-caption: clamp(0.72rem, 0.69rem + 0.15vw, 0.8rem);
+  --fs-small: clamp(0.83rem, 0.8rem + 0.18vw, 0.92rem);
+  --fs-body: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
+  --fs-lead: clamp(1.14rem, 1.02rem + 0.6vw, 1.45rem);
+  --fs-h4: clamp(1.2rem, 1.06rem + 0.7vw, 1.55rem);
+  --fs-h3: clamp(1.45rem, 1.18rem + 1.35vw, 2.15rem);
+  --fs-h2: clamp(2rem, 1.5rem + 2.5vw, 3.4rem);
+  --fs-h1: clamp(2.7rem, 1.9rem + 4vw, 5.4rem);
+  --fs-mega: clamp(3.2rem, 2rem + 6vw, 7rem);
+
+  --lh-tight: 1.02;
+  --lh-snug: 1.14;
+  --lh-body: 1.62;
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.16em;
+
+  /* --- Spacing scale (4px base) ---------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  --sp-11: 10rem;
+  /* fluid section rhythm */
+  --section-y: clamp(3.5rem, 2rem + 7vw, 8rem);
+
+  /* --- Layout widths --------------------------------------------------- */
+  --w-prose: 42rem;
+  --w-content: 68rem;
+  --w-wide: 82rem;
+  --gutter: clamp(1.15rem, 0.6rem + 2.6vw, 2.75rem);
+
+  /* --- Radius (square-leaning editorial) ------------------------------- */
+  --r-0: 0px;
+  --r-1: 3px;
+  --r-2: 7px;
+  --r-3: 14px;
+  --r-pill: 999px;
+
+  /* --- Borders --------------------------------------------------------- */
+  --bw: 1.5px;
+  --bw-2: 2.5px;
+
+  /* --- Elevation (restrained; depth mostly via rules + layered SVG) ---- */
+  --shadow-1: 0 1px 0 var(--rule);
+  --shadow-2: 0 18px 44px -28px color-mix(in oklab, var(--c-ink) 55%, transparent);
+  --shadow-lift: 0 26px 60px -30px color-mix(in oklab, var(--c-ink) 60%, transparent);
+
+  /* --- Motion ---------------------------------------------------------- */
+  --dur-1: 140ms;
+  --dur-2: 320ms;
+  --dur-3: 620ms;
+  --dur-line: 1100ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Z-index --------------------------------------------------------- */
+  --z-header: 50;
+  --z-overlay: 90;
+  --z-nav: 100;
+}

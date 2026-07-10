@@ -30,84 +30,84 @@ description: "Dependency-ordered implementation tasks for the Infinite Weblinks 
 
 ### Setup
 
-- [ ] T001 Initialize Astro project at repo root (`package.json`, `astro.config.mjs`, `tsconfig.json`, `.gitignore`, `src/`, `public/`), scripts `dev`/`build`/`preview`/`test`; no UI/CSS framework added.
+- [X] T001 Initialize Astro project at repo root (`package.json`, `astro.config.mjs`, `tsconfig.json`, `.gitignore`, `src/`, `public/`), scripts `dev`/`build`/`preview`/`test`; no UI/CSS framework added.
   - ↳ Dep: none · Verify: `npm run dev` serves a page and `npm run build` succeeds · Satisfies: plan Structure Decision · Phase 1
-- [ ] T002 [P] Configure essential integrations only: `@astrojs/sitemap`, Astro image (sharp), and Vitest (`vitest.config.ts`, `tests/unit/`) in `astro.config.mjs` + config files.
+- [X] T002 [P] Configure essential integrations only: `@astrojs/sitemap`, Astro image (sharp), and Vitest (`vitest.config.ts`, `tests/unit/`) in `astro.config.mjs` + config files.
   - ↳ Dep: T001 · Verify: `npm run test` runs (zero tests passes); build still succeeds · Satisfies: FR-043, Principle X · Phase 1
-- [ ] T003 [P] Add self-hosted placeholder variable fonts (display serif, interface sans, mono) to `public/fonts/` with `@font-face` + preload of the critical display subset in `src/styles/`.
+- [X] T003 [P] Add self-hosted placeholder variable fonts (display serif, interface sans, mono) to `public/fonts/` with `@font-face` + preload of the critical display subset in `src/styles/`.
   - ↳ Dep: T001 · Verify: fonts load in dev with `font-display: swap`; no external font origin · Satisfies: FR-052, Principle III · Phase 1 · TODO(content): final typeface licensing
 
 ### Foundational — design system & shell
 
-- [ ] T004 Create design tokens in `src/styles/tokens.css` (color: `--paper`/`--ink`/`--vermilion`/`--green`/rationed accents; fluid `clamp()` type scale; 4px spacing scale; radius `0/2/6`; elevation; breakpoints 360/390/480/768/1024/1280/1536; `--focus`).
+- [X] T004 Create design tokens in `src/styles/tokens.css` (color: `--paper`/`--ink`/`--vermilion`/`--green`/rationed accents; fluid `clamp()` type scale; 4px spacing scale; radius `0/2/6`; elevation; breakpoints 360/390/480/768/1024/1280/1536; `--focus`).
   - ↳ Dep: T001 · Verify: tokens resolve in a probe component; values documented as adjustable · Satisfies: FR-004, Principle IV · Phase 1
-- [ ] T005 [P] Create `src/styles/environments.css` — paper (light) & ink (dark) section environments via `[data-env]` remapping semantic tokens (`--bg`/`--fg`/`--muted`/`--rule`/`--link`).
+- [X] T005 [P] Create `src/styles/environments.css` — paper (light) & ink (dark) section environments via `[data-env]` remapping semantic tokens (`--bg`/`--fg`/`--muted`/`--rule`/`--link`).
   - ↳ Dep: T004 · Verify: a section flips environment correctly in both modes · Satisfies: FR-034, plan Design System · Phase 1
-- [ ] T006 [P] Create `src/styles/base.css` + `global.css` — reset, base elements, `:focus-visible`, prose defaults, base `prefers-reduced-motion` handling.
+- [X] T006 [P] Create `src/styles/base.css` + `global.css` — reset, base elements, `:focus-visible`, prose defaults, base `prefers-reduced-motion` handling.
   - ↳ Dep: T004 · Verify: focus outline visible on keyboard nav; reduced-motion query active · Satisfies: FR-048, FR-037 · Phase 1
-- [ ] T007 Build layout primitives `Container`, `Section`, `Grid` in `src/components/layout/`.
+- [X] T007 Build layout primitives `Container`, `Section`, `Grid` in `src/components/layout/`.
   - ↳ Dep: T004–T006 · Verify: an asymmetric section renders with no overflow at all breakpoints · Satisfies: FR-045, FR-002 · Phase 1
-- [ ] T008 Build UI primitives `Button`, `TextLink`, `Eyebrow`, `Tag`, `Stat`, `Prose` in `src/components/ui/` with focus states.
+- [X] T008 Build UI primitives `Button`, `TextLink`, `Eyebrow`, `Tag`, `Stat`, `Prose` in `src/components/ui/` with focus states.
   - ↳ Dep: T004–T006 · Verify: keyboard focus visible; variants render in both environments · Satisfies: FR-048 · Phase 1
-- [ ] T009 Build accessible form-control primitives (`FieldLabel`, `Input`, `Textarea`, `Select`, `Checkbox`, `FormStatus` with `aria-live`) in `src/components/ui/` + `src/components/forms/`.
+- [X] T009 Build accessible form-control primitives (`FieldLabel`, `Input`, `Textarea`, `Select`, `Checkbox`, `FormStatus` with `aria-live`) in `src/components/ui/` + `src/components/forms/`.
   - ↳ Dep: T008 · Verify: labels/`aria-describedby` wired; `FormStatus` announces politely · Satisfies: FR-049 · Phase 1 (consumed in Phase 4)
-- [ ] T010 [P] Create data modules `src/data/nav.ts` (primary/footer nav, `emphasis`, `matchPaths`) and `src/data/pillars.ts` (Demand/Storefront/Retention/Intelligence + Brand/Content foundation).
+- [X] T010 [P] Create data modules `src/data/nav.ts` (primary/footer nav, `emphasis`, `matchPaths`) and `src/data/pillars.ts` (Demand/Storefront/Retention/Intelligence + Brand/Content foundation).
   - ↳ Dep: T001 · Verify: nav lists exactly the six primary destinations; secondary links flagged `quiet` · Satisfies: FR-005, FR-009, SC-017 · Phase 1
-- [ ] T011 [US1] Build `SiteHeader` + sticky `PrimaryNav` (active-state from path, persistent Request-a-Proposal CTA) in `src/components/layout/`.
+- [X] T011 [US1] Build `SiteHeader` + sticky `PrimaryNav` (active-state from path, persistent Request-a-Proposal CTA) in `src/components/layout/`.
   - ↳ Dep: T007, T008, T010 · Verify: sticky on scroll; active page marked; CTA present · Satisfies: FR-005, FR-019 · Phase 1
-- [ ] T012 [US6] Build `MobileNav` island (disclosure, focus trap, `Esc` to close, focus return, `aria-expanded`/`aria-controls`, background inert) in `src/components/layout/`.
+- [X] T012 [US6] Build `MobileNav` island (disclosure, focus trap, `Esc` to close, focus return, `aria-expanded`/`aria-controls`, background inert) in `src/components/layout/`.
   - ↳ Dep: T011 · Verify: keyboard-only open/close; no hover dependence; works at 360px · Satisfies: FR-046, FR-049 · Phase 1
-- [ ] T013 Build `SiteFooter` (full sitemap incl. legal; quiet secondary-audience links) in `src/components/layout/`.
+- [X] T013 Build `SiteFooter` (full sitemap incl. legal; quiet secondary-audience links) in `src/components/layout/`.
   - ↳ Dep: T008, T010 · Verify: all routes linked; secondary links visually subordinate · Satisfies: FR-007, FR-030, SC-017 · Phase 1
-- [ ] T014 Build `BaseLayout.astro` (`<head>`, skip link, header, footer, section-env wrapper, JSON-LD slot) + `src/lib/seo.ts` + `src/lib/schema.ts` scaffolding.
+- [X] T014 Build `BaseLayout.astro` (`<head>`, skip link, header, footer, section-env wrapper, JSON-LD slot) + `src/lib/seo.ts` + `src/lib/schema.ts` scaffolding.
   - ↳ Dep: T011, T013 · Verify: a probe page renders one `<h1>`, unique title/description/canonical, landmarks · Satisfies: FR-041, FR-042, Principle VII · Phase 1
-- [ ] T015 [US6] Add `SkipLink`, semantic landmark structure, and route-level focus reset in `BaseLayout`.
+- [X] T015 [US6] Add `SkipLink`, semantic landmark structure, and route-level focus reset in `BaseLayout`.
   - ↳ Dep: T014 · Verify: skip link focuses `<main>`; landmarks present · Satisfies: FR-048, FR-049 · Phase 1
 
 ### Foundational — Infinite Universe brand system
 
-- [ ] T016 [US1] Build the Line visual system `src/components/brand/Line.astro` (SVG stroke; continuous vs broken/leaking states; vertical-spine mobile variant; reduced-motion static state; IO-driven draw controller as a `client:visible` island).
+- [X] T016 [US1] Build the Line visual system `src/components/brand/Line.astro` (SVG stroke; continuous vs broken/leaking states; vertical-spine mobile variant; reduced-motion static state; IO-driven draw controller as a `client:visible` island).
   - ↳ Dep: T004–T006 · Verify: Line draws on scroll, static under reduced motion, collapses to vertical at ≤768px; not a node-graph · Satisfies: FR-034, FR-035, FR-036, FR-037 · Phase 1
-- [ ] T017 [P] Build brand objects `Storefront` and `Campaign` (SVG/CSS, static + assembled states) in `src/components/brand/`.
+- [X] T017 [P] Build brand objects `Storefront` and `Campaign` (SVG/CSS, static + assembled states) in `src/components/brand/`.
   - ↳ Dep: T004–T006 · Verify: render crisply at all sizes; assemble under motion, static under reduce · Satisfies: FR-039 · Phase 1
-- [ ] T018 [P] Build brand objects `ContentStream` and `RetentionLoop` in `src/components/brand/`.
+- [X] T018 [P] Build brand objects `ContentStream` and `RetentionLoop` in `src/components/brand/`.
   - ↳ Dep: T004–T006 · Verify: as T017 · Satisfies: FR-039 · Phase 1
-- [ ] T019 [P] Build brand objects `AnalyticsPanel` and `FlowMarker` in `src/components/brand/`.
+- [X] T019 [P] Build brand objects `AnalyticsPanel` and `FlowMarker` in `src/components/brand/`.
   - ↳ Dep: T004–T006 · Verify: as T017 · Satisfies: FR-039 · Phase 1
-- [ ] T020 [US1] Build `ProofModule`, `TestimonialModule`, `LogoWall` in `src/components/modules/` + a **dev-only** `PlaceholderBadge` (renders only when `import.meta.env.DEV`; never in production).
+- [X] T020 [US1] Build `ProofModule`, `TestimonialModule`, `LogoWall` in `src/components/modules/` + a **dev-only** `PlaceholderBadge` (renders only when `import.meta.env.DEV`; never in production).
   - ↳ Dep: T008 · Verify: proof renders beside a claim; badge absent from `npm run build` output · Satisfies: FR-015, FR-016 · Phase 1
 
 ### Flagship homepage narrative (US1)
 
-- [ ] T021 [US1] Author realistic placeholder homepage copy/data as a plain typed module `src/data/home.ts` (flagged `placeholder: true`). Use a plain data module here so the homepage builds without the Phase-2 content-collection config (`src/content/config.ts`, T036); content collections begin in Phase 2.
+- [X] T021 [US1] Author realistic placeholder homepage copy/data as a plain typed module `src/data/home.ts` (flagged `placeholder: true`). Use a plain data module here so the homepage builds without the Phase-2 content-collection config (`src/content/config.ts`, T036); content collections begin in Phase 2.
   - ↳ Dep: T010 · Verify: copy reads human and ecommerce-specific; flags present; homepage builds with no `src/content/` dependency · Satisfies: FR-033, Principle VI · Phase 1
-- [ ] T022 [US1] Build Hero + positioning section (`src/components/sections/Hero.astro`, mounted in `src/pages/index.astro`) — first-screen ecommerce relevance + "disconnected leaks / connected compounds".
+- [X] T022 [US1] Build Hero + positioning section (`src/components/sections/Hero.astro`, mounted in `src/pages/index.astro`) — first-screen ecommerce relevance + "disconnected leaks / connected compounds".
   - ↳ Dep: T007, T008, T016, T021 · Verify: message clear above the fold at 360px & desktop · Satisfies: FR-001, SC-001 · Phase 1
-- [ ] T023 [US1] Build "cost of disconnected growth" section using brand objects + leaking Line state.
+- [X] T023 [US1] Build "cost of disconnected growth" section using brand objects + leaking Line state.
   - ↳ Dep: T007, T016, T017–T019 · Verify: conveys leak/cost visually and in static text · Satisfies: FR-002(2) · Phase 1
-- [ ] T024 [US1] Build "connected ecosystem" section incl. signature experience **The Connection** (growth loop becomes visible).
+- [X] T024 [US1] Build "connected ecosystem" section incl. signature experience **The Connection** (growth loop becomes visible).
   - ↳ Dep: T016, T017–T019 · Verify: loop closes on scroll; understandable statically · Satisfies: FR-002(3), FR-038 · Phase 1
-- [ ] T025 [US1][US6] Build signature experience **Leak to Compound** (disconnected↔connected; reduced-motion shows labeled before/after).
+- [X] T025 [US1][US6] Build signature experience **Leak to Compound** (disconnected↔connected; reduced-motion shows labeled before/after).
   - ↳ Dep: T016 · Verify: both states legible with motion and under `reduce` · Satisfies: FR-038, SC-011 · Phase 1
-- [ ] T026 [US1] Build four-pillar presentation (Demand/Storefront/Retention/Intelligence + Brand/Content foundation) with `PillarGrid`.
+- [X] T026 [US1] Build four-pillar presentation (Demand/Storefront/Retention/Intelligence + Brand/Content foundation) with `PillarGrid`.
   - ↳ Dep: T007, T010, T017–T019 · Verify: four pillars + foundation shown, not a full directory · Satisfies: FR-009 · Phase 1
-- [ ] T027 [US1] Build five-priority-services section (Meta Ads, Google Ads, Website Design & Development, Shopify Store Development & Management, Social Media Growth) by real names.
+- [X] T027 [US1] Build five-priority-services section (Meta Ads, Google Ads, Website Design & Development, Shopify Store Development & Management, Social Media Growth) by real names.
   - ↳ Dep: T007, T008 · Verify: all five findable in ~30s without browser find · Satisfies: FR-008, SC-003 · Phase 1
-- [ ] T028 [US1] Build contextual proof section (`ProofModule` beside claims; realistic placeholder metrics/logos/testimonials).
+- [X] T028 [US1] Build contextual proof section (`ProofModule` beside claims; realistic placeholder metrics/logos/testimonials).
   - ↳ Dep: T020, T021 · Verify: proof adjacent to its claim; flagged in data · Satisfies: FR-015, SC-005 · Phase 1
-- [ ] T029 [US1] Build "how Infinite Weblinks works" approach-summary section.
+- [X] T029 [US1] Build "how Infinite Weblinks works" approach-summary section.
   - ↳ Dep: T007, T021 · Verify: process legible; leads toward proposal · Satisfies: FR-002(7) · Phase 1
-- [ ] T030 [US1][US5] Build quiet secondary-audience paths section (Creators, Partners) that preserves ecommerce-first emphasis.
+- [X] T030 [US1][US5] Build quiet secondary-audience paths section (Creators, Partners) that preserves ecommerce-first emphasis.
   - ↳ Dep: T007, T010 · Verify: links present but subordinate in hierarchy · Satisfies: FR-002(8), SC-017 · Phase 1
-- [ ] T031 [US1] Build reusable `CTASection` (final proposal invitation) in `src/components/modules/`.
+- [X] T031 [US1] Build reusable `CTASection` (final proposal invitation) in `src/components/modules/`.
   - ↳ Dep: T008 · Verify: contextual, non-aggressive CTA; reachable · Satisfies: FR-019, SC-006 · Phase 1
-- [ ] T032 [US1] Assemble `src/pages/index.astro`: wire the Line as the connecting scroll spine across sections, keep calm reading sections between signatures, add homepage metadata + Organization JSON-LD.
+- [X] T032 [US1] Assemble `src/pages/index.astro`: wire the Line as the connecting scroll spine across sections, keep calm reading sections between signatures, add homepage metadata + Organization JSON-LD.
   - ↳ Dep: T022–T031, T014, T016 · Verify: one connected argument top→bottom (problem + value proposition graspable in a single scan); one `<h1>`; valid JSON-LD · Satisfies: FR-002, FR-003, FR-035, SC-002 · Phase 1
-- [ ] T033 [US6] Homepage responsive + inclusive pass at 360/390/768/1024/desktop — no horizontal overflow, reduced-motion parity, keyboard operability.
+- [X] T033 [US6] Homepage responsive + inclusive pass at 360/390/768/1024/desktop — no horizontal overflow, reduced-motion parity, keyboard operability.
   - ↳ Dep: T032 · Verify: zero overflow at 5 widths; keyboard reaches all controls; motion info present statically · Satisfies: FR-045, FR-046, SC-009, SC-010, SC-011 · Phase 1
-- [ ] T034 [P] Add foundational tests in `tests/unit/`: nav config integrity (six primary destinations, quiet secondary), `lib/seo.ts` output completeness, and homepage build smoke.
+- [X] T034 [P] Add foundational tests in `tests/unit/`: nav config integrity (six primary destinations, quiet secondary), `lib/seo.ts` output completeness, and homepage build smoke.
   - ↳ Dep: T010, T014, T032 · Verify: `npm run test` green · Satisfies: SC-014, Principle X · Phase 1
-- [ ] T035 **VISUAL REVIEW CHECKPOINT** — run `npm run dev`/`build`, review the homepage at all breakpoints (use `/run` or screenshots), confirm flagship, intentionally-designed quality before Phase 2.
+- [X] T035 **VISUAL REVIEW CHECKPOINT** — run `npm run dev`/`build`, review the homepage at all breakpoints (use `/run` or screenshots), confirm flagship, intentionally-designed quality before Phase 2.
   - ↳ Dep: T033 · Verify: reviewer sign-off that the homepage reads as the flagship direction (not scaffolding) · Satisfies: milestone gate, SC-018 · Phase 1
 
 **Checkpoint**: Reviewable flagship homepage complete. Do not start Phase 2 until T035 passes.

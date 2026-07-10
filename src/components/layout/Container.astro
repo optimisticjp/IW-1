@@ -1,0 +1,28 @@
+---
+interface Props {
+  width?: 'prose' | 'content' | 'wide';
+  class?: string;
+}
+const { width = 'content', class: className = '' } = Astro.props;
+---
+
+<div class:list={['container', `container--${width}`, className]}>
+  <slot />
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .container--prose {
+    max-width: calc(var(--w-prose) + var(--gutter) * 2);
+  }
+  .container--content {
+    max-width: calc(var(--w-content) + var(--gutter) * 2);
+  }
+  .container--wide {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+  }
+</style>

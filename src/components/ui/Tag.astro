@@ -1,0 +1,51 @@
+---
+interface Props {
+  accent?: 'vermilion' | 'green' | 'saffron' | 'cobalt' | 'muted';
+  class?: string;
+}
+const { accent = 'muted', class: className = '' } = Astro.props;
+---
+
+<span class:list={['tag', `tag--${accent}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    letter-spacing: 0.04em;
+    padding: 0.3em 0.7em;
+    border-radius: var(--r-pill);
+    border: var(--bw) solid var(--rule-strong);
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+  .tag--vermilion {
+    color: var(--c-vermilion-deep);
+    border-color: color-mix(in oklab, var(--c-vermilion) 45%, transparent);
+  }
+  .tag--green {
+    color: var(--c-green);
+    border-color: color-mix(in oklab, var(--c-green) 45%, transparent);
+  }
+  .tag--saffron {
+    color: color-mix(in oklab, var(--c-saffron) 75%, var(--fg));
+    border-color: color-mix(in oklab, var(--c-saffron) 55%, transparent);
+  }
+  .tag--cobalt {
+    color: var(--c-cobalt);
+    border-color: color-mix(in oklab, var(--c-cobalt) 45%, transparent);
+  }
+  [data-env='ink'] .tag--vermilion {
+    color: var(--c-vermilion-soft);
+  }
+  [data-env='ink'] .tag--green {
+    color: var(--c-green-bright);
+  }
+  [data-env='ink'] .tag--cobalt {
+    color: color-mix(in oklab, var(--c-cobalt) 60%, var(--c-paper));
+  }
+</style>

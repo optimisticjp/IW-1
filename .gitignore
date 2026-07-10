@@ -1,0 +1,28 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# logs
+*.log
+npm-debug.log*
+
+# environment
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# visual QA artifacts (generated)
+scripts/*.png

@@ -1,0 +1,112 @@
+---
+// Accessible field primitive (label + control + help/error wiring).
+// Built in Phase 1 (T009); consumed by the full proposal/contact forms in
+// Phase 4. Progressive-enhancement friendly: renders a real control.
+interface Props {
+  id: string;
+  label: string;
+  type?: 'text' | 'email' | 'url' | 'textarea' | 'select' | 'checkbox';
+  name?: string;
+  required?: boolean;
+  optional?: boolean;
+  help?: string;
+  placeholder?: string;
+  options?: string[];
+}
+const {
+  id,
+  label,
+  type = 'text',
+  name = id,
+  required = false,
+  optional = false,
+  help,
+  placeholder,
+  options = [],
+} = Astro.props;
+const helpId = help ? `${id}-help` : undefined;
+---
+
+<div class="field" data-type={type}>
+  <label class="field__label" for={id}>
+    {label}
+    {required && <span class="field__req" aria-hidden="true">*</span>}
+    {optional && <span class="field__opt">(optional)</span>}
+  </label>
+  {help && <p class="field__help" id={helpId}>{help}</p>}
+
+  {type === 'textarea' ? (
+    <textarea id={id} name={name} rows="4" required={required}
+      placeholder={placeholder} aria-describedby={helpId}></textarea>
+  ) : type === 'select' ? (
+    <select id={id} name={name} required={required} aria-describedby={helpId}>
+      <option value="" disabled selected>Choose…</option>
+      {options.map((o) => <option value={o}>{o}</option>)}
+    </select>
+  ) : type === 'checkbox' ? (
+    <input class="field__check" id={id} name={name} type="checkbox"
+      required={required} aria-describedby={helpId} />
+  ) : (
+    <input id={id} name={name} type={type} required={required}
+      placeholder={placeholder} aria-describedby={helpId} />
+  )}
+</div>
+
+<style>
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .field__label {
+    font-weight: 600;
+    font-size: var(--fs-small);
+  }
+  .field__req {
+    color: var(--accent);
+    margin-inline-start: 0.15em;
+  }
+  .field__opt {
+    color: var(--fg-faint);
+    font-weight: 400;
+    margin-inline-start: 0.35em;
+  }
+  .field__help {
+    color: var(--fg-muted);
+    font-size: var(--fs-small);
+  }
+  input,
+  textarea,
+  select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.7rem 0.85rem;
+    background: var(--bg-raised);
+    color: var(--fg);
+    border: var(--bw) solid var(--rule-strong);
+    border-radius: var(--r-2);
+  }
+  textarea {
+    resize: vertical;
+  }
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+  }
+  .field[data-type='checkbox'] {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.6rem;
+  }
+  .field__check {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-height: 0;
+    margin-top: 0.15rem;
+  }
+  .field[data-type='checkbox'] .field__label {
+    order: 2;
+    font-weight: 400;
+    font-size: var(--fs-body);
+  }
+</style>

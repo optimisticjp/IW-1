@@ -1,0 +1,6 @@
+# Infinite Weblinks — robots directives
+# TODO(content): confirm final host + sitemap URL before launch.
+User-agent: *
+Allow: /
+
+Sitemap: https://www.infiniteweblinks.example/sitemap-index.xml

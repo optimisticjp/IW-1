@@ -1,0 +1,25 @@
+---
+// Keyboard skip link — first focusable element on the page.
+---
+
+<a class="skip" href="#main">Skip to content</a>
+
+<style>
+  .skip {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: var(--z-nav);
+    transform: translateY(-160%);
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding: 0.65rem 1rem;
+    border-radius: var(--r-2);
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+  .skip:focus-visible {
+    transform: translateY(0);
+  }
+</style>

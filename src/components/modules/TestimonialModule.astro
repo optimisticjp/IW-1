@@ -1,0 +1,48 @@
+---
+import PlaceholderBadge from './PlaceholderBadge.astro';
+interface Props {
+  quote: string;
+  name: string;
+  role: string;
+  brand: string;
+  assetStatus: 'pending' | 'approved';
+}
+const { quote, name, role, brand, assetStatus } = Astro.props;
+---
+<figure class="quote">
+  {assetStatus === 'pending' && <PlaceholderBadge note="Testimonial pending approval" />}
+  <blockquote class="quote__body">“{quote}”</blockquote>
+  <figcaption class="quote__cite">
+    <span class="quote__avatar" aria-hidden="true">{name.charAt(0)}</span>
+    <span>
+      <strong>{name}</strong><br />
+      <span class="quote__role">{role}, {brand}</span>
+    </span>
+  </figcaption>
+</figure>
+<style>
+  .quote {
+    position: relative;
+    display: grid;
+    gap: 1.4rem;
+    padding: clamp(1.6rem, 1rem + 2vw, 2.6rem);
+    background: var(--bg-inset);
+    border-radius: var(--r-3);
+    border: var(--bw) solid var(--rule);
+  }
+  .quote__body {
+    font-family: var(--font-display);
+    font-size: var(--fs-h4);
+    line-height: 1.32;
+    text-wrap: balance;
+  }
+  .quote__cite { display: flex; align-items: center; gap: 0.9rem; font-size: var(--fs-small); }
+  .quote__avatar {
+    width: 2.6rem; height: 2.6rem; flex: none;
+    display: grid; place-items: center;
+    border-radius: var(--r-pill);
+    background: var(--accent); color: var(--accent-ink);
+    font-family: var(--font-display); font-weight: 600;
+  }
+  .quote__role { color: var(--fg-muted); }
+</style>

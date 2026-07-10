@@ -1,0 +1,48 @@
+/* =========================================================================
+   Section environments — warm paper (light) and warm ink (dark) are
+   compositional environments, not a user theme toggle. Any element can open
+   a `data-env` scope; semantic tokens remap beneath it. Both are first-class
+   and contrast-checked.
+   ========================================================================= */
+
+[data-env='paper'] {
+  --bg: var(--c-paper);
+  --bg-raised: var(--c-cream);
+  --bg-inset: var(--c-paper-2);
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 64%, var(--c-paper));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 44%, var(--c-paper));
+  --rule: color-mix(in oklab, var(--c-ink) 15%, var(--c-paper));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 30%, var(--c-paper));
+  --link: var(--c-vermilion-deep);
+  --accent: var(--c-vermilion);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-green);
+  --spark: var(--c-cobalt);
+  --focus: var(--c-cobalt);
+  color-scheme: light;
+}
+
+[data-env='ink'] {
+  --bg: var(--c-ink);
+  --bg-raised: var(--c-ink-2);
+  --bg-inset: var(--c-ink-3);
+  --fg: var(--c-paper);
+  --fg-muted: color-mix(in oklab, var(--c-paper) 68%, var(--c-ink));
+  --fg-faint: color-mix(in oklab, var(--c-paper) 46%, var(--c-ink));
+  --rule: color-mix(in oklab, var(--c-paper) 20%, var(--c-ink));
+  --rule-strong: color-mix(in oklab, var(--c-paper) 40%, var(--c-ink));
+  --link: var(--c-saffron);
+  --accent: var(--c-vermilion-soft);
+  --accent-ink: #17130c;
+  --accent-2: var(--c-green-bright);
+  --spark: var(--c-saffron);
+  --focus: var(--c-saffron);
+  color-scheme: dark;
+}
+
+/* An environment paints its own background + text when used as a surface. */
+[data-env] {
+  background-color: var(--bg);
+  color: var(--fg);
+}

@@ -1,0 +1,429 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import Tag from '../components/ui/Tag.astro';
+import TextLink from '../components/ui/TextLink.astro';
+import Line from '../components/brand/Line.astro';
+import Campaign from '../components/brand/Campaign.astro';
+import Storefront from '../components/brand/Storefront.astro';
+import RetentionLoop from '../components/brand/RetentionLoop.astro';
+import AnalyticsPanel from '../components/brand/AnalyticsPanel.astro';
+import ContentStream from '../components/brand/ContentStream.astro';
+import FlowMarker from '../components/brand/FlowMarker.astro';
+import ProofModule from '../components/modules/ProofModule.astro';
+import TestimonialModule from '../components/modules/TestimonialModule.astro';
+import LogoWall from '../components/modules/LogoWall.astro';
+import CTASection from '../components/modules/CTASection.astro';
+import { home } from '../data/home';
+import { pillars, foundation } from '../data/pillars';
+
+const objFor: Record<string, any> = {
+  demand: Campaign,
+  storefront: Storefront,
+  retention: RetentionLoop,
+  intelligence: AnalyticsPanel,
+};
+const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = {
+  demand: 'vermilion', storefront: 'green', retention: 'saffron', intelligence: 'cobalt',
+};
+---
+
+<BaseLayout seo={home.meta} siteSchema>
+  <!-- 1 · HERO / positioning ------------------------------------------- -->
+  <Section env="ink" width="wide" pad="loose" class="hero" labelledby="hero-h">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <Eyebrow>{home.hero.kicker}</Eyebrow>
+        <h1 id="hero-h" class="hero__head">
+          <span class="hero__line">{home.hero.headlineLead} <em class="is-leak">{home.hero.headlineLeak}</em></span>
+          <span class="hero__line">{home.hero.headlineConnect} <em class="is-compound">{home.hero.headlineCompound}</em></span>
+        </h1>
+        <p class="hero__sub">{home.hero.sub}</p>
+        <div class="hero__actions">
+          <Button href={home.hero.primaryCta.href} variant="primary" size="lg">{home.hero.primaryCta.label}</Button>
+          <Button href={home.hero.secondaryCta.href} variant="secondary" size="lg">{home.hero.secondaryCta.label}</Button>
+        </div>
+        <ul class="hero__signals" aria-label="What we run">
+          {home.hero.signals.map((s) => <li><Tag>{s}</Tag></li>)}
+        </ul>
+      </div>
+      <div class="hero__stage" aria-hidden="true">
+        <div class="hero__nodes">
+          <span class="hero__node"><FlowMarker accent="vermilion" /><b>Demand</b></span>
+          <span class="hero__node"><FlowMarker accent="green" /><b>Storefront</b></span>
+          <span class="hero__node"><FlowMarker accent="saffron" /><b>Retention</b></span>
+          <span class="hero__node"><FlowMarker accent="cobalt" /><b>Intelligence</b></span>
+        </div>
+        <div class="hero__flow"><Line variant="flow" /></div>
+        <p class="hero__stagecaption u-mono">One line of value, connected end to end.</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 2 · Cost of disconnected growth ---------------------------------- -->
+  <Section env="paper" width="content" class="disc" labelledby="disc-h">
+    <div class="disc__head u-reveal">
+      <Eyebrow>{home.disconnected.kicker}</Eyebrow>
+      <h2 id="disc-h" class="section-head">{home.disconnected.heading}</h2>
+      <p class="lead">{home.disconnected.body}</p>
+    </div>
+    <ul class="disc__leaks">
+      {home.disconnected.leaks.map((leak, i) => (
+        <li class="leak u-reveal" style={`--reveal-delay:${i * 80}ms`}>
+          <span class="leak__where u-mono">{leak.where}</span>
+          <span class="leak__loss">{leak.loss}</span>
+          <span class="leak__gap" aria-hidden="true"></span>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 3 · Signature: Leak to Compound ---------------------------------- -->
+  <Section env="ink" width="content" class="lc" labelledby="lc-h">
+    <div class="lc__head u-reveal">
+      <Eyebrow>Leak → Compound</Eyebrow>
+      <h2 id="lc-h" class="section-head">The same effort, two very different outcomes.</h2>
+    </div>
+    <div class="lc__grid">
+      <figure class="lc__panel lc__panel--leak u-reveal">
+        <figcaption class="lc__label"><span class="lc__dot lc__dot--leak" aria-hidden="true"></span>Disconnected</figcaption>
+        <div class="lc__vis"><Line variant="flow" state="leak" /></div>
+        <p class="lc__note">Value drips out between the gaps. You spend more to stand still.</p>
+        <span class="lc__delta lc__delta--down">value leaks</span>
+      </figure>
+      <figure class="lc__panel lc__panel--comp u-reveal" style="--reveal-delay:120ms">
+        <figcaption class="lc__label"><span class="lc__dot lc__dot--comp" aria-hidden="true"></span>Connected</figcaption>
+        <div class="lc__vis"><Line variant="flow" state="continuous" /></div>
+        <p class="lc__note">Each system hands value to the next. The same spend does more, then more again.</p>
+        <span class="lc__delta lc__delta--up">value compounds</span>
+      </figure>
+    </div>
+  </Section>
+
+  <!-- 4 · Connected ecosystem — Signature: The Connection -------------- -->
+  <Section env="paper" width="wide" id="connected" class="conn" labelledby="conn-h">
+    <div class="conn__grid">
+      <div class="conn__copy u-reveal">
+        <Eyebrow>{home.connected.kicker}</Eyebrow>
+        <h2 id="conn-h" class="section-head">{home.connected.heading}</h2>
+        <p class="lead">{home.connected.body}</p>
+        <div class="conn__foundation">
+          <div class="conn__foundation-obj" aria-hidden="true"><ContentStream /></div>
+          <p><strong>{foundation.name}.</strong> {foundation.role}</p>
+        </div>
+      </div>
+
+      <figure class="conn__loop u-reveal" style="--reveal-delay:120ms">
+        <svg class="loop" viewBox="0 0 560 360" role="presentation" aria-hidden="true">
+          <path class="loop__track" d="M120 60 H440 A60 60 0 0 1 440 300 H120 A60 60 0 0 1 120 60 Z"
+                fill="none" stroke="var(--rule)" stroke-width="2"/>
+          <path class="loop__draw line__draw" d="M120 60 H440 A60 60 0 0 1 440 300 H120 A60 60 0 0 1 120 60 Z"
+                fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" pathLength="1000"/>
+          <g class="loop__arrows" fill="var(--accent)">
+            <path d="M300 54 l10 6 l-10 6 z"/>
+            <path d="M486 180 l-6 -10 l-6 10 z" transform="translate(14 0)"/>
+            <path d="M260 306 l-10 -6 l10 -6 z"/>
+            <path d="M74 180 l6 10 l6 -10 z"/>
+          </g>
+        </svg>
+        <ul class="loop__labels">
+          <li class="loop__label loop__label--tl"><FlowMarker accent="vermilion" /> Demand</li>
+          <li class="loop__label loop__label--tr"><FlowMarker accent="green" /> Storefront</li>
+          <li class="loop__label loop__label--br"><FlowMarker accent="saffron" /> Retention</li>
+          <li class="loop__label loop__label--bl"><FlowMarker accent="cobalt" /> Intelligence</li>
+        </ul>
+      </figure>
+    </div>
+    <p class="conn__closure u-reveal">Demand → Storefront → Retention → Intelligence → <span class="conn__back">back into Demand</span>. That’s the loop.</p>
+  </Section>
+
+  <!-- 5 · The four pillars in detail ----------------------------------- -->
+  <Section env="ink" width="wide" class="pil" labelledby="pil-h">
+    <div class="pil__head u-reveal">
+      <Eyebrow>Four connected systems</Eyebrow>
+      <h2 id="pil-h" class="section-head">Demand, Storefront, Retention, Intelligence.</h2>
+    </div>
+    <ul class="pil__grid">
+      {pillars.map((p, i) => {
+        const Obj = objFor[p.key];
+        return (
+          <li class="pcard u-reveal" style={`--reveal-delay:${i * 70}ms`}>
+            <div class="pcard__top">
+              <span class="pcard__idx u-mono">{p.index}</span>
+              <div class="pcard__obj"><Obj /></div>
+            </div>
+            <h3 class="pcard__name">{p.name}</h3>
+            <p class="pcard__role">{p.role}</p>
+            <p class="pcard__line u-mono">{p.lineRole}</p>
+            <ul class="pcard__svc">
+              {p.services.slice(0, 5).map((s) => <li><Tag accent={accentFor[p.key]}>{s}</Tag></li>)}
+            </ul>
+          </li>
+        );
+      })}
+    </ul>
+  </Section>
+
+  <!-- 6 · Five priority services --------------------------------------- -->
+  <Section env="paper" width="wide" class="svc" labelledby="svc-h">
+    <div class="svc__head u-reveal">
+      <Eyebrow>{home.services.kicker}</Eyebrow>
+      <h2 id="svc-h" class="section-head">{home.services.heading}</h2>
+      <p class="lead">{home.services.body}</p>
+    </div>
+    <ul class="svc__grid">
+      {home.services.items.map((s, i) => (
+        <li class="scard u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <a class="scard__link" href={s.href}>
+            <span class="scard__pillar u-mono">{s.pillar}</span>
+            <h3 class="scard__name">{s.name}</h3>
+            <p class="scard__promise">{s.promise}</p>
+            <span class="scard__connect"><span class="scard__connect-dot" aria-hidden="true"></span>{s.connects}</span>
+            <span class="scard__cta" aria-hidden="true">Explore →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 7 · Contextual proof --------------------------------------------- -->
+  <Section env="ink" width="wide" class="prf" labelledby="prf-h">
+    <div class="prf__head u-reveal">
+      <Eyebrow>{home.proof.kicker}</Eyebrow>
+      <h2 id="prf-h" class="section-head">{home.proof.heading}</h2>
+      <p class="lead">{home.proof.body}</p>
+    </div>
+    <div class="prf__body">
+      <ul class="prf__metrics">
+        {home.proof.metrics.map((m, i) => (
+          <li class="u-reveal" style={`--reveal-delay:${i * 70}ms`}>
+            <ProofModule value={m.value} label={m.label} system={m.system} assetStatus={m.assetStatus} />
+          </li>
+        ))}
+      </ul>
+      <div class="prf__quote u-reveal">
+        <TestimonialModule
+          quote={home.proof.testimonial.quote}
+          name={home.proof.testimonial.name}
+          role={home.proof.testimonial.role}
+          brand={home.proof.testimonial.brand}
+          assetStatus={home.proof.testimonial.assetStatus}
+        />
+      </div>
+    </div>
+    <div class="prf__logos u-reveal">
+      <LogoWall count={home.proof.logoCount} note={home.proof.logosNote} />
+    </div>
+  </Section>
+
+  <!-- 8 · How Infinite Weblinks works ---------------------------------- -->
+  <Section env="paper" width="content" class="how" labelledby="how-h">
+    <div class="how__head u-reveal">
+      <Eyebrow>{home.how.kicker}</Eyebrow>
+      <h2 id="how-h" class="section-head">{home.how.heading}</h2>
+    </div>
+    <ol class="how__steps">
+      {home.how.steps.map((step, i) => (
+        <li class="hstep u-reveal" style={`--reveal-delay:${i * 90}ms`}>
+          <span class="hstep__n u-mono">{step.n}</span>
+          <div>
+            <h3 class="hstep__title">{step.title}</h3>
+            <p class="hstep__text">{step.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- 9 · Secondary audience paths ------------------------------------- -->
+  <Section env="paper" width="content" pad="tight" class="sec" labelledby="sec-h">
+    <div class="sec__head u-reveal">
+      <Eyebrow>{home.secondary.kicker}</Eyebrow>
+      <h2 id="sec-h" class="section-head section-head--sm">{home.secondary.heading}</h2>
+    </div>
+    <ul class="sec__grid">
+      {home.secondary.paths.map((p) => (
+        <li class="sec__card u-reveal">
+          <h3 class="sec__name">{p.label}</h3>
+          <p class="sec__text">{p.text}</p>
+          <TextLink href={p.href}>Take this path</TextLink>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 10 · Final proposal invitation ----------------------------------- -->
+  <CTASection
+    id="proposal"
+    env="ink"
+    kicker={home.finalCta.kicker}
+    heading={home.finalCta.heading}
+    body={home.finalCta.body}
+    cta={home.finalCta.cta}
+    reassurance={home.finalCta.reassurance}
+  />
+</BaseLayout>
+
+<style>
+  /* Shared section typography ---------------------------------------- */
+  .section-head { font-size: var(--fs-h2); max-width: 20ch; margin-top: 0.6rem; }
+  .section-head--sm { font-size: var(--fs-h3); }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; margin-top: 1rem; }
+
+  /* 1 · Hero ---------------------------------------------------------- */
+  .hero__grid { display: grid; gap: clamp(2.5rem, 1rem + 6vw, 5rem); align-items: center; }
+  .hero__head {
+    font-size: var(--fs-h1);
+    margin: 1.2rem 0 0;
+    display: grid;
+  }
+  .hero__line { display: block; }
+  .hero__head em { font-style: normal; }
+  .hero__head .is-leak { color: var(--accent); }
+  .hero__head .is-compound { color: var(--accent-2); }
+  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.5rem; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+  .hero__signals { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 2rem 0 0; }
+
+  .hero__copy { min-width: 0; }
+  .hero__stage {
+    position: relative;
+    min-width: 0;
+    padding: clamp(1.5rem, 1rem + 3vw, 2.5rem);
+    background: var(--bg-raised);
+    border: var(--bw) solid var(--rule);
+    border-radius: var(--r-3);
+  }
+  .hero__nodes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 0.75rem; }
+  .hero__node { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--fs-small); min-width: 0; }
+  .hero__node b { font-weight: 600; }
+  .hero__flow { margin: 1.5rem 0 0.75rem; }
+  .hero__stagecaption { color: var(--fg-faint); }
+
+  @media (min-width: 940px) {
+    .hero__grid { grid-template-columns: 1.1fr 0.9fr; }
+  }
+
+  /* 2 · Disconnected -------------------------------------------------- */
+  .disc__leaks { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 0; }
+  .leak {
+    display: grid; grid-template-columns: 1fr; gap: 0.25rem;
+    padding: 1.25rem 0;
+    border-top: var(--bw) solid var(--rule);
+    position: relative;
+  }
+  .leak:last-child { border-bottom: var(--bw) solid var(--rule); }
+  .leak__where { color: var(--accent); }
+  .leak__loss { font-size: var(--fs-h4); font-family: var(--font-display); line-height: 1.3; text-wrap: balance; }
+  .leak__gap {
+    position: absolute; right: 0; top: 50%; width: 42px; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px);
+    opacity: 0.6; display: none;
+  }
+  @media (min-width: 720px) {
+    .leak { grid-template-columns: 12rem 1fr; gap: 1.5rem; align-items: baseline; }
+    .leak__gap { display: block; }
+  }
+
+  /* 3 · Leak to Compound --------------------------------------------- */
+  .lc__grid { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+  .lc__panel {
+    padding: clamp(1.4rem, 1rem + 2vw, 2.2rem);
+    background: var(--bg-raised);
+    border: var(--bw) solid var(--rule);
+    border-radius: var(--r-3);
+    display: grid; gap: 1rem;
+  }
+  .lc__panel--leak { border-left: var(--bw-2) solid var(--c-vermilion); }
+  .lc__panel--comp { border-left: var(--bw-2) solid var(--accent-2); }
+  .lc__label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .lc__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
+  .lc__dot--leak { background: var(--c-vermilion); }
+  .lc__dot--comp { background: var(--accent-2); }
+  .lc__vis { padding: 0.5rem 0; }
+  .lc__note { color: var(--fg-muted); }
+  .lc__delta { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.03em; padding: 0.25rem 0.6rem; border-radius: var(--r-pill); justify-self: start; }
+  .lc__delta--down { color: var(--c-vermilion-soft); border: var(--bw) solid color-mix(in oklab, var(--c-vermilion) 45%, transparent); }
+  .lc__delta--up { color: var(--accent-2); border: var(--bw) solid color-mix(in oklab, var(--accent-2) 45%, transparent); }
+  @media (min-width: 720px) { .lc__grid { grid-template-columns: 1fr 1fr; } }
+
+  /* 4 · Connection ---------------------------------------------------- */
+  .conn__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
+  .conn__foundation { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: var(--bw) solid var(--rule); color: var(--fg-muted); max-width: 48ch; }
+  .conn__foundation strong { color: var(--fg); }
+  .conn__foundation-obj { width: 3rem; flex: none; }
+  .conn__loop { position: relative; margin: 0; }
+  .loop { width: 100%; height: auto; overflow: visible; }
+  .loop__labels { list-style: none; margin: 0; padding: 0; }
+  .loop__label {
+    position: absolute; display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--bg); padding: 0.3rem 0.6rem; border: var(--bw) solid var(--rule);
+    border-radius: var(--r-pill); font-weight: 600; font-size: var(--fs-small); white-space: nowrap;
+  }
+  .loop__label--tl { top: 6%; left: 4%; }
+  .loop__label--tr { top: 6%; right: 4%; }
+  .loop__label--br { bottom: 6%; right: 4%; }
+  .loop__label--bl { bottom: 6%; left: 4%; }
+  .conn__closure { margin-top: 2rem; font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-muted); text-align: center; text-wrap: balance; }
+  .conn__back { color: var(--accent); }
+  @media (min-width: 900px) { .conn__grid { grid-template-columns: 1fr 1fr; } }
+
+  /* 5 · Pillars ------------------------------------------------------- */
+  .pil__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1px; background: var(--rule); border: var(--bw) solid var(--rule); border-radius: var(--r-3); overflow: hidden; }
+  .pcard { background: var(--bg); padding: clamp(1.4rem, 1rem + 1.5vw, 2rem); display: grid; gap: 0.7rem; align-content: start; }
+  .pcard__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .pcard__idx { color: var(--fg-faint); font-size: var(--fs-body); }
+  .pcard__obj { width: 3.4rem; }
+  .pcard__name { font-size: var(--fs-h3); }
+  .pcard__role { color: var(--fg-muted); }
+  .pcard__line { color: var(--fg-faint); }
+  .pcard__svc { list-style: none; padding: 0; margin: 0.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  @media (min-width: 620px) { .pil__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1040px) { .pil__grid { grid-template-columns: repeat(4, 1fr); } }
+
+  /* 6 · Services ------------------------------------------------------ */
+  .svc__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
+  .scard { display: grid; }
+  .scard__link {
+    display: grid; gap: 0.6rem; align-content: start;
+    padding: clamp(1.4rem, 1rem + 1.5vw, 2rem);
+    background: var(--bg-raised); border: var(--bw) solid var(--rule);
+    border-radius: var(--r-3); text-decoration: none; color: var(--fg);
+    transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1), box-shadow var(--dur-1);
+  }
+  .scard__link:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-2); }
+  .scard__pillar { color: var(--accent); }
+  .scard__name { font-size: var(--fs-h4); }
+  .scard__promise { color: var(--fg-muted); font-size: var(--fs-small); }
+  .scard__connect { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--fs-caption); color: var(--fg-faint); margin-top: 0.2rem; }
+  .scard__connect-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent-2); flex: none; }
+  .scard__cta { font-weight: 600; color: var(--link); font-size: var(--fs-small); margin-top: 0.3rem; }
+  @media (min-width: 620px) { .svc__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .svc__grid { grid-template-columns: repeat(3, 1fr); } .scard:first-child, .scard:nth-child(2) { grid-column: span 1; } }
+
+  /* 7 · Proof --------------------------------------------------------- */
+  .prf__body { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+  .prf__metrics { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .prf__logos { margin-top: 2.5rem; }
+  @media (min-width: 900px) {
+    .prf__body { grid-template-columns: 1.4fr 1fr; align-items: stretch; }
+    .prf__metrics { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* 8 · How ----------------------------------------------------------- */
+  .how__steps { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; counter-reset: step; }
+  .hstep { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; padding: 1.5rem 0; border-top: var(--bw) solid var(--rule); align-items: start; }
+  .hstep:last-child { border-bottom: var(--bw) solid var(--rule); }
+  .hstep__n { font-size: var(--fs-h3); color: var(--accent); font-family: var(--font-mono); }
+  .hstep__title { font-size: var(--fs-h4); }
+  .hstep__text { color: var(--fg-muted); margin-top: 0.35rem; max-width: 52ch; }
+
+  /* 9 · Secondary ----------------------------------------------------- */
+  .sec__grid { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1rem; }
+  .sec__card { padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); border: var(--bw) solid var(--rule); border-radius: var(--r-3); background: var(--bg-inset); display: grid; gap: 0.6rem; align-content: start; }
+  .sec__name { font-size: var(--fs-h4); }
+  .sec__text { color: var(--fg-muted); font-size: var(--fs-small); }
+  @media (min-width: 680px) { .sec__grid { grid-template-columns: 1fr 1fr; } }
+</style>

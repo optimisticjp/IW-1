@@ -1,0 +1,18 @@
+---
+// Flow Marker — a node on the Line where value moves or is measured.
+interface Props { accent?: 'vermilion' | 'green' | 'saffron' | 'cobalt'; class?: string; }
+const { accent = 'vermilion', class: className = '' } = Astro.props;
+const fill: Record<string, string> = {
+  vermilion: 'var(--accent)',
+  green: 'var(--accent-2)',
+  saffron: 'var(--saffron, #f4a72c)',
+  cobalt: 'var(--spark)',
+};
+---
+<svg class:list={['marker', className]} viewBox="0 0 32 32" aria-hidden="true" role="presentation">
+  <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>
+  <circle cx="16" cy="16" r="6" fill={fill[accent]} stroke="var(--bg)" stroke-width="2"/>
+</svg>
+<style>
+  .marker { width: 2rem; height: 2rem; flex: none; color: var(--fg); }
+</style>

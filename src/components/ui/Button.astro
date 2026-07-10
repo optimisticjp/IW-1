@@ -1,0 +1,88 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  class?: string;
+  'aria-label'?: string;
+}
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  class: className = '',
+  ...rest
+} = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, className]}
+  {...rest}
+>
+  <span class="btn__label"><slot /></span>
+  {variant === 'primary' && <span class="btn__arrow" aria-hidden="true">→</span>}
+</Tag>
+
+<style>
+  .btn {
+    --_bg: var(--accent);
+    --_fg: var(--accent-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    font-family: var(--font-body);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border-radius: var(--r-pill);
+    border: var(--bw) solid transparent;
+    min-height: 44px; /* comfortable touch target */
+    padding: 0.85em 1.4em;
+    background: var(--_bg);
+    color: var(--_fg);
+    transition: transform var(--dur-1) var(--ease-out),
+      background-color var(--dur-1) var(--ease-out),
+      box-shadow var(--dur-1) var(--ease-out);
+  }
+  .btn--lg {
+    font-size: var(--fs-body);
+    padding: 1em 1.7em;
+  }
+  .btn--primary {
+    box-shadow: var(--shadow-2);
+  }
+  .btn--primary:hover {
+    transform: translateY(-2px);
+    background: color-mix(in oklab, var(--accent) 88%, var(--fg));
+  }
+  .btn--primary .btn__arrow {
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+  .btn--primary:hover .btn__arrow {
+    transform: translateX(3px);
+  }
+  .btn--secondary {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--rule-strong);
+  }
+  .btn--secondary:hover {
+    border-color: var(--fg);
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--fg);
+    padding-inline: 0.4em;
+    min-height: 44px;
+  }
+  .btn--ghost:hover {
+    color: var(--accent);
+  }
+</style>
