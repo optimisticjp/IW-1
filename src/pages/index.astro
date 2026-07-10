@@ -20,19 +20,14 @@ import { home } from '../data/home';
 import { pillars, foundation } from '../data/pillars';
 
 const objFor: Record<string, any> = {
-  demand: Campaign,
-  storefront: Storefront,
-  retention: RetentionLoop,
-  intelligence: AnalyticsPanel,
+  demand: Campaign, storefront: Storefront, retention: RetentionLoop, intelligence: AnalyticsPanel,
 };
-const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = {
-  demand: 'vermilion', storefront: 'green', retention: 'saffron', intelligence: 'cobalt',
-};
+const proofAccents = ['orange', 'green', 'violet', 'blue'] as const;
 ---
 
 <BaseLayout seo={home.meta} siteSchema>
   <!-- 1 · HERO / positioning ------------------------------------------- -->
-  <Section env="ink" width="wide" pad="loose" class="hero" labelledby="hero-h">
+  <Section env="cream" width="wide" pad="loose" class="hero" labelledby="hero-h">
     <div class="hero__grid">
       <div class="hero__copy">
         <Eyebrow>{home.hero.kicker}</Eyebrow>
@@ -46,24 +41,32 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
           <Button href={home.hero.secondaryCta.href} variant="secondary" size="lg">{home.hero.secondaryCta.label}</Button>
         </div>
         <ul class="hero__signals" aria-label="What we run">
-          {home.hero.signals.map((s) => <li><Tag>{s}</Tag></li>)}
+          {home.hero.signals.map((s) => <li><Tag accent="muted">{s}</Tag></li>)}
         </ul>
       </div>
+
       <div class="hero__stage" aria-hidden="true">
-        <div class="hero__nodes">
-          <span class="hero__node"><FlowMarker accent="vermilion" /><b>Demand</b></span>
-          <span class="hero__node"><FlowMarker accent="green" /><b>Storefront</b></span>
-          <span class="hero__node"><FlowMarker accent="saffron" /><b>Retention</b></span>
-          <span class="hero__node"><FlowMarker accent="cobalt" /><b>Intelligence</b></span>
+        <div class="hero__blobs">
+          <span class="blob blob--o"></span>
+          <span class="blob blob--b"></span>
+          <span class="blob blob--g"></span>
+          <span class="blob blob--v"></span>
         </div>
-        <div class="hero__flow"><Line variant="flow" /></div>
-        <p class="hero__stagecaption u-mono">One line of value, connected end to end.</p>
+        <div class="hero__scene">
+          <div class="hline"><Line variant="flow" width={6} /></div>
+          <div class="chip chip--a"><div class="chip__obj"><Campaign /></div><span class="chip__tag chip__tag--o">Demand</span></div>
+          <div class="chip chip--b"><div class="chip__obj"><Storefront /></div><span class="chip__tag chip__tag--bl">Storefront</span></div>
+          <div class="chip chip--c"><div class="chip__obj"><RetentionLoop /></div><span class="chip__tag chip__tag--g">Retention</span></div>
+          <div class="chip chip--d"><div class="chip__obj"><AnalyticsPanel /></div><span class="chip__tag chip__tag--v">Intelligence</span></div>
+          <span class="pop pop--orders">New order ✦</span>
+          <span class="pop pop--roas">Compounding ↗</span>
+        </div>
       </div>
     </div>
   </Section>
 
   <!-- 2 · Cost of disconnected growth ---------------------------------- -->
-  <Section env="paper" width="content" class="disc" labelledby="disc-h">
+  <Section env="peach" width="content" class="disc" labelledby="disc-h">
     <div class="disc__head u-reveal">
       <Eyebrow>{home.disconnected.kicker}</Eyebrow>
       <h2 id="disc-h" class="section-head">{home.disconnected.heading}</h2>
@@ -72,16 +75,15 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
     <ul class="disc__leaks">
       {home.disconnected.leaks.map((leak, i) => (
         <li class="leak u-reveal" style={`--reveal-delay:${i * 80}ms`}>
-          <span class="leak__where u-mono">{leak.where}</span>
+          <span class="leak__where">{leak.where}</span>
           <span class="leak__loss">{leak.loss}</span>
-          <span class="leak__gap" aria-hidden="true"></span>
         </li>
       ))}
     </ul>
   </Section>
 
   <!-- 3 · Signature: Leak to Compound ---------------------------------- -->
-  <Section env="ink" width="content" class="lc" labelledby="lc-h">
+  <Section env="cream" width="content" class="lc" labelledby="lc-h">
     <div class="lc__head u-reveal">
       <Eyebrow>Leak → Compound</Eyebrow>
       <h2 id="lc-h" class="section-head">The same effort, two very different outcomes.</h2>
@@ -95,7 +97,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
       </figure>
       <figure class="lc__panel lc__panel--comp u-reveal" style="--reveal-delay:120ms">
         <figcaption class="lc__label"><span class="lc__dot lc__dot--comp" aria-hidden="true"></span>Connected</figcaption>
-        <div class="lc__vis"><Line variant="flow" state="continuous" /></div>
+        <div class="lc__vis"><Line variant="flow" state="continuous" width={6} /></div>
         <p class="lc__note">Each system hands value to the next. The same spend does more, then more again.</p>
         <span class="lc__delta lc__delta--up">value compounds</span>
       </figure>
@@ -103,7 +105,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 4 · Connected ecosystem — Signature: The Connection -------------- -->
-  <Section env="paper" width="wide" id="connected" class="conn" labelledby="conn-h">
+  <Section env="sky" width="wide" id="connected" class="conn" labelledby="conn-h">
     <div class="conn__grid">
       <div class="conn__copy u-reveal">
         <Eyebrow>{home.connected.kicker}</Eyebrow>
@@ -117,22 +119,24 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
 
       <figure class="conn__loop u-reveal" style="--reveal-delay:120ms">
         <svg class="loop" viewBox="0 0 560 360" role="presentation" aria-hidden="true">
+          <defs>
+            <linearGradient id="loopgrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--c-orange)" />
+              <stop offset="40%" stop-color="var(--c-blue)" />
+              <stop offset="70%" stop-color="var(--c-green)" />
+              <stop offset="100%" stop-color="var(--c-violet)" />
+            </linearGradient>
+          </defs>
           <path class="loop__track" d="M120 60 H440 A60 60 0 0 1 440 300 H120 A60 60 0 0 1 120 60 Z"
-                fill="none" stroke="var(--rule)" stroke-width="2"/>
+                fill="none" stroke="var(--rule-strong)" stroke-width="2"/>
           <path class="loop__draw line__draw" d="M120 60 H440 A60 60 0 0 1 440 300 H120 A60 60 0 0 1 120 60 Z"
-                fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" pathLength="1000"/>
-          <g class="loop__arrows" fill="var(--accent)">
-            <path d="M300 54 l10 6 l-10 6 z"/>
-            <path d="M486 180 l-6 -10 l-6 10 z" transform="translate(14 0)"/>
-            <path d="M260 306 l-10 -6 l10 -6 z"/>
-            <path d="M74 180 l6 10 l6 -10 z"/>
-          </g>
+                fill="none" stroke="url(#loopgrad)" stroke-width="5" stroke-linecap="round"/>
         </svg>
         <ul class="loop__labels">
-          <li class="loop__label loop__label--tl"><FlowMarker accent="vermilion" /> Demand</li>
-          <li class="loop__label loop__label--tr"><FlowMarker accent="green" /> Storefront</li>
-          <li class="loop__label loop__label--br"><FlowMarker accent="saffron" /> Retention</li>
-          <li class="loop__label loop__label--bl"><FlowMarker accent="cobalt" /> Intelligence</li>
+          <li class="loop__label loop__label--tl"><FlowMarker accent="orange" /> Demand</li>
+          <li class="loop__label loop__label--tr"><FlowMarker accent="blue" /> Storefront</li>
+          <li class="loop__label loop__label--br"><FlowMarker accent="green" /> Retention</li>
+          <li class="loop__label loop__label--bl"><FlowMarker accent="violet" /> Intelligence</li>
         </ul>
       </figure>
     </div>
@@ -140,7 +144,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 5 · The four pillars in detail ----------------------------------- -->
-  <Section env="ink" width="wide" class="pil" labelledby="pil-h">
+  <Section env="cream" width="wide" class="pil" labelledby="pil-h">
     <div class="pil__head u-reveal">
       <Eyebrow>Four connected systems</Eyebrow>
       <h2 id="pil-h" class="section-head">Demand, Storefront, Retention, Intelligence.</h2>
@@ -149,16 +153,16 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
       {pillars.map((p, i) => {
         const Obj = objFor[p.key];
         return (
-          <li class="pcard u-reveal" style={`--reveal-delay:${i * 70}ms`}>
+          <li class:list={['pcard', `pcard--${p.accent}`, 'u-reveal']} style={`--reveal-delay:${i * 70}ms`}>
             <div class="pcard__top">
-              <span class="pcard__idx u-mono">{p.index}</span>
+              <span class="pcard__idx">{p.index}</span>
               <div class="pcard__obj"><Obj /></div>
             </div>
             <h3 class="pcard__name">{p.name}</h3>
             <p class="pcard__role">{p.role}</p>
-            <p class="pcard__line u-mono">{p.lineRole}</p>
+            <p class="pcard__line">{p.lineRole}</p>
             <ul class="pcard__svc">
-              {p.services.slice(0, 5).map((s) => <li><Tag accent={accentFor[p.key]}>{s}</Tag></li>)}
+              {p.services.slice(0, 5).map((s) => <li><Tag accent={p.accent}>{s}</Tag></li>)}
             </ul>
           </li>
         );
@@ -167,7 +171,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 6 · Five priority services --------------------------------------- -->
-  <Section env="paper" width="wide" class="svc" labelledby="svc-h">
+  <Section env="lemon" width="wide" class="svc" labelledby="svc-h">
     <div class="svc__head u-reveal">
       <Eyebrow>{home.services.kicker}</Eyebrow>
       <h2 id="svc-h" class="section-head">{home.services.heading}</h2>
@@ -175,13 +179,14 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
     </div>
     <ul class="svc__grid">
       {home.services.items.map((s, i) => (
-        <li class="scard u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+        <li class:list={['scard', `scard--${['orange','blue','green','violet','pink'][i]}`, 'u-reveal']} style={`--reveal-delay:${i * 60}ms`}>
           <a class="scard__link" href={s.href}>
-            <span class="scard__pillar u-mono">{s.pillar}</span>
+            <span class="scard__dot" aria-hidden="true"></span>
+            <span class="scard__pillar">{s.pillar}</span>
             <h3 class="scard__name">{s.name}</h3>
             <p class="scard__promise">{s.promise}</p>
-            <span class="scard__connect"><span class="scard__connect-dot" aria-hidden="true"></span>{s.connects}</span>
-            <span class="scard__cta" aria-hidden="true">Explore →</span>
+            <span class="scard__connect">{s.connects}</span>
+            <span class="scard__cta" aria-hidden="true">Explore <span>→</span></span>
           </a>
         </li>
       ))}
@@ -189,7 +194,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 7 · Contextual proof --------------------------------------------- -->
-  <Section env="ink" width="wide" class="prf" labelledby="prf-h">
+  <Section env="mint" width="wide" class="prf" labelledby="prf-h">
     <div class="prf__head u-reveal">
       <Eyebrow>{home.proof.kicker}</Eyebrow>
       <h2 id="prf-h" class="section-head">{home.proof.heading}</h2>
@@ -199,7 +204,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
       <ul class="prf__metrics">
         {home.proof.metrics.map((m, i) => (
           <li class="u-reveal" style={`--reveal-delay:${i * 70}ms`}>
-            <ProofModule value={m.value} label={m.label} system={m.system} assetStatus={m.assetStatus} />
+            <ProofModule value={m.value} label={m.label} system={m.system} assetStatus={m.assetStatus} accent={proofAccents[i % proofAccents.length]} />
           </li>
         ))}
       </ul>
@@ -219,15 +224,15 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 8 · How Infinite Weblinks works ---------------------------------- -->
-  <Section env="paper" width="content" class="how" labelledby="how-h">
+  <Section env="cream" width="content" class="how" labelledby="how-h">
     <div class="how__head u-reveal">
       <Eyebrow>{home.how.kicker}</Eyebrow>
       <h2 id="how-h" class="section-head">{home.how.heading}</h2>
     </div>
     <ol class="how__steps">
       {home.how.steps.map((step, i) => (
-        <li class="hstep u-reveal" style={`--reveal-delay:${i * 90}ms`}>
-          <span class="hstep__n u-mono">{step.n}</span>
+        <li class:list={['hstep', `hstep--${['orange','blue','green'][i]}`, 'u-reveal']} style={`--reveal-delay:${i * 90}ms`}>
+          <span class="hstep__n">{step.n}</span>
           <div>
             <h3 class="hstep__title">{step.title}</h3>
             <p class="hstep__text">{step.text}</p>
@@ -238,7 +243,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   </Section>
 
   <!-- 9 · Secondary audience paths ------------------------------------- -->
-  <Section env="paper" width="content" pad="tight" class="sec" labelledby="sec-h">
+  <Section env="lavender" width="content" pad="tight" class="sec" labelledby="sec-h">
     <div class="sec__head u-reveal">
       <Eyebrow>{home.secondary.kicker}</Eyebrow>
       <h2 id="sec-h" class="section-head section-head--sm">{home.secondary.heading}</h2>
@@ -257,7 +262,7 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
   <!-- 10 · Final proposal invitation ----------------------------------- -->
   <CTASection
     id="proposal"
-    env="ink"
+    env="flare"
     kicker={home.finalCta.kicker}
     heading={home.finalCta.heading}
     body={home.finalCta.body}
@@ -267,162 +272,229 @@ const accentFor: Record<string, 'vermilion' | 'green' | 'saffron' | 'cobalt'> = 
 </BaseLayout>
 
 <style>
-  /* Shared section typography ---------------------------------------- */
-  .section-head { font-size: var(--fs-h2); max-width: 20ch; margin-top: 0.6rem; }
+  /* Shared typography ------------------------------------------------- */
+  .section-head { font-size: var(--fs-h2); max-width: 18ch; margin-top: 0.7rem; }
   .section-head--sm { font-size: var(--fs-h3); }
-  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; margin-top: 1rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 48ch; margin-top: 1.1rem; }
 
   /* 1 · Hero ---------------------------------------------------------- */
-  .hero__grid { display: grid; gap: clamp(2.5rem, 1rem + 6vw, 5rem); align-items: center; }
-  .hero__head {
-    font-size: var(--fs-h1);
-    margin: 1.2rem 0 0;
-    display: grid;
-  }
+  .hero__grid { display: grid; gap: clamp(2.5rem, 1rem + 6vw, 4.5rem); align-items: center; }
+  .hero__copy { min-width: 0; }
+  .hero__head { font-size: var(--fs-h1); margin: 1.2rem 0 0; display: grid; }
   .hero__line { display: block; }
   .hero__head em { font-style: normal; }
-  .hero__head .is-leak { color: var(--accent); }
-  .hero__head .is-compound { color: var(--accent-2); }
+  .hero__head .is-leak { color: var(--c-orange-deep); }
+  .hero__head .is-compound { color: var(--c-green-deep); }
   .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.5rem; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
   .hero__signals { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 2rem 0 0; }
 
-  .hero__copy { min-width: 0; }
+  /* Hero ecosystem stage */
   .hero__stage {
     position: relative;
     min-width: 0;
-    padding: clamp(1.5rem, 1rem + 3vw, 2.5rem);
+    border-radius: var(--r-4);
+    padding: clamp(1.2rem, 0.5rem + 3vw, 2.4rem);
     background: var(--bg-raised);
-    border: var(--bw) solid var(--rule);
-    border-radius: var(--r-3);
+    box-shadow: var(--shadow-pop);
+    overflow: clip;
   }
-  .hero__nodes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 0.75rem; }
-  .hero__node { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--fs-small); min-width: 0; }
-  .hero__node b { font-weight: 600; }
-  .hero__flow { margin: 1.5rem 0 0.75rem; }
-  .hero__stagecaption { color: var(--fg-faint); }
+  .hero__blobs { position: absolute; inset: 0; z-index: 0; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(34px); opacity: 0.5; }
+  .blob--o { width: 46%; height: 46%; background: var(--c-orange); top: -8%; left: -6%; }
+  .blob--b { width: 42%; height: 42%; background: var(--c-blue); bottom: -6%; right: -4%; }
+  .blob--g { width: 34%; height: 34%; background: var(--c-green); bottom: 8%; left: -8%; opacity: 0.4; }
+  .blob--v { width: 30%; height: 30%; background: var(--c-violet); top: 4%; right: 6%; opacity: 0.4; }
+
+  .hero__scene {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.7rem, 2vw, 1.3rem);
+  }
+  .hline { position: absolute; inset-inline: 6%; top: 50%; translate: 0 -50%; z-index: 0; opacity: 0.9; }
+  .chip {
+    position: relative; z-index: 1;
+    background: var(--c-ivory);
+    border-radius: var(--r-3);
+    padding: clamp(0.8rem, 0.4rem + 1.5vw, 1.3rem);
+    box-shadow: var(--shadow-2);
+    display: grid; gap: 0.5rem; justify-items: start;
+  }
+  .chip__obj { width: clamp(2.6rem, 5vw, 3.6rem); }
+  .chip--a { rotate: -3deg; }
+  .chip--b { rotate: 2.5deg; margin-top: clamp(0.6rem, 2vw, 1.4rem); }
+  .chip--c { rotate: 2deg; margin-top: clamp(-0.6rem, -2vw, -0.4rem); }
+  .chip--d { rotate: -2.5deg; }
+  .chip__tag {
+    font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption);
+    padding: 0.2em 0.6em; border-radius: var(--r-pill);
+  }
+  .chip__tag--o { background: color-mix(in oklab, var(--c-orange) 18%, var(--c-ivory)); color: var(--c-orange-deep); }
+  .chip__tag--bl { background: color-mix(in oklab, var(--c-blue) 18%, var(--c-ivory)); color: var(--c-blue-deep); }
+  .chip__tag--g { background: color-mix(in oklab, var(--c-green) 18%, var(--c-ivory)); color: var(--c-green-deep); }
+  .chip__tag--v { background: color-mix(in oklab, var(--c-violet) 18%, var(--c-ivory)); color: var(--c-violet-deep); }
+  .pop {
+    position: absolute; z-index: 2;
+    font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption);
+    padding: 0.4em 0.75em; border-radius: var(--r-pill);
+    background: var(--c-ink); color: var(--c-cream);
+    box-shadow: var(--shadow-2); white-space: nowrap;
+  }
+  .pop--orders { top: 42%; left: 44%; translate: -50% -50%; background: var(--c-green); color: #06301f; }
+  .pop--roas { bottom: 6%; left: 50%; translate: -50% 0; background: var(--c-ink); color: var(--c-cream); }
 
   @media (min-width: 940px) {
-    .hero__grid { grid-template-columns: 1.1fr 0.9fr; }
+    .hero__grid { grid-template-columns: 1.05fr 0.95fr; }
+    .hero__stage { aspect-ratio: 1 / 1; display: grid; align-content: center; }
   }
 
   /* 2 · Disconnected -------------------------------------------------- */
-  .disc__leaks { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 0; }
+  .disc__leaks { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 0.9rem; }
   .leak {
-    display: grid; grid-template-columns: 1fr; gap: 0.25rem;
-    padding: 1.25rem 0;
-    border-top: var(--bw) solid var(--rule);
-    position: relative;
+    display: grid; gap: 0.4rem;
+    padding: 1.25rem 1.4rem;
+    background: var(--bg-raised);
+    border-radius: var(--r-2);
+    border-left: 5px solid var(--accent);
+    box-shadow: var(--shadow-1);
   }
-  .leak:last-child { border-bottom: var(--bw) solid var(--rule); }
-  .leak__where { color: var(--accent); }
-  .leak__loss { font-size: var(--fs-h4); font-family: var(--font-display); line-height: 1.3; text-wrap: balance; }
-  .leak__gap {
-    position: absolute; right: 0; top: 50%; width: 42px; height: 2px;
-    background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px);
-    opacity: 0.6; display: none;
-  }
+  .leak__where { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--c-orange-deep); font-weight: 600; }
+  .leak__loss { font-size: var(--fs-h4); font-family: var(--font-display); font-weight: 700; line-height: 1.25; letter-spacing: var(--tracking-tight); text-wrap: balance; }
   @media (min-width: 720px) {
-    .leak { grid-template-columns: 12rem 1fr; gap: 1.5rem; align-items: baseline; }
-    .leak__gap { display: block; }
+    .disc__leaks { grid-template-columns: 1fr 1fr; }
   }
 
   /* 3 · Leak to Compound --------------------------------------------- */
   .lc__grid { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
   .lc__panel {
-    padding: clamp(1.4rem, 1rem + 2vw, 2.2rem);
-    background: var(--bg-raised);
-    border: var(--bw) solid var(--rule);
+    padding: clamp(1.5rem, 1rem + 2vw, 2.4rem);
     border-radius: var(--r-3);
     display: grid; gap: 1rem;
+    box-shadow: var(--shadow-1);
   }
-  .lc__panel--leak { border-left: var(--bw-2) solid var(--c-vermilion); }
-  .lc__panel--comp { border-left: var(--bw-2) solid var(--accent-2); }
-  .lc__label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .lc__panel--leak { background: color-mix(in oklab, var(--fg) 5%, var(--bg-raised)); }
+  .lc__panel--leak .lc__vis { filter: grayscale(0.7); opacity: 0.85; }
+  .lc__panel--comp { background: var(--bg-raised); border: var(--bw-2) solid color-mix(in oklab, var(--c-green) 35%, transparent); }
+  .lc__label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .lc__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
-  .lc__dot--leak { background: var(--c-vermilion); }
-  .lc__dot--comp { background: var(--accent-2); }
-  .lc__vis { padding: 0.5rem 0; }
+  .lc__dot--leak { background: var(--fg-faint); }
+  .lc__dot--comp { background: var(--c-green); }
   .lc__note { color: var(--fg-muted); }
-  .lc__delta { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.03em; padding: 0.25rem 0.6rem; border-radius: var(--r-pill); justify-self: start; }
-  .lc__delta--down { color: var(--c-vermilion-soft); border: var(--bw) solid color-mix(in oklab, var(--c-vermilion) 45%, transparent); }
-  .lc__delta--up { color: var(--accent-2); border: var(--bw) solid color-mix(in oklab, var(--accent-2) 45%, transparent); }
+  .lc__delta { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); padding: 0.28rem 0.7rem; border-radius: var(--r-pill); justify-self: start; }
+  .lc__delta--down { color: var(--fg-muted); background: color-mix(in oklab, var(--fg) 8%, transparent); }
+  .lc__delta--up { color: #06301f; background: var(--c-green); }
   @media (min-width: 720px) { .lc__grid { grid-template-columns: 1fr 1fr; } }
 
   /* 4 · Connection ---------------------------------------------------- */
   .conn__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
-  .conn__foundation { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: var(--bw) solid var(--rule); color: var(--fg-muted); max-width: 48ch; }
+  .conn__foundation { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; padding: 1rem 1.2rem; background: var(--bg-raised); border-radius: var(--r-3); color: var(--fg-muted); max-width: 48ch; box-shadow: var(--shadow-1); }
   .conn__foundation strong { color: var(--fg); }
   .conn__foundation-obj { width: 3rem; flex: none; }
   .conn__loop { position: relative; margin: 0; }
-  .loop { width: 100%; height: auto; overflow: visible; }
+  .loop { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 10px 20px color-mix(in oklab, var(--c-blue) 22%, transparent)); }
   .loop__labels { list-style: none; margin: 0; padding: 0; }
   .loop__label {
     position: absolute; display: inline-flex; align-items: center; gap: 0.4rem;
-    background: var(--bg); padding: 0.3rem 0.6rem; border: var(--bw) solid var(--rule);
-    border-radius: var(--r-pill); font-weight: 600; font-size: var(--fs-small); white-space: nowrap;
+    background: var(--c-ivory); padding: 0.35rem 0.7rem;
+    border-radius: var(--r-pill); font-weight: 700; font-size: var(--fs-small); white-space: nowrap;
+    box-shadow: var(--shadow-1);
   }
-  .loop__label--tl { top: 6%; left: 4%; }
-  .loop__label--tr { top: 6%; right: 4%; }
-  .loop__label--br { bottom: 6%; right: 4%; }
-  .loop__label--bl { bottom: 6%; left: 4%; }
-  .conn__closure { margin-top: 2rem; font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-muted); text-align: center; text-wrap: balance; }
-  .conn__back { color: var(--accent); }
+  .loop__label--tl { top: 4%; left: 2%; }
+  .loop__label--tr { top: 4%; right: 2%; }
+  .loop__label--br { bottom: 4%; right: 2%; }
+  .loop__label--bl { bottom: 4%; left: 2%; }
+  .conn__closure { margin-top: 2rem; font-family: var(--font-body); font-weight: 600; font-size: var(--fs-small); color: var(--fg-muted); text-align: center; text-wrap: balance; }
+  .conn__back { color: var(--c-orange-deep); }
   @media (min-width: 900px) { .conn__grid { grid-template-columns: 1fr 1fr; } }
 
   /* 5 · Pillars ------------------------------------------------------- */
-  .pil__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1px; background: var(--rule); border: var(--bw) solid var(--rule); border-radius: var(--r-3); overflow: hidden; }
-  .pcard { background: var(--bg); padding: clamp(1.4rem, 1rem + 1.5vw, 2rem); display: grid; gap: 0.7rem; align-content: start; }
+  .pil__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
+  .pcard {
+    border-radius: var(--r-3);
+    padding: clamp(1.4rem, 1rem + 1.5vw, 2rem);
+    display: grid; gap: 0.7rem; align-content: start;
+    box-shadow: var(--shadow-1);
+  }
+  .pcard--orange { background: var(--tint-peach); }
+  .pcard--blue { background: var(--tint-sky); }
+  .pcard--green { background: var(--tint-mint); }
+  .pcard--violet { background: var(--tint-lavender); }
   .pcard__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .pcard__idx { color: var(--fg-faint); font-size: var(--fs-body); }
-  .pcard__obj { width: 3.4rem; }
+  .pcard__idx { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); color: var(--fg-faint); }
+  .pcard__obj { width: 3.6rem; }
   .pcard__name { font-size: var(--fs-h3); }
-  .pcard__role { color: var(--fg-muted); }
-  .pcard__line { color: var(--fg-faint); }
+  .pcard__role { color: var(--fg); font-weight: 500; }
+  .pcard__line { color: var(--fg-muted); font-size: var(--fs-small); }
   .pcard__svc { list-style: none; padding: 0; margin: 0.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
   @media (min-width: 620px) { .pil__grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1040px) { .pil__grid { grid-template-columns: repeat(4, 1fr); } }
 
   /* 6 · Services ------------------------------------------------------ */
   .svc__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
-  .scard { display: grid; }
+  .scard { display: grid; --sc: var(--c-orange); }
+  .scard--orange { --sc: var(--c-orange); }
+  .scard--blue { --sc: var(--c-blue); }
+  .scard--green { --sc: var(--c-green); }
+  .scard--violet { --sc: var(--c-violet); }
+  .scard--pink { --sc: var(--c-pink); }
   .scard__link {
-    display: grid; gap: 0.6rem; align-content: start;
-    padding: clamp(1.4rem, 1rem + 1.5vw, 2rem);
-    background: var(--bg-raised); border: var(--bw) solid var(--rule);
-    border-radius: var(--r-3); text-decoration: none; color: var(--fg);
-    transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1), box-shadow var(--dur-1);
+    position: relative;
+    display: grid; gap: 0.55rem; align-content: start;
+    padding: clamp(1.5rem, 1rem + 1.5vw, 2.1rem);
+    padding-top: clamp(1.8rem, 1.2rem + 1.5vw, 2.4rem);
+    background: var(--c-ivory); border-radius: var(--r-3);
+    text-decoration: none; color: var(--fg); overflow: clip;
+    box-shadow: var(--shadow-1);
+    transition: transform var(--dur-1) var(--ease-spring), box-shadow var(--dur-2);
   }
-  .scard__link:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow-2); }
-  .scard__pillar { color: var(--accent); }
+  .scard__link::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--sc); }
+  .scard__link:hover { transform: translateY(-4px); box-shadow: var(--shadow-pop); }
+  .scard__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--sc); box-shadow: 0 0 0 0.3rem color-mix(in oklab, var(--sc) 20%, transparent); }
+  .scard__pillar { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: color-mix(in oklab, var(--sc) 72%, var(--fg)); }
   .scard__name { font-size: var(--fs-h4); }
   .scard__promise { color: var(--fg-muted); font-size: var(--fs-small); }
-  .scard__connect { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--fs-caption); color: var(--fg-faint); margin-top: 0.2rem; }
-  .scard__connect-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent-2); flex: none; }
-  .scard__cta { font-weight: 600; color: var(--link); font-size: var(--fs-small); margin-top: 0.3rem; }
+  .scard__connect { font-size: var(--fs-caption); color: var(--fg-faint); }
+  .scard__cta { font-weight: 700; color: var(--link); font-size: var(--fs-small); margin-top: 0.3rem; display: inline-flex; gap: 0.35rem; }
   @media (min-width: 620px) { .svc__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1000px) { .svc__grid { grid-template-columns: repeat(3, 1fr); } .scard:first-child, .scard:nth-child(2) { grid-column: span 1; } }
+  @media (min-width: 1000px) {
+    .svc__grid { grid-template-columns: repeat(6, 1fr); }
+    .scard { grid-column: span 2; }
+    .scard:nth-child(4) { grid-column: 2 / 4; }
+    .scard:nth-child(5) { grid-column: 4 / 6; }
+  }
 
   /* 7 · Proof --------------------------------------------------------- */
   .prf__body { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
   .prf__metrics { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .prf__logos { margin-top: 2.5rem; }
   @media (min-width: 900px) {
-    .prf__body { grid-template-columns: 1.4fr 1fr; align-items: stretch; }
-    .prf__metrics { grid-template-columns: 1fr 1fr; }
+    .prf__body { grid-template-columns: 1.35fr 1fr; align-items: stretch; }
   }
 
   /* 8 · How ----------------------------------------------------------- */
-  .how__steps { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; counter-reset: step; }
-  .hstep { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; padding: 1.5rem 0; border-top: var(--bw) solid var(--rule); align-items: start; }
-  .hstep:last-child { border-bottom: var(--bw) solid var(--rule); }
-  .hstep__n { font-size: var(--fs-h3); color: var(--accent); font-family: var(--font-mono); }
+  .how__steps { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
+  .hstep {
+    display: grid; grid-template-columns: auto 1fr; gap: 1.25rem;
+    padding: 1.5rem 1.6rem; background: var(--bg-raised); border-radius: var(--r-3);
+    align-items: start; box-shadow: var(--shadow-1); --hc: var(--c-orange);
+  }
+  .hstep--orange { --hc: var(--c-orange); }
+  .hstep--blue { --hc: var(--c-blue); }
+  .hstep--green { --hc: var(--c-green); }
+  .hstep__n {
+    font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4);
+    width: 2.8rem; height: 2.8rem; display: grid; place-items: center; flex: none;
+    background: color-mix(in oklab, var(--hc) 18%, var(--bg-raised)); color: color-mix(in oklab, var(--hc) 78%, var(--fg));
+    border-radius: var(--r-pill);
+  }
   .hstep__title { font-size: var(--fs-h4); }
   .hstep__text { color: var(--fg-muted); margin-top: 0.35rem; max-width: 52ch; }
 
   /* 9 · Secondary ----------------------------------------------------- */
   .sec__grid { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1rem; }
-  .sec__card { padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); border: var(--bw) solid var(--rule); border-radius: var(--r-3); background: var(--bg-inset); display: grid; gap: 0.6rem; align-content: start; }
+  .sec__card { padding: clamp(1.5rem, 1rem + 1.5vw, 2rem); border-radius: var(--r-3); background: var(--bg-raised); display: grid; gap: 0.6rem; align-content: start; box-shadow: var(--shadow-1); }
   .sec__name { font-size: var(--fs-h4); }
   .sec__text { color: var(--fg-muted); font-size: var(--fs-small); }
   @media (min-width: 680px) { .sec__grid { grid-template-columns: 1fr 1fr; } }

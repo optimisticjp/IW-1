@@ -15,19 +15,21 @@ const { class: className = '', as: Tag = 'p' } = Astro.props;
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.6em;
-    font-family: var(--font-mono);
+    gap: 0.55em;
+    font-family: var(--font-body);
+    font-weight: 700;
     font-size: var(--fs-caption);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--fg-muted);
+    color: var(--link);
     margin: 0;
   }
   .eyebrow__tick {
-    width: 1.6em;
-    height: var(--bw-2);
+    width: 0.55em;
+    height: 0.55em;
     background: var(--accent);
     border-radius: var(--r-pill);
     flex: none;
+    box-shadow: 0 0 0 0.28em color-mix(in oklab, var(--accent) 22%, transparent);
   }
 </style>

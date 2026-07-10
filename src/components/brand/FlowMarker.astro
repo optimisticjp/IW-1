@@ -1,18 +1,20 @@
 ---
 // Flow Marker — a node on the Line where value moves or is measured.
-interface Props { accent?: 'vermilion' | 'green' | 'saffron' | 'cobalt'; class?: string; }
-const { accent = 'vermilion', class: className = '' } = Astro.props;
+interface Props { accent?: 'orange' | 'blue' | 'green' | 'yellow' | 'pink' | 'violet'; class?: string; }
+const { accent = 'orange', class: className = '' } = Astro.props;
 const fill: Record<string, string> = {
-  vermilion: 'var(--accent)',
-  green: 'var(--accent-2)',
-  saffron: 'var(--saffron, #f4a72c)',
-  cobalt: 'var(--spark)',
+  orange: 'var(--c-orange)',
+  blue: 'var(--c-blue)',
+  green: 'var(--c-green)',
+  yellow: 'var(--c-yellow)',
+  pink: 'var(--c-pink)',
+  violet: 'var(--c-violet)',
 };
 ---
 <svg class:list={['marker', className]} viewBox="0 0 32 32" aria-hidden="true" role="presentation">
-  <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>
-  <circle cx="16" cy="16" r="6" fill={fill[accent]} stroke="var(--bg)" stroke-width="2"/>
+  <circle cx="16" cy="16" r="15" fill={fill[accent]} opacity="0.18"/>
+  <circle cx="16" cy="16" r="7" fill={fill[accent]} stroke="var(--bg-raised)" stroke-width="2.5"/>
 </svg>
 <style>
-  .marker { width: 2rem; height: 2rem; flex: none; color: var(--fg); }
+  .marker { width: 2rem; height: 2rem; flex: none; }
 </style>

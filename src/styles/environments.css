@@ -1,48 +1,148 @@
 /* =========================================================================
-   Section environments — warm paper (light) and warm ink (dark) are
-   compositional environments, not a user theme toggle. Any element can open
-   a `data-env` scope; semantic tokens remap beneath it. Both are first-class
-   and contrast-checked.
+   Section environments — LIGHT-FIRST. A family of warm/colored-light bands
+   plus one bright "flare" band and a single warm-dark footer. Text stays
+   deep ink on every light band (AA), while each band carries its own accent
+   identity so the page reads as a journey through one colorful ecosystem.
    ========================================================================= */
 
-[data-env='paper'] {
-  --bg: var(--c-paper);
-  --bg-raised: var(--c-cream);
-  --bg-inset: var(--c-paper-2);
-  --fg: var(--c-ink);
-  --fg-muted: color-mix(in oklab, var(--c-ink) 64%, var(--c-paper));
-  --fg-faint: color-mix(in oklab, var(--c-ink) 44%, var(--c-paper));
-  --rule: color-mix(in oklab, var(--c-ink) 15%, var(--c-paper));
-  --rule-strong: color-mix(in oklab, var(--c-ink) 30%, var(--c-paper));
-  --link: var(--c-vermilion-deep);
-  --accent: var(--c-vermilion);
-  --accent-ink: #ffffff;
-  --accent-2: var(--c-green);
-  --spark: var(--c-cobalt);
-  --focus: var(--c-cobalt);
-  color-scheme: light;
-}
-
-[data-env='ink'] {
-  --bg: var(--c-ink);
-  --bg-raised: var(--c-ink-2);
-  --bg-inset: var(--c-ink-3);
-  --fg: var(--c-paper);
-  --fg-muted: color-mix(in oklab, var(--c-paper) 68%, var(--c-ink));
-  --fg-faint: color-mix(in oklab, var(--c-paper) 46%, var(--c-ink));
-  --rule: color-mix(in oklab, var(--c-paper) 20%, var(--c-ink));
-  --rule-strong: color-mix(in oklab, var(--c-paper) 40%, var(--c-ink));
-  --link: var(--c-saffron);
-  --accent: var(--c-vermilion-soft);
-  --accent-ink: #17130c;
-  --accent-2: var(--c-green-bright);
-  --spark: var(--c-saffron);
-  --focus: var(--c-saffron);
-  color-scheme: dark;
-}
-
-/* An environment paints its own background + text when used as a surface. */
 [data-env] {
   background-color: var(--bg);
   color: var(--fg);
+}
+
+/* --- Warm ivory canvas (default) ------------------------------------- */
+[data-env='cream'],
+[data-env='paper'] {
+  --bg: var(--c-cream);
+  --bg-raised: var(--c-ivory);
+  --bg-inset: var(--c-cream-2);
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--c-cream));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--c-cream));
+  --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-cream));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 24%, var(--c-cream));
+  --link: var(--c-orange-deep);
+  --accent: var(--c-orange);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-blue);
+  --focus: var(--c-blue-deep);
+  color-scheme: light;
+}
+
+/* --- Colored-light bands (bg = soft tint, fg = ink) ------------------ */
+[data-env='peach'] {
+  --bg: var(--tint-peach);
+  --bg-raised: #fff8f1;
+  --bg-inset: #fbe2cf;
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--tint-peach));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--tint-peach));
+  --rule: color-mix(in oklab, var(--c-orange) 22%, var(--tint-peach));
+  --rule-strong: color-mix(in oklab, var(--c-orange) 40%, var(--tint-peach));
+  --link: var(--c-orange-deep);
+  --accent: var(--c-orange);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-pink);
+  --focus: var(--c-blue-deep);
+  color-scheme: light;
+}
+[data-env='sky'] {
+  --bg: var(--tint-sky);
+  --bg-raised: #f4f9fe;
+  --bg-inset: #d5e7f8;
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--tint-sky));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--tint-sky));
+  --rule: color-mix(in oklab, var(--c-blue) 24%, var(--tint-sky));
+  --rule-strong: color-mix(in oklab, var(--c-blue) 42%, var(--tint-sky));
+  --link: var(--c-blue-deep);
+  --accent: var(--c-blue);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-violet);
+  --focus: var(--c-violet-deep);
+  color-scheme: light;
+}
+[data-env='mint'] {
+  --bg: var(--tint-mint);
+  --bg-raised: #f2fbf6;
+  --bg-inset: #d3efe0;
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--tint-mint));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--tint-mint));
+  --rule: color-mix(in oklab, var(--c-green) 22%, var(--tint-mint));
+  --rule-strong: color-mix(in oklab, var(--c-green) 40%, var(--tint-mint));
+  --link: var(--c-green-deep);
+  --accent: var(--c-green);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-orange);
+  --focus: var(--c-blue-deep);
+  color-scheme: light;
+}
+[data-env='lemon'] {
+  --bg: var(--tint-lemon);
+  --bg-raised: #fdf7e6;
+  --bg-inset: #f6e6bd;
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--tint-lemon));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--tint-lemon));
+  --rule: color-mix(in oklab, var(--c-yellow-deep) 26%, var(--tint-lemon));
+  --rule-strong: color-mix(in oklab, var(--c-yellow-deep) 44%, var(--tint-lemon));
+  --link: var(--c-orange-deep);
+  --accent: var(--c-orange);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-green);
+  --focus: var(--c-blue-deep);
+  color-scheme: light;
+}
+[data-env='lavender'] {
+  --bg: var(--tint-lavender);
+  --bg-raised: #f7f4fd;
+  --bg-inset: #e2d8f7;
+  --fg: var(--c-ink);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--tint-lavender));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--tint-lavender));
+  --rule: color-mix(in oklab, var(--c-violet) 24%, var(--tint-lavender));
+  --rule-strong: color-mix(in oklab, var(--c-violet) 42%, var(--tint-lavender));
+  --link: var(--c-violet-deep);
+  --accent: var(--c-violet);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-pink);
+  --focus: var(--c-violet-deep);
+  color-scheme: light;
+}
+
+/* --- Bright immersive band (final CTA) — saturated orange, ink text --- */
+[data-env='flare'] {
+  --bg: var(--c-orange);
+  --bg-raised: #ff8149;
+  --bg-inset: #f2571b;
+  --fg: #2a1405;
+  --fg-muted: color-mix(in oklab, #2a1405 78%, var(--c-orange));
+  --fg-faint: color-mix(in oklab, #2a1405 60%, var(--c-orange));
+  --rule: color-mix(in oklab, #2a1405 22%, var(--c-orange));
+  --rule-strong: color-mix(in oklab, #2a1405 40%, var(--c-orange));
+  --link: #2a1405;
+  --accent: #2a1405;
+  --accent-ink: var(--c-orange);
+  --accent-2: #ffffff;
+  --focus: #2a1405;
+  color-scheme: light;
+}
+
+/* --- Single warm-dark footer ----------------------------------------- */
+[data-env='ink'] {
+  --bg: var(--c-ink-2);
+  --bg-raised: #34291a;
+  --bg-inset: #3f3220;
+  --fg: var(--c-cream);
+  --fg-muted: color-mix(in oklab, var(--c-cream) 70%, var(--c-ink-2));
+  --fg-faint: color-mix(in oklab, var(--c-cream) 48%, var(--c-ink-2));
+  --rule: color-mix(in oklab, var(--c-cream) 18%, var(--c-ink-2));
+  --rule-strong: color-mix(in oklab, var(--c-cream) 34%, var(--c-ink-2));
+  --link: var(--c-yellow);
+  --accent: var(--c-orange);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-mint);
+  --focus: var(--c-yellow);
+  color-scheme: dark;
 }

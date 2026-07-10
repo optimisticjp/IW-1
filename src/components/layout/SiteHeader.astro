@@ -6,7 +6,7 @@ import Button from '../ui/Button.astro';
 const pathname = Astro.url.pathname;
 ---
 
-<header class="hdr" data-env="paper">
+<header class="hdr" data-env="cream">
   <div class="hdr__bar">
     <a class="brand" href="/" aria-label="Infinite Weblinks — home">
       <span class="brand__mark" aria-hidden="true">
@@ -50,7 +50,7 @@ const pathname = Astro.url.pathname;
   </div>
 
   <!-- Mobile navigation panel -->
-  <div class="mnav" id="mobile-nav" data-env="ink" hidden>
+  <div class="mnav" id="mobile-nav" data-env="cream" hidden>
     <nav class="mnav__inner" aria-label="Primary (mobile)">
       <ul class="mnav__list">
         {primaryNav.map((item) => (
@@ -78,8 +78,8 @@ const pathname = Astro.url.pathname;
     position: sticky;
     top: 0;
     z-index: var(--z-header);
-    background: color-mix(in oklab, var(--c-paper) 88%, transparent);
-    backdrop-filter: saturate(1.2) blur(10px);
+    background: color-mix(in oklab, var(--c-cream) 82%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
     border-bottom: var(--bw) solid var(--rule);
   }
   .hdr__bar {
@@ -181,10 +181,10 @@ const pathname = Astro.url.pathname;
   .mnav__link[aria-current='page'] { color: var(--accent); }
   .mnav__cta {
     display: inline-flex; align-items: center; gap: 0.5em;
-    background: var(--accent); color: var(--accent-ink);
-    padding: 0.9rem 1.4rem; border-radius: var(--r-pill);
-    font-weight: 600; text-decoration: none; justify-self: start;
-    min-height: 44px;
+    background: var(--accent); color: #2a1405;
+    padding: 0.9rem 1.5rem; border-radius: var(--r-pill);
+    font-weight: 700; text-decoration: none; justify-self: start;
+    min-height: 46px;
   }
   .mnav__quiet { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.2rem; }
   .mnav__quiet a { color: var(--fg-muted); font-size: var(--fs-small); }

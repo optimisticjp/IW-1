@@ -48,5 +48,19 @@ npm run test
 node scripts/visual-qa.mjs   # overflow + screenshots at 5 widths (needs `npm run preview` running)
 ```
 
+## Phase 1 visual-direction correction (light-first, colorful)
+
+Applied a focused art-direction overhaul (no architecture/spec/narrative change):
+
+- **Palette** rebuilt light-first: warm ivory canvas + a controlled bright family (signature **orange**, sky blue, grass/mint green, warm yellow, playful pink, violet) with deep warm ink for type. Red/vermilion and black no longer dominate.
+- **Environments** are now a family of warm/colored-light bands (`cream`/`peach`/`sky`/`mint`/`lemon`/`lavender`), one bright orange `flare` CTA band, and a single warm-dark `ink` footer — ~90% light.
+- **Hero** replaced the small dark graph with a large, bright ecosystem stage: soft colored blobs, rounded object chips (Demand/Storefront/Retention/Intelligence), the gradient **Line**, and playful floating pills.
+- **Brand objects** recolored bright + dimensional with soft shadows and rounded forms.
+- **The Line** is now a living multi-color gradient (orange→pink→violet→blue→green); signatures (Line, Connection loop, Leak-to-Compound) restyled for light — no large black backgrounds.
+- **Cards/sections**: colored pillar cards, bright service tiles with colored accents, colored proof tiles, soft shadows, generous radii, varied pacing.
+- Typography shifted to a **bold friendly sans** display.
+
+Verified: build ✓, 14/14 tests ✓, `astro check` 0 errors ✓, no horizontal overflow at 360/390/768/1024/1440 ✓, reveals reach full opacity + reduced-motion parity ✓. Screenshots: `scripts/rev-{360,390,768,1024,1440}.png` (regenerate with `node scripts/review.mjs` while `npm run preview` runs).
+
 ### Next phase
-**Phase 2 — Primary Pages** (T036–T047): content-collection schemas, the seven service/pillar pages via a reusable `ServiceLayout`, What We Do, cross-linking, and per-page metadata.
+**Phase 2 — Primary Pages** (T036–T047): content-collection schemas, the seven service/pillar pages via a reusable `ServiceLayout`, What We Do, cross-linking, and per-page metadata. Phase 2 has **not** been started.

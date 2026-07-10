@@ -2,7 +2,6 @@
 import Section from '../layout/Section.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import Button from '../ui/Button.astro';
-import Line from '../brand/Line.astro';
 
 interface Props {
   kicker: string;
@@ -10,14 +9,18 @@ interface Props {
   body?: string;
   cta: { label: string; href: string };
   reassurance?: string;
-  env?: 'paper' | 'ink';
+  env?: 'cream' | 'peach' | 'sky' | 'mint' | 'lemon' | 'lavender' | 'flare' | 'ink';
   id?: string;
 }
-const { kicker, heading, body, cta, reassurance, env = 'ink', id } = Astro.props;
+const { kicker, heading, body, cta, reassurance, env = 'flare', id } = Astro.props;
 ---
 
 <Section env={env} id={id} width="wide" pad="loose" class="cta" labelledby={id ? `${id}-h` : undefined}>
-  <div class="cta__line" aria-hidden="true"><Line variant="arc" /></div>
+  <div class="cta__blobs" aria-hidden="true">
+    <span class="cta__blob cta__blob--a"></span>
+    <span class="cta__blob cta__blob--b"></span>
+    <span class="cta__blob cta__blob--c"></span>
+  </div>
   <div class="cta__inner u-reveal">
     <Eyebrow>{kicker}</Eyebrow>
     <h2 id={id ? `${id}-h` : undefined} class="cta__head">{heading}</h2>
@@ -30,11 +33,15 @@ const { kicker, heading, body, cta, reassurance, env = 'ink', id } = Astro.props
 </Section>
 
 <style>
-  .cta { text-align: center; overflow: hidden; }
-  .cta__line { position: absolute; inset-inline: 0; top: 0; opacity: 0.4; z-index: -1; }
-  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
-  .cta__head { font-size: var(--fs-h2); }
-  .cta__body { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 34rem; }
-  .cta__actions { margin-top: 0.5rem; }
-  .cta__reassure { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); letter-spacing: 0.02em; }
+  .cta { text-align: center; overflow: clip; }
+  .cta__blobs { position: absolute; inset: 0; z-index: -1; }
+  .cta__blob { position: absolute; border-radius: 50%; filter: blur(6px); opacity: 0.5; }
+  .cta__blob--a { width: 12rem; height: 12rem; background: color-mix(in oklab, var(--accent-2) 55%, transparent); top: -3rem; left: 6%; }
+  .cta__blob--b { width: 9rem; height: 9rem; background: color-mix(in oklab, var(--bg-raised) 70%, transparent); bottom: -2rem; right: 10%; }
+  .cta__blob--c { width: 6rem; height: 6rem; background: color-mix(in oklab, var(--bg-inset) 80%, transparent); top: 30%; right: 22%; }
+  .cta__inner { max-width: 44rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h1); }
+  .cta__body { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 36rem; }
+  .cta__actions { margin-top: 0.6rem; }
+  .cta__reassure { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-muted); }
 </style>

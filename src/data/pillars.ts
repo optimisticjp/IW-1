@@ -11,7 +11,7 @@ export interface Pillar {
   role: string;
   lineRole: string;
   services: string[];
-  accent: 'vermilion' | 'green' | 'saffron' | 'cobalt';
+  accent: 'orange' | 'blue' | 'green' | 'violet';
 }
 
 export const pillars: Pillar[] = [
@@ -22,7 +22,7 @@ export const pillars: Pillar[] = [
     role: 'Bring the right people in — profitably, and at the volume growth needs.',
     lineRole: 'The Line begins here: attention and clicks enter the system.',
     services: ['Meta Ads', 'Google Ads', 'Social Media Growth', 'SEO', 'TikTok & YouTube Ads', 'Influencer'],
-    accent: 'vermilion',
+    accent: 'orange',
   },
   {
     key: 'storefront',
@@ -31,7 +31,7 @@ export const pillars: Pillar[] = [
     role: 'Turn that attention into orders with a store built to convert.',
     lineRole: 'The Line thickens: visitors become customers instead of leaking away.',
     services: ['Website Design & Development', 'Shopify Development', 'CRO', 'Landing Pages', 'Migrations'],
-    accent: 'green',
+    accent: 'blue',
   },
   {
     key: 'retention',
@@ -40,7 +40,7 @@ export const pillars: Pillar[] = [
     role: 'Grow the value of every customer you already paid to acquire.',
     lineRole: 'The Line loops back: one order becomes many.',
     services: ['Email & SMS', 'Lifecycle', 'Loyalty & Referrals', 'CRM', 'Subscriptions'],
-    accent: 'saffron',
+    accent: 'green',
   },
   {
     key: 'intelligence',
@@ -49,7 +49,7 @@ export const pillars: Pillar[] = [
     role: 'Measure what is true, so every other decision gets sharper.',
     lineRole: 'The Line feeds back: data becomes the next round of growth.',
     services: ['GA4 & Server-side Tracking', 'Dashboards', 'Testing', 'Automation', 'Growth Strategy'],
-    accent: 'cobalt',
+    accent: 'violet',
   },
 ];
 

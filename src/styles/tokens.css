@@ -1,70 +1,87 @@
 /* =========================================================================
-   Infinite Weblinks — Design Tokens
-   Editorial-tech. Warm paper + warm near-black environments, vermilion
-   signature accent, deep green support, rationed bright accents.
-   Exact values are adjustable while the approved direction is preserved.
+   Infinite Weblinks — Design Tokens (light-first, colorful universe)
+   Warm ivory canvas, saturated orange signature, and a controlled family of
+   bright supporting colors (sky, grass, mint, yellow, pink, violet). Deep
+   warm ink for type. Original palette — inspired by warm/vibrant light UIs,
+   not copied from any one site.
    ========================================================================= */
 
 :root {
   /* --- Color primitives ------------------------------------------------ */
-  --c-paper: #f4ecdd;          /* warm light foundation */
-  --c-paper-2: #efe3d0;        /* deeper paper */
-  --c-cream: #fbf6ee;          /* lightest raised surface */
-  --c-ink: #17130c;            /* warm near-black foundation */
-  --c-ink-2: #221b12;          /* raised ink surface */
-  --c-ink-3: #322619;          /* ink hairline base */
+  --c-cream: #faf3e6;          /* warm ivory canvas */
+  --c-cream-2: #f2e7d1;        /* deeper cream */
+  --c-ivory: #fffdf8;          /* lightest raised surface */
+  --c-ink: #2a2013;            /* warm near-black (type) */
+  --c-ink-2: #241b10;          /* deeper ink (footer) */
 
-  --c-vermilion: #ee4423;      /* signature accent */
-  --c-vermilion-deep: #c8330f; /* accessible link on paper */
-  --c-vermilion-soft: #ff6a44; /* accent on ink */
+  /* signature + supporting families (saturated, friendly) */
+  --c-orange: #ff6a2c;         /* signature */
+  --c-orange-deep: #dd4e0d;    /* accessible orange for text/links on light */
+  --c-pink: #ff6f9c;
+  --c-pink-deep: #db3f74;
+  --c-blue: #3d9bec;           /* sky */
+  --c-blue-deep: #1f74bd;
+  --c-green: #23b27a;          /* grass */
+  --c-green-deep: #0e875a;
+  --c-mint: #9be7c6;
+  --c-yellow: #ffc24a;
+  --c-yellow-deep: #c98a10;
+  --c-violet: #9a7cf0;
+  --c-violet-deep: #6a49d4;
 
-  --c-green: #0e5a41;          /* deep supporting accent */
-  --c-green-bright: #38b98a;   /* support accent on ink */
+  /* soft light section tints (backgrounds for colored-light bands) */
+  --tint-peach: #fdeddf;
+  --tint-sky: #e6f1fc;
+  --tint-mint: #e4f5ec;
+  --tint-lemon: #fcf2d8;
+  --tint-lavender: #efeafc;
+  --tint-pink: #fce7ef;
 
-  --c-saffron: #f4a72c;        /* rationed bright accent */
-  --c-cobalt: #2f57da;         /* rationed bright accent (spark) */
-
-  /* --- Semantic defaults (paper environment) --------------------------- */
-  --bg: var(--c-paper);
-  --bg-raised: var(--c-cream);
-  --bg-inset: var(--c-paper-2);
+  /* --- Semantic defaults (cream environment) --------------------------- */
+  --bg: var(--c-cream);
+  --bg-raised: var(--c-ivory);
+  --bg-inset: var(--c-cream-2);
   --fg: var(--c-ink);
-  --fg-muted: color-mix(in oklab, var(--c-ink) 64%, var(--c-paper));
-  --fg-faint: color-mix(in oklab, var(--c-ink) 44%, var(--c-paper));
-  --rule: color-mix(in oklab, var(--c-ink) 15%, var(--c-paper));
-  --rule-strong: color-mix(in oklab, var(--c-ink) 30%, var(--c-paper));
-  --link: var(--c-vermilion-deep);
-  --accent: var(--c-vermilion);
-  --accent-ink: #ffffff;       /* text on accent */
-  --accent-2: var(--c-green);
-  --spark: var(--c-cobalt);
-  --focus: var(--c-cobalt);
+  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--c-cream));
+  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--c-cream));
+  --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-cream));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 24%, var(--c-cream));
+  --link: var(--c-orange-deep);
+  --accent: var(--c-orange);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-blue);
+  --spark: var(--c-violet);
+  --focus: var(--c-blue-deep);
 
   /* --- Type families (Phase 1: swappable system-stack placeholders) ---- */
-  /* TODO(content): validate + self-host final variable typefaces. */
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua',
-    Palatino, 'Georgia', 'Times New Roman', serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-    'Apple Color Emoji', sans-serif;
+  /* Friendly bold sans display + legible sans interface + mono for labels.
+     TODO(content): validate + self-host final variable typefaces. */
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, 'Apple Color Emoji', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code',
     Menlo, Consolas, monospace;
 
-  /* --- Fluid type scale (mobile → desktop) ----------------------------- */
-  --fs-caption: clamp(0.72rem, 0.69rem + 0.15vw, 0.8rem);
-  --fs-small: clamp(0.83rem, 0.8rem + 0.18vw, 0.92rem);
-  --fs-body: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
-  --fs-lead: clamp(1.14rem, 1.02rem + 0.6vw, 1.45rem);
-  --fs-h4: clamp(1.2rem, 1.06rem + 0.7vw, 1.55rem);
-  --fs-h3: clamp(1.45rem, 1.18rem + 1.35vw, 2.15rem);
-  --fs-h2: clamp(2rem, 1.5rem + 2.5vw, 3.4rem);
-  --fs-h1: clamp(2.7rem, 1.9rem + 4vw, 5.4rem);
-  --fs-mega: clamp(3.2rem, 2rem + 6vw, 7rem);
+  --weight-display: 800;
 
-  --lh-tight: 1.02;
-  --lh-snug: 1.14;
+  /* --- Fluid type scale ------------------------------------------------ */
+  --fs-caption: clamp(0.72rem, 0.69rem + 0.15vw, 0.8rem);
+  --fs-small: clamp(0.85rem, 0.82rem + 0.18vw, 0.95rem);
+  --fs-body: clamp(1rem, 0.96rem + 0.26vw, 1.14rem);
+  --fs-lead: clamp(1.16rem, 1.02rem + 0.68vw, 1.55rem);
+  --fs-h4: clamp(1.22rem, 1.06rem + 0.75vw, 1.6rem);
+  --fs-h3: clamp(1.5rem, 1.18rem + 1.5vw, 2.3rem);
+  --fs-h2: clamp(2.1rem, 1.5rem + 2.9vw, 3.7rem);
+  --fs-h1: clamp(2.75rem, 1.95rem + 4vw, 5.3rem);
+  --fs-mega: clamp(3.4rem, 2rem + 7vw, 7.5rem);
+
+  --lh-tight: 0.98;
+  --lh-snug: 1.06;
   --lh-body: 1.62;
-  --tracking-tight: -0.02em;
-  --tracking-label: 0.16em;
+  --tracking-tight: -0.035em;
+  --tracking-display: -0.045em;
+  --tracking-label: 0.14em;
 
   /* --- Spacing scale (4px base) ---------------------------------------- */
   --sp-1: 0.25rem;
@@ -77,38 +94,40 @@
   --sp-8: 4rem;
   --sp-9: 6rem;
   --sp-10: 8rem;
-  --sp-11: 10rem;
-  /* fluid section rhythm */
-  --section-y: clamp(3.5rem, 2rem + 7vw, 8rem);
+  --section-y: clamp(4rem, 2.5rem + 7vw, 9rem);
 
   /* --- Layout widths --------------------------------------------------- */
   --w-prose: 42rem;
-  --w-content: 68rem;
-  --w-wide: 82rem;
-  --gutter: clamp(1.15rem, 0.6rem + 2.6vw, 2.75rem);
+  --w-content: 70rem;
+  --w-wide: 84rem;
+  --gutter: clamp(1.15rem, 0.5rem + 3vw, 3rem);
 
-  /* --- Radius (square-leaning editorial) ------------------------------- */
-  --r-0: 0px;
-  --r-1: 3px;
-  --r-2: 7px;
-  --r-3: 14px;
+  /* --- Radius (friendly, rounded) -------------------------------------- */
+  --r-1: 8px;
+  --r-2: 14px;
+  --r-3: 22px;
+  --r-4: 32px;
   --r-pill: 999px;
 
   /* --- Borders --------------------------------------------------------- */
   --bw: 1.5px;
   --bw-2: 2.5px;
 
-  /* --- Elevation (restrained; depth mostly via rules + layered SVG) ---- */
-  --shadow-1: 0 1px 0 var(--rule);
-  --shadow-2: 0 18px 44px -28px color-mix(in oklab, var(--c-ink) 55%, transparent);
-  --shadow-lift: 0 26px 60px -30px color-mix(in oklab, var(--c-ink) 60%, transparent);
+  /* --- Elevation (soft, dimensional) ----------------------------------- */
+  --shadow-1: 0 1px 2px color-mix(in oklab, var(--c-ink) 8%, transparent),
+    0 6px 16px -10px color-mix(in oklab, var(--c-ink) 20%, transparent);
+  --shadow-2: 0 2px 4px color-mix(in oklab, var(--c-ink) 6%, transparent),
+    0 14px 34px -16px color-mix(in oklab, var(--c-ink) 26%, transparent);
+  --shadow-pop: 0 8px 18px -8px color-mix(in oklab, var(--c-ink) 22%, transparent),
+    0 30px 60px -28px color-mix(in oklab, var(--c-ink) 32%, transparent);
 
   /* --- Motion ---------------------------------------------------------- */
-  --dur-1: 140ms;
-  --dur-2: 320ms;
-  --dur-3: 620ms;
-  --dur-line: 1100ms;
+  --dur-1: 150ms;
+  --dur-2: 340ms;
+  --dur-3: 660ms;
+  --dur-line: 1150ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.32, 0.5, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* --- Z-index --------------------------------------------------------- */

@@ -1,39 +1,49 @@
 ---
-// Proof placed next to the claim it supports. Pending metrics are flagged in
-// data (assetStatus) and marked dev-only via PlaceholderBadge — never a public
-// label. Numbers read as representative until approved case studies land.
+// Proof placed next to the claim it supports. Bright light tile with a
+// colored value. Pending metrics flagged in data + dev-only badge — never a
+// public label.
 import PlaceholderBadge from './PlaceholderBadge.astro';
 interface Props {
   value: string;
   label: string;
   system: string;
   assetStatus: 'pending' | 'approved';
+  accent?: 'orange' | 'blue' | 'green' | 'violet' | 'pink';
 }
-const { value, label, system, assetStatus } = Astro.props;
+const { value, label, system, assetStatus, accent = 'orange' } = Astro.props;
+const c: Record<string, string> = {
+  orange: 'var(--c-orange-deep)', blue: 'var(--c-blue-deep)', green: 'var(--c-green-deep)',
+  violet: 'var(--c-violet-deep)', pink: 'var(--c-pink-deep)',
+};
 ---
-<figure class="proof">
+<figure class="proof" style={`--pc:${c[accent]}`}>
   {assetStatus === 'pending' && <PlaceholderBadge note={`Metric pending: ${label}`} />}
   <div class="proof__value">{value}</div>
   <figcaption class="proof__label">{label}</figcaption>
-  <p class="proof__system u-mono">{system}</p>
+  <p class="proof__system">{system}</p>
 </figure>
 <style>
   .proof {
     position: relative;
     display: grid;
     gap: 0.3rem;
-    padding: 1.4rem 1.4rem 1.2rem;
+    padding: 1.6rem;
     background: var(--bg-raised);
-    border: var(--bw) solid var(--rule);
-    border-top: var(--bw-2) solid var(--accent);
-    border-radius: var(--r-2);
+    border-radius: var(--r-3);
+    box-shadow: var(--shadow-1);
   }
   .proof__value {
     font-family: var(--font-display);
-    font-size: var(--fs-h2);
+    font-weight: var(--weight-display);
+    font-size: clamp(2.2rem, 1.4rem + 3vw, 3.1rem);
     line-height: 1;
-    letter-spacing: var(--tracking-tight);
+    letter-spacing: var(--tracking-display);
+    color: var(--pc);
   }
-  .proof__label { font-weight: 600; font-size: var(--fs-small); }
-  .proof__system { color: var(--fg-faint); }
+  .proof__label { font-weight: 700; font-size: var(--fs-small); }
+  .proof__system {
+    font-family: var(--font-mono);
+    font-size: var(--fs-caption);
+    color: var(--fg-faint);
+  }
 </style>

@@ -1,33 +1,43 @@
 ---
-// The Line of value — the brand signature. A continuous SVG stroke that
-// connects growth systems. It draws on scroll (via the shared reveal
-// controller), collapses to a vertical spine on mobile, and renders fully
-// drawn under reduced motion. Decorative: meaning is always in the adjacent
-// text, never in the Line alone (FR-050).
+// The Line of value — the brand signature. A continuous stroke whose color
+// shifts through the Infinite Weblinks family (orange → pink → violet → blue
+// → green) as value travels between systems. Draws on scroll, collapses to a
+// vertical spine on mobile, renders fully drawn under reduced motion.
+// Decorative: meaning is always in the adjacent text (FR-050).
 interface Props {
   variant?: 'flow' | 'arc' | 'descend';
   state?: 'continuous' | 'leak';
+  width?: number;
   class?: string;
 }
-const { variant = 'flow', state = 'continuous', class: className = '' } = Astro.props;
+const { variant = 'flow', state = 'continuous', width = 5, class: className = '' } = Astro.props;
 
-// Path per variant (viewBox 0 0 1200 120 for horizontal flows).
 const paths: Record<string, string> = {
-  flow: 'M0 60 C 200 60 240 20 400 20 S 620 100 800 100 1000 40 1200 40',
-  arc: 'M0 100 C 300 100 340 20 600 20 S 900 100 1200 20',
+  flow: 'M0 60 C 200 60 240 18 400 18 S 620 104 800 104 1000 34 1200 34',
+  arc: 'M0 104 C 300 104 340 18 600 18 S 900 104 1200 18',
   descend: 'M40 8 C 40 220 260 260 260 470 S 40 720 40 940',
 };
 const isDescend = variant === 'descend';
 const viewBox = isDescend ? '0 0 300 960' : '0 0 1200 120';
+const gid = 'line-grad-' + Math.random().toString(36).slice(2, 9);
 ---
 
 <div class:list={['line', `line--${variant}`, `line--${state}`, className]} aria-hidden="true">
   <svg viewBox={viewBox} preserveAspectRatio={isDescend ? 'xMidYMin slice' : 'none'} class="line__svg">
+    <defs>
+      <linearGradient id={gid} x1="0" y1="0" x2={isDescend ? '0' : '1'} y2={isDescend ? '1' : '0'}>
+        <stop offset="0%" stop-color="var(--c-orange)" />
+        <stop offset="28%" stop-color="var(--c-pink)" />
+        <stop offset="52%" stop-color="var(--c-violet)" />
+        <stop offset="76%" stop-color="var(--c-blue)" />
+        <stop offset="100%" stop-color="var(--c-green)" />
+      </linearGradient>
+    </defs>
     <path
       class="line__track"
       d={paths[variant]}
       fill="none"
-      stroke="var(--rule)"
+      stroke="var(--rule-strong)"
       stroke-width={isDescend ? 2 : 3}
     />
     <path
@@ -35,8 +45,8 @@ const viewBox = isDescend ? '0 0 300 960' : '0 0 1200 120';
       class:list={[state === 'leak' && 'line__draw--leak']}
       d={paths[variant]}
       fill="none"
-      stroke="var(--accent)"
-      stroke-width={isDescend ? 3 : 4}
+      stroke={state === 'leak' ? 'var(--c-orange)' : `url(#${gid})`}
+      stroke-width={width}
       stroke-linecap="round"
     />
   </svg>
@@ -50,7 +60,7 @@ const viewBox = isDescend ? '0 0 300 960' : '0 0 1200 120';
   }
   .line--flow,
   .line--arc {
-    height: clamp(60px, 9vw, 120px);
+    height: clamp(64px, 9vw, 132px);
   }
   .line--descend {
     height: 100%;
@@ -61,11 +71,10 @@ const viewBox = isDescend ? '0 0 300 960' : '0 0 1200 120';
     overflow: visible;
   }
 
-  /* Default (no JS): line is fully drawn. With JS (html.js) it starts hidden
-     and draws on scroll when the controller adds .is-drawn. */
   .line__draw {
     stroke-dasharray: var(--len, 2600);
     stroke-dashoffset: 0;
+    filter: drop-shadow(0 3px 6px color-mix(in oklab, var(--c-violet) 26%, transparent));
     transition: stroke-dashoffset var(--dur-line) var(--ease-in-out);
   }
   html.js .line__draw:not(.line__draw--leak) {
@@ -74,22 +83,19 @@ const viewBox = isDescend ? '0 0 300 960' : '0 0 1200 120';
   html.js .line.is-drawn .line__draw:not(.line__draw--leak) {
     stroke-dashoffset: 0;
   }
-  /* Leak state: the value line is dashed/broken and loses opacity. */
   .line__draw--leak {
-    stroke: var(--c-vermilion);
-    stroke-dasharray: 10 16;
+    stroke-dasharray: 9 15;
     stroke-dashoffset: 0;
-    opacity: 0.55;
+    opacity: 0.6;
+    filter: none;
     animation: leak-drift 2.4s linear infinite;
   }
-
   @keyframes leak-drift {
     to {
-      stroke-dashoffset: -52;
+      stroke-dashoffset: -48;
     }
   }
 
-  /* Reduced motion: fully drawn, no animation. */
   @media (prefers-reduced-motion: reduce) {
     .line__draw {
       stroke-dashoffset: 0 !important;

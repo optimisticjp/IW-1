@@ -30,59 +30,72 @@ const Tag = href ? 'a' : 'button';
 
 <style>
   .btn {
-    --_bg: var(--accent);
-    --_fg: var(--accent-ink);
     display: inline-flex;
     align-items: center;
-    gap: 0.55em;
+    gap: 0.5em;
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.01em;
     text-decoration: none;
     border-radius: var(--r-pill);
-    border: var(--bw) solid transparent;
-    min-height: 44px; /* comfortable touch target */
-    padding: 0.85em 1.4em;
-    background: var(--_bg);
-    color: var(--_fg);
-    transition: transform var(--dur-1) var(--ease-out),
+    border: var(--bw-2) solid transparent;
+    min-height: 46px;
+    padding: 0.85em 1.5em;
+    transition: transform var(--dur-1) var(--ease-spring),
       background-color var(--dur-1) var(--ease-out),
-      box-shadow var(--dur-1) var(--ease-out);
+      box-shadow var(--dur-2) var(--ease-out);
   }
   .btn--lg {
     font-size: var(--fs-body);
-    padding: 1em 1.7em;
+    padding: 1.05em 1.9em;
+    min-height: 54px;
   }
+
+  /* Primary — bright orange with dark ink text (AA), soft lifted shadow. */
   .btn--primary {
-    box-shadow: var(--shadow-2);
+    background: var(--accent);
+    color: #2a1405;
+    box-shadow: 0 6px 0 -1px color-mix(in oklab, var(--accent) 62%, #000),
+      var(--shadow-1);
+  }
+  [data-env='flare'] .btn--primary {
+    background: #2a1405;
+    color: var(--c-orange);
+    box-shadow: var(--shadow-1);
+  }
+  [data-env='ink'] .btn--primary {
+    color: #ffffff;
+    box-shadow: var(--shadow-1);
   }
   .btn--primary:hover {
     transform: translateY(-2px);
-    background: color-mix(in oklab, var(--accent) 88%, var(--fg));
   }
   .btn--primary .btn__arrow {
     transition: transform var(--dur-1) var(--ease-out);
   }
   .btn--primary:hover .btn__arrow {
-    transform: translateX(3px);
+    transform: translateX(4px);
   }
+
+  /* Secondary — friendly outline on the raised surface. */
   .btn--secondary {
-    background: transparent;
+    background: var(--bg-raised);
     color: var(--fg);
     border-color: var(--rule-strong);
+    box-shadow: var(--shadow-1);
   }
   .btn--secondary:hover {
+    transform: translateY(-2px);
     border-color: var(--fg);
-    background: color-mix(in oklab, var(--fg) 6%, transparent);
   }
+
   .btn--ghost {
     background: transparent;
     color: var(--fg);
-    padding-inline: 0.4em;
-    min-height: 44px;
+    padding-inline: 0.5em;
   }
   .btn--ghost:hover {
-    color: var(--accent);
+    color: var(--link);
   }
 </style>
