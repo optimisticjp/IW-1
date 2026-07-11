@@ -34,11 +34,12 @@
 - Validation passed on the first iteration. Framework/tool references were confined to the
   Assumptions section (preserved technical baseline, owner-supplied config keys) and softened so
   no implementation detail leaks into the requirements or success criteria.
-- No blocking `[NEEDS CLARIFICATION]` markers: the source brief and playbook are unusually complete,
-  so open decisions were resolved with informed defaults and recorded in **Assumptions**. Items the
-  owner should still confirm are surfaced separately in the completion report as material questions
-  (they do not block planning): response-time commitment, crawler policy split, the dedicated
-  service-page phase order, the first case studies and their anonymization, the optional scheduling
-  provider, and inclusion of the budget field.
+- No blocking `[NEEDS CLARIFICATION]` markers. The seven open material decisions were confirmed in
+  the 2026-07-11 clarification session and recorded in the spec's **Clarifications** section, with the
+  affected **Functional Requirements**, **Key Entities** and **Assumptions** updated to match:
+  response-time message (three outcomes, no deadline), crawler policy (allow search and AI citation,
+  block AI training), service-page launch order (top seven high-intent first), interim proof (honest
+  anonymized work), scheduling (no calendar at launch, personal reply), budget field (omitted), and
+  the fifth Growth Graph goal ("Save team time"). No owner decisions remain outstanding for planning.
 - Items marked incomplete would require spec updates before `/speckit-clarify` or `/speckit-plan`;
   none remain.

@@ -16,6 +16,18 @@ This specification governs the restructure. It replaces the retired `specs/001-m
 
 Two reconciliations are fixed here: the approved infinity-link mark in the repository is the identity mark (DESIGN.md's "deferred, text-only wordmark" placeholder is overridden), and the capability-to-colour mapping follows DESIGN.md (Convert is amber, Scale is coral).
 
+## Clarifications
+
+### Session 2026-07-11
+
+- Q: Consultation response-time message → A: Use the three-outcomes copy with no time commitment (no "within N days" promise).
+- Q: Search-discovery and AI crawler policy → A: Allow search-discovery and AI-search citation crawlers (including OAI-SearchBot); block AI model-training crawlers (for example GPTBot, CCBot, Google-Extended).
+- Q: Priority order for launching dedicated service pages → A: Launch the seven highest-intent pages first (Ecommerce Development, Website Design & Development, SEO & Search Visibility, Paid Advertising, Conversion Optimisation, Email Marketing, Analytics & Tracking); the remaining dedicated pages phase in by intent and stay as anchored capability sections until built.
+- Q: Initial Work and case-study presentation while approved proof is limited → A: Honest anonymized work (situation, obstacle, change, lesson) with connection-map placeholder art and honest empty states, plus the site's own execution as proof; publish named case studies as permissions clear.
+- Q: Optional calendar scheduling after consultation submission → A: No calendar widget at launch; the written enquiry is the only submission path and any call is arranged in the personal follow-up. A scheduler may be added later.
+- Q: Consultation-form budget field → A: Omit the budget field; required fields stay name, work email, business and privacy, with the other qualification fields optional; budget is raised in the human follow-up.
+- Q: Fifth Growth Graph outcome and wording → A: "Save team time" (a Scale and automation outcome), alongside More sales, Lower advertising waste, More repeat customers and Know what is working.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Understand fast and request a consultation (Priority: P1)
@@ -210,10 +222,10 @@ Any visitor, on a 360px phone, with a keyboard only, with a screen reader, with 
 
 **Consultation, contact and states**
 
-- **FR-026**: The consultation request MUST be a single short form with the playbook fields, where only name, work email, business name and the privacy acknowledgement are required, and starting-point, working-model and budget fields qualify lightly without gatekeeping.
+- **FR-026**: The consultation request MUST be a single short form where only name, work email, business name and the privacy acknowledgement are required; goal, obstacle, closest-description, working model and timing are optional and qualify lightly without gatekeeping. The form MUST NOT ask for a budget; budget is raised in the personal follow-up when relevant.
 - **FR-027**: The form MUST validate on blur and on submit with specific, accessible errors (icon plus text, never colour alone), include spam protection, and submit through a provider-neutral path that never reports a false success and offers a direct email fallback on failure.
-- **FR-028**: On a genuine accept, the visitor MUST reach an honest confirmation ("Thank you. We have your enquiry.") that reassures they need not resend, states the three-outcomes follow-up expectation, and points onward; a separate post-booking state MUST explain what to bring.
-- **FR-029**: A written enquiry route (Contact) and an optional "prefer to talk" scheduling step MUST be offered; the newsletter MUST be opt-in and separate from the enquiry.
+- **FR-028**: On a genuine accept, the visitor MUST reach an honest confirmation ("Thank you. We have your enquiry.") that reassures they need not resend, states the three-outcomes follow-up expectation with no specific response-time promise, and points onward. A separate post-booking state ("Your call is booked") is deferred with the optional scheduler (FR-029) and is not required at launch.
+- **FR-029**: A written enquiry route (Contact) MUST be offered. No calendar-scheduling widget is included at launch: the written enquiry is the only submission path and any call is arranged in the personal follow-up; an optional scheduler MAY be added later behind the same primary conversion. The newsletter MUST be opt-in and separate from the enquiry.
 - **FR-030**: The site MUST provide confirmation, error and empty states across the experience: form success and failure, Work and Insights empty filters, a no-input tool state, and an on-brand 404 that is no-indexed and excluded from the sitemap.
 
 **Work, Insights, About, FAQ**
@@ -234,7 +246,7 @@ Any visitor, on a 360px phone, with a keyboard only, with a screen reader, with 
 
 - **FR-039**: Every indexable page MUST have exactly one H1 carrying the main promise, a logical heading order with no skipped levels, a per-page title and meta description in the approved patterns, and one canonical URL.
 - **FR-040**: Filtered Work and Insights views MUST canonicalise to their base index; structured data MUST be applied only to content visible on the page (Organization, WebSite, WebPage, BreadcrumbList, Article, and Service or Product only where the visible page supports it).
-- **FR-041**: A deliberate crawler policy MUST be provided that separates search-discovery crawlers from model-training crawlers, and a generated sitemap MUST include public routes and exclude the 404.
+- **FR-041**: The crawler policy MUST allow search-discovery and AI-search citation crawlers (including OAI-SearchBot) and MUST block AI model-training crawlers (for example GPTBot, CCBot, Google-Extended); a generated sitemap MUST include public routes and exclude the 404.
 - **FR-042**: CTA labels MUST be consistent between a button and its destination, and each capability and audience MUST use its specific, matching action label.
 
 **Design, motion, mobile (experience requirements)**
@@ -252,7 +264,7 @@ Any visitor, on a 360px phone, with a keyboard only, with a screen reader, with 
 - **Audience**: one of six visitor situations. Attributes: name, situation, language, concerns, desired outcomes, relevant services, educational content, objections, action label, Growth Graph variant, specialist depth.
 - **Growth Graph model**: the shared node set, hub, capability-coloured links, goals and captions, plus the per-context variant (homepage, How It Connects, Review, capability, audience, case study). Attributes: nodes, links (real relationships only), goals, captions, layout mode, accessibility text.
 - **Stack tool and rule**: the tool set a visitor selects and the rules that define valuable connections (an AND of OR-groups) with priority order. Attributes: tool id and helper text, rule required-tool groups, opportunity description, capability grouping, service link.
-- **Consultation enquiry**: the submitted request. Attributes: name, work email, business name, optional website, goal, obstacle, closest-description, working model, optional budget, optional timing, optional file, carried Map Your Stack context, required privacy acknowledgement; plus submission outcome (accepted, recoverable failure) and the follow-up expectation.
+- **Consultation enquiry**: the submitted request. Attributes: name, work email, business name, optional website, goal, obstacle, closest-description, working model, optional timing, optional file, carried Map Your Stack context, required privacy acknowledgement; plus submission outcome (accepted, recoverable failure) and the follow-up expectation. No budget field is collected.
 - **Case study**: a proof surface. Attributes: capability tags, audience tags, situation, obstacle, customer experience, change, improvement (honest, sourced when quantitative), one lesson, scoped graph, permission state (named, anonymized, interim).
 - **Article**: an Insights piece. Attributes: question title, H1, standfirst, key points, plain answer, pitfalls, self-check, sources, last-reviewed date, capability tag, audience tag, related links.
 - **Navigation model**: the primary items, mega-menu columns, footer columns, breadcrumb rules and contextual link rules that keep a large sitemap understandable.
@@ -280,13 +292,13 @@ Any visitor, on a 360px phone, with a keyboard only, with a screen reader, with 
 - **Technical baseline preserved**: the current repository (a static-first, content-led site with its sitemap and metadata seams, the provider-neutral submission with a preview-only mock that never runs in production, the Growth Graph and Map Your Stack engines and shared geometry, the accessible chrome, and the honest placeholders) is the preserved baseline. Any change of technical stack is a separate, justified decision and is out of scope here.
 - **Identity mark**: the approved infinity-link mark in the repository is the identity mark; DESIGN.md's "logo deferred" placeholder is overridden per the request. The wordmark sits beside the mark.
 - **Capability-colour correction**: capability-to-colour mapping follows DESIGN.md (Build indigo, Attract pink, Convert amber, Retain green, Connect purple, Scale coral); the repository's older mapping is corrected.
-- **Consultation route**: the primary conversion stays at `/book-a-call` and serves as the free consultation request; "Book a free call" is the primary CTA label sitewide; scheduling is an optional later step.
-- **Fifth Growth Graph goal**: "Save team time" is included as the fifth homepage goal unless the owner removes it.
+- **Consultation route**: the primary conversion stays at `/book-a-call` and serves as the free consultation request; "Book a free call" is the primary CTA label sitewide. Confirmed (2026-07-11): no calendar-scheduling widget at launch; any call is arranged in the personal follow-up, and a scheduler may be added later.
+- **Fifth Growth Graph goal**: confirmed (2026-07-11) as "Save team time" (a Scale and automation outcome), alongside More sales, Lower advertising waste, More repeat customers and Know what is working.
 - **Growing Teams audience**: a sixth audience page, Growing Teams, is split from the Established Teams content so the "several tools, no owner" situation is distinct from the enterprise "problems between departments" situation.
-- **Service-page phasing**: all 25 dedicated service pages and the six capability pages are in scope; not all ship at once. The default build order follows the roadmap phases, leading with the highest-intent services; any service lacking unique intent remains an anchored section until demand justifies a page.
-- **Response-time messaging**: until the owner confirms a window that can be met, the three-outcomes copy sets expectations without a specific time promise.
+- **Service-page phasing**: all 25 dedicated service pages and the six capability pages are in scope; not all ship at once. Confirmed (2026-07-11) launch set is the seven highest-intent dedicated pages: Ecommerce Development, Website Design & Development, SEO & Search Visibility, Paid Advertising, Conversion Optimisation, Email Marketing and Analytics & Tracking; the remaining dedicated pages phase in by intent, and any service lacking unique intent stays an anchored capability section until demand justifies a page.
+- **Response-time messaging**: confirmed (2026-07-11) to use the three-outcomes copy with no specific time promise (no "within N days"); a realistic window may be added later only once the owner confirms it can be met.
 - **Owner-supplied assets are dependencies, not blockers for structure**: licensed Geist WOFF2 fonts, the production domain (`PUBLIC_SITE_URL`) and booking endpoint (`PUBLIC_BOOKING_ENDPOINT`), founder and team information and photography, at least three real work examples and two or three permissioned case studies, testimonials, verifiable credentials, and legal wording for privacy, cookies and terms. The site behaves honestly (safe fallbacks, honest interim states, no invented proof) until they arrive.
 - **Legal wording deferred**: privacy, cookie and terms pages ship interface copy only; jurisdiction-reviewed legal wording is out of scope here.
-- **Crawler policy**: the search-discovery versus model-training crawler split is a deliberate decision to be confirmed; the default allows normal search discovery and citation-supporting crawlers.
-- **Optional scheduling tool**: if the optional "prefer to talk" scheduling step is enabled, the specific calendar provider is an owner decision; the written consultation request stands alone without it.
+- **Crawler policy**: confirmed (2026-07-11) to allow search-discovery and AI-search citation crawlers (including OAI-SearchBot) and to block AI model-training crawlers (for example GPTBot, CCBot, Google-Extended).
+- **Consultation qualification and scheduling**: confirmed (2026-07-11). The form omits any budget field (budget is raised in the personal follow-up), keeps only name, work email, business and privacy required, and includes no calendar-scheduling widget at launch; if a scheduler is added later, the calendar provider is an owner decision and the written consultation request still stands alone.
 - **Voice and constitution**: content follows the playbook voice and the project constitution (spec before code, mobile-first, speed, deliberate design, human-sounding content, SEO, accessibility, security, testing important behaviour, and the definition of done).
