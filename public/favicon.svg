@@ -1,12 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <rect width="48" height="48" rx="11" fill="#0c0b14"/>
+  <!-- Favicon variant: designed for small-size clarity — a solid brand-gradient
+       tile with a bold white infinity-link mark (reads at 16px on light or dark). -->
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="g" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#4b3fea"/><stop offset="52%" stop-color="#7b3fe4"/><stop offset="100%" stop-color="#e8409a"/>
     </linearGradient>
   </defs>
-  <path d="M17 24 C 17 16 9 16 9 24 C 9 32 17 32 24 24 C 31 16 39 16 39 24 C 39 32 31 32 24 24 Z"
-        fill="none" stroke="url(#g)" stroke-width="4.2" stroke-linecap="round"/>
-  <circle cx="9" cy="24" r="3.1" fill="url(#g)"/>
-  <circle cx="39" cy="24" r="3.1" fill="url(#g)"/>
+  <rect width="48" height="48" rx="12" fill="url(#g)"/>
+  <path d="M13 24 C 13 17 22 17 24 24 C 26 31 35 31 35 24 C 35 17 26 17 24 24 C 22 31 13 31 13 24 Z"
+        fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="13" cy="24" r="3.4" fill="#ffffff"/>
+  <circle cx="35" cy="24" r="3.4" fill="#ffffff"/>
 </svg>

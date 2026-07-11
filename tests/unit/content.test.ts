@@ -17,6 +17,11 @@ describe('homepage copy (Brief §5, verbatim)', () => {
     expect(home.finalCta.h2).toBe('Let’s map your Growth Graph.');
   });
 
+  it('every "Book a free call" link resolves to /book-a-call', () => {
+    expect(home.hero.primary.href).toBe('/book-a-call');
+    expect(home.finalCta.primary.href).toBe('/book-a-call');
+  });
+
   it('does not use the retired "Request a Proposal" wording anywhere', () => {
     const blob = JSON.stringify(home).toLowerCase();
     expect(blob).not.toContain('request a proposal');

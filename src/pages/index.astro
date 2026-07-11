@@ -6,6 +6,7 @@ import Button from '../components/ui/Button.astro';
 import Constellation from '../components/brand/Constellation.astro';
 import GrowthGraph from '../components/brand/GrowthGraph.astro';
 import InfinityMark from '../components/brand/InfinityMark.astro';
+import WorkThumb from '../components/brand/WorkThumb.astro';
 import { home } from '../data/home';
 
 const accentVar: Record<string, string> = {
@@ -109,7 +110,7 @@ const accentVar: Record<string, string> = {
     <ul class="prf__strip">
       {home.proof.items.map((w, i) => (
         <li class="work u-reveal" style={`--wc:${accentVar[w.accent]}; --reveal-delay:${i * 70}ms`}>
-          <div class="work__thumb" aria-hidden="true"><span class="work__mark"><InfinityMark size={26} /></span></div>
+          <div class="work__thumb"><WorkThumb accent={accentVar[w.accent]} variant={i} /></div>
           <div class="work__meta">
             <span class="work__kind">{w.kind}</span>
             <h3 class="work__title">{w.title}</h3>
@@ -193,9 +194,7 @@ const accentVar: Record<string, string> = {
   /* 6 · Proof — recent-work strip (no invented data) */
   .prf__strip { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.25rem; }
   .work { display: grid; gap: 0.9rem; }
-  .work__thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--r-3); background: color-mix(in oklab, var(--wc) 22%, var(--bg-raised)); display: grid; place-items: center; overflow: clip; box-shadow: var(--shadow-1); }
-  .work__thumb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 120% at 20% 12%, color-mix(in oklab, var(--wc) 40%, transparent), transparent 60%); }
-  .work__mark { position: relative; z-index: 1; opacity: 0.9; }
+  .work__thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--r-3); background: var(--bg-raised); border: var(--bw) solid var(--rule); overflow: clip; box-shadow: var(--shadow-1); }
   .work__kind { font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--wc) 70%, var(--fg)); }
   .work__title { font-size: var(--fs-h4); margin-top: 0.2rem; }
   @media (min-width: 620px) { .prf__strip { grid-template-columns: 1fr 1fr; } }

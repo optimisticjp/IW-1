@@ -26,3 +26,4 @@ Thumbs.db
 
 # visual QA artifacts (generated)
 scripts/*.png
+scripts/*.json

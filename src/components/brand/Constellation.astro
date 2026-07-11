@@ -13,7 +13,7 @@ const nodes = [
   { label: 'Email', color: 'var(--c-green)', a: 45 },
   { label: 'CRM', color: 'var(--c-violet)', a: 90 },
   { label: 'Store', color: 'var(--c-coral)', a: 135 },
-  { label: 'Analytics', color: 'var(--c-indigo)', a: 180 },
+  { label: 'Tracking', color: 'var(--c-indigo)', a: 180 },
   { label: 'AI', color: 'var(--c-amber)', a: 225 },
 ].map((n, i) => {
   const r = (n.a * Math.PI) / 180;
@@ -39,17 +39,16 @@ const nodes = [
         <text class="node__label" x={n.x} y={n.y + 34} text-anchor="middle">{n.label}</text>
       </g>
     ))}
-    <!-- central hub -->
-    <circle class="hub__halo" cx={CX} cy={CY} r="46" fill="var(--c-indigo)" opacity="0.12" />
-    <circle cx={CX} cy={CY} r="34" fill="var(--bg-raised)" stroke="var(--rule)" stroke-width="1.5" />
-    <circle cx={CX} cy={CY} r="30" fill="url(#hubgrad)" />
+    <!-- central hub (one soft halo + the gradient disc; no extra ring) -->
+    <circle class="hub__halo" cx={CX} cy={CY} r="48" fill="var(--c-indigo)" opacity="0.12" />
+    <circle cx={CX} cy={CY} r="34" fill="url(#hubgrad)" />
     <defs>
       <linearGradient id="hubgrad" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
       </linearGradient>
     </defs>
   </svg>
-  <div class="cons__hubmark"><InfinityMark size={38} /></div>
+  <div class="cons__hubmark"><InfinityMark size={40} variant="white" /></div>
 </div>
 
 <style>

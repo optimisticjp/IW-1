@@ -17,7 +17,7 @@ export const home = {
     h1a: 'You focus on your work.',
     h1b: 'We handle the digital side.',
     sub: "Website, ads, email, social, all of it. We build it, run it, and connect every piece so it works as one. That's what actually grows a business, and it means you get to spend your time on what you're great at.",
-    primary: { label: 'Book a free call', href: '#book' },
+    primary: { label: 'Book a free call', href: '/book-a-call' },
     secondary: { label: 'See how it connects', href: '#growth-graph' },
     trust: 'Built for solo experts and in-house teams alike.',
   },

@@ -77,3 +77,14 @@ Reworked the homepage to the brief as source of truth (typography override kept 
 - Removed the previous orange-led homepage components; tests rewritten (nav, content copy, Growth Graph goals, rendered section order / one-h1 / no public placeholder labels). 27 tests pass.
 
 Known placeholders: recent-work tiles, and the final CTA "Book a free call" → `/book-a-call` (future booking page). QA scripts: `node scripts/review.mjs`, `node scripts/gg.mjs`.
+
+## Corrective pass (Growth Graph labels, booking route, logo, terminology, proof tiles)
+
+- **Growth Graph labels**: geometry-driven placement (`src/lib/graphLayout.ts`) clears the active halo in all four goal states (verified 0 label∩halo intersections); larger viewBox for margin; simplified hub with a bold white ∞ mark + a backing pill so loop lines never clutter the hub label.
+- **/book-a-call**: real Astro route + accessible `BookingForm` (validation, submitting/success/failure/retry, duplicate guard, honeypot, aria-live). Provider-neutral boundary via `PUBLIC_BOOKING_ENDPOINT` (`.env.example`); dev-safe mock when unset. All "Book a free call" links now resolve to `/book-a-call`.
+- **Logo**: redesigned `InfinityMark` (bolder rounded stroke, two nodes, no extra rings) with gradient/dark/white variants + a dedicated bolder `favicon.svg`; applied to header, hero hub (white on gradient), Growth Graph hub, footer, favicon. B&W legible at 16–96px.
+- **Terminology**: unified on **"Tracking"** (hero constellation + Growth Graph + captions).
+- **Proof tiles**: `WorkThumb` renders subtle, varied connection-map scenes (no invented results; no public placeholder badges).
+- **Contrast**: darkened `--fg-faint` per environment to pass AA.
+
+Verified: build ✓, `astro check` 0 errors, 47/47 tests. **Mobile Lighthouse: home 100/100/100/100, /book-a-call 100/100/100/100.** No overflow (home+book, 360–1440). Keyboard goal-switching + form flow + reduced-motion all pass. Production config still required: set `PUBLIC_BOOKING_ENDPOINT`.

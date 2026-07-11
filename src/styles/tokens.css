@@ -35,7 +35,7 @@
   --bg-inset: var(--c-paper-lav);
   --fg: var(--c-ink);
   --fg-muted: var(--c-ink-2);
-  --fg-faint: var(--c-ink-3);
+  --fg-faint: color-mix(in oklab, var(--c-ink) 62%, var(--c-paper));
   --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-paper));
   --rule-strong: color-mix(in oklab, var(--c-ink) 20%, var(--c-paper));
   --link: var(--c-indigo);

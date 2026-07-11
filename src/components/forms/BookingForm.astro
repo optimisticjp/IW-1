@@ -1,0 +1,238 @@
+---
+// Accessible booking/contact form. Progressive enhancement: a real <form>
+// that the island upgrades with inline validation, submit states, retry, a
+// duplicate guard, a honeypot, and an aria-live status region. Submission
+// goes through the provider-neutral adapter in src/lib/booking.ts.
+import { helpOptions, timingOptions } from '../../lib/booking';
+---
+
+<form class="bk" id="booking-form" novalidate>
+  <div class="bk__grid">
+    <div class="fld">
+      <label for="bk-name">Your name</label>
+      <input id="bk-name" name="name" type="text" autocomplete="name" required aria-describedby="bk-name-err" />
+      <p class="fld__err" id="bk-name-err" role="alert"></p>
+    </div>
+    <div class="fld">
+      <label for="bk-email">Email</label>
+      <input id="bk-email" name="email" type="email" autocomplete="email" required aria-describedby="bk-email-err" />
+      <p class="fld__err" id="bk-email-err" role="alert"></p>
+    </div>
+    <div class="fld">
+      <label for="bk-company">Company or brand</label>
+      <input id="bk-company" name="company" type="text" autocomplete="organization" required aria-describedby="bk-company-err" />
+      <p class="fld__err" id="bk-company-err" role="alert"></p>
+    </div>
+    <div class="fld">
+      <label for="bk-url">Website or profile <span class="fld__opt">(optional)</span></label>
+      <input id="bk-url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="yourbrand.com" aria-describedby="bk-url-err" />
+      <p class="fld__err" id="bk-url-err" role="alert"></p>
+    </div>
+    <div class="fld fld--wide">
+      <label for="bk-help">What do you need help with?</label>
+      <select id="bk-help" name="help" required aria-describedby="bk-help-err">
+        <option value="" disabled selected>Choose one…</option>
+        {helpOptions.map((o) => <option value={o}>{o}</option>)}
+      </select>
+      <p class="fld__err" id="bk-help-err" role="alert"></p>
+    </div>
+    <div class="fld fld--wide">
+      <label for="bk-details">Tell us a little about your project</label>
+      <textarea id="bk-details" name="details" rows="4" required aria-describedby="bk-details-err"
+        placeholder="Where you are now, and what you're trying to reach."></textarea>
+      <p class="fld__err" id="bk-details-err" role="alert"></p>
+    </div>
+    <div class="fld fld--wide">
+      <label for="bk-timing">Preferred timing <span class="fld__opt">(optional)</span></label>
+      <select id="bk-timing" name="timing" aria-describedby="bk-timing-err">
+        <option value="">No preference</option>
+        {timingOptions.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </div>
+
+    <!-- honeypot: hidden from people, catches bots -->
+    <div class="bk__hp" aria-hidden="true">
+      <label for="bk-hp">Do not fill this in</label>
+      <input id="bk-hp" name="_hp" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="fld fld--wide fld--check">
+      <input id="bk-privacy" name="privacy" type="checkbox" required aria-describedby="bk-privacy-err" />
+      <label for="bk-privacy">I understand Infinite Weblinks will use these details to reply to me. Nothing else.</label>
+      <p class="fld__err" id="bk-privacy-err" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="bk__actions">
+    <button type="submit" class="bk__submit" id="bk-submit">
+      <span class="bk__submit-label">Book a free call</span>
+    </button>
+    <p class="bk__status" id="bk-status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<div class="bk__success" id="bk-success" hidden tabindex="-1">
+  <p class="bk__success-mark" aria-hidden="true">✓</p>
+  <h2 class="bk__success-h">Thanks. Your details are on their way.</h2>
+  <p class="bk__success-b">We’ll read them properly and get back to you within two business days with a clear, no-pressure next step. No jargon, no obligation.</p>
+  <a class="bk__success-link" href="/">Back to the homepage</a>
+</div>
+
+<style>
+  .bk__grid { display: grid; gap: 1.1rem 1.25rem; }
+  .fld { display: grid; gap: 0.4rem; }
+  .fld label { font-weight: 600; font-size: var(--fs-small); }
+  .fld__opt { color: var(--fg-faint); font-weight: 400; }
+  .fld input, .fld select, .fld textarea {
+    width: 100%; min-height: 48px; padding: 0.7rem 0.85rem;
+    background: var(--bg-raised); color: var(--fg);
+    border: var(--bw) solid var(--rule-strong); border-radius: var(--r-2);
+    font: inherit;
+  }
+  .fld textarea { min-height: 120px; resize: vertical; }
+  .fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--accent); }
+  .fld[data-invalid] input, .fld[data-invalid] select, .fld[data-invalid] textarea { border-color: var(--c-magenta); }
+  .fld__err { color: var(--c-magenta); font-size: var(--fs-caption); min-height: 0; }
+  .fld__err:empty { display: none; }
+  .fld--check { grid-template-columns: auto 1fr; align-items: start; gap: 0.4rem 0.7rem; }
+  .fld--check input { width: 1.3rem; height: 1.3rem; min-height: 0; margin-top: 0.15rem; }
+  .fld--check label { order: 2; font-weight: 400; font-size: var(--fs-body); }
+  .fld--check .fld__err { grid-column: 1 / -1; }
+
+  .bk__hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .bk__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .bk__submit {
+    display: inline-flex; align-items: center; gap: 0.5em;
+    background-image: var(--grad-brand); color: #fff; font-weight: 700; font: inherit; font-weight: 700;
+    border: none; border-radius: var(--r-2); min-height: 52px; padding: 0.9em 1.7em;
+    transition: transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-2), opacity var(--dur-micro);
+    box-shadow: var(--shadow-1);
+  }
+  .bk__submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .bk__submit:disabled { opacity: 0.7; cursor: progress; }
+  .bk__status { font-size: var(--fs-small); color: var(--fg-muted); }
+  .bk__status:empty { display: none; }
+  .bk__status[data-tone='error'] { color: var(--c-magenta); }
+
+  .bk__success { display: grid; gap: 0.8rem; justify-items: start; padding: clamp(1.5rem, 1rem + 2vw, 2.5rem); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-1); }
+  .bk__success[hidden] { display: none; }
+  .bk__success-mark { width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 50%; background: var(--c-green); color: #fff; font-weight: 800; font-size: 1.4rem; }
+  .bk__success-h { font-size: var(--fs-h3); }
+  .bk__success-b { color: var(--fg-muted); max-width: 46ch; }
+  .bk__success-link { font-weight: 600; color: var(--link); }
+
+  @media (min-width: 640px) {
+    .bk__grid { grid-template-columns: 1fr 1fr; }
+    .fld--wide { grid-column: 1 / -1; }
+  }
+</style>
+
+<script>
+  import { validateBooking, submitBooking, type BookingValues } from '../../lib/booking';
+
+  const form = document.getElementById('booking-form') as HTMLFormElement | null;
+  const success = document.getElementById('bk-success');
+  const submitBtn = document.getElementById('bk-submit') as HTMLButtonElement | null;
+  const submitLabel = form?.querySelector('.bk__submit-label');
+  const status = document.getElementById('bk-status');
+  if (form && submitBtn && status) {
+    const fields = ['name', 'email', 'company', 'url', 'help', 'details', 'privacy'];
+    let submitting = false;
+    let lastOkHash = '';
+
+    const setStatus = (msg: string, tone: '' | 'error' = '') => {
+      status.textContent = msg;
+      if (tone) status.setAttribute('data-tone', tone);
+      else status.removeAttribute('data-tone');
+    };
+
+    const readValues = (): BookingValues => {
+      const fd = new FormData(form);
+      return {
+        name: String(fd.get('name') || ''),
+        email: String(fd.get('email') || ''),
+        company: String(fd.get('company') || ''),
+        url: String(fd.get('url') || ''),
+        help: String(fd.get('help') || ''),
+        details: String(fd.get('details') || ''),
+        timing: String(fd.get('timing') || ''),
+        privacy: fd.get('privacy') === 'on',
+        _hp: String(fd.get('_hp') || ''),
+      };
+    };
+
+    const showErrors = (errors: Record<string, string>) => {
+      let firstInvalid: HTMLElement | null = null;
+      for (const name of fields) {
+        const input = form.querySelector<HTMLElement>(`[name="${name}"]`);
+        const wrap = input?.closest('.fld');
+        const err = document.getElementById(`bk-${name}-err`);
+        const msg = errors[name] || '';
+        if (err) err.textContent = msg;
+        if (wrap) wrap.toggleAttribute('data-invalid', !!msg);
+        if (input) input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        if (msg && !firstInvalid) firstInvalid = input;
+      }
+      if (firstInvalid) firstInvalid.focus();
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submitting) return; // duplicate-submit guard
+      const values = readValues();
+      const errors = validateBooking(values);
+      showErrors(errors);
+      if (Object.keys(errors).length) {
+        setStatus('Please fix the highlighted fields.', 'error');
+        return;
+      }
+      const hash = JSON.stringify(values);
+      if (hash === lastOkHash) {
+        setStatus('You’ve already sent this — we’ve got it.');
+        return;
+      }
+
+      submitting = true;
+      submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Sending…';
+      setStatus('Sending your details…');
+
+      const result = await submitBooking(values);
+
+      submitting = false;
+      submitBtn.disabled = false;
+      if (submitLabel) submitLabel.textContent = 'Book a free call';
+
+      if (result.ok) {
+        lastOkHash = hash;
+        if (import.meta.env.DEV && result.mock) {
+          console.info('[booking] mock submission (no PUBLIC_BOOKING_ENDPOINT set).');
+        }
+        form.hidden = true;
+        if (success) {
+          success.hidden = false;
+          (success as HTMLElement).focus();
+        }
+      } else {
+        setStatus(
+          result.retryable
+            ? 'Something went wrong sending that. Please try again.'
+            : 'We couldn’t send that. Please check your details and try again.',
+          'error'
+        );
+      }
+    });
+
+    // clear a field's error as the user corrects it
+    form.addEventListener('input', (e) => {
+      const el = e.target as HTMLElement;
+      const name = el.getAttribute('name');
+      if (!name) return;
+      const err = document.getElementById(`bk-${name}-err`);
+      const wrap = el.closest('.fld');
+      if (err && err.textContent) err.textContent = '';
+      if (wrap) wrap.removeAttribute('data-invalid');
+    });
+  }
+</script>

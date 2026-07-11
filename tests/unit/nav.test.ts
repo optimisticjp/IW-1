@@ -6,9 +6,10 @@ describe('navigation (Brief §4)', () => {
     expect(primaryNav.map((i) => i.label)).toEqual(['What we do', 'How it connects', 'Who we help']);
   });
 
-  it('the primary CTA is Book a free call', () => {
+  it('the primary CTA is Book a free call and resolves to /book-a-call', () => {
     expect(bookCta.label).toBe('Book a free call');
     expect(bookCta.emphasis).toBe('cta');
+    expect(bookCta.href).toBe('/book-a-call');
   });
 
   it('footer groups match the brief columns', () => {
