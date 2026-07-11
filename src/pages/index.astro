@@ -76,6 +76,9 @@ const accentVar: Record<string, string> = {
     </div>
     <div class="gg__stage u-reveal"><GrowthGraph /></div>
     <p class="gg__footerline u-reveal">{home.graph.footerLine}</p>
+    <div class="gg__cta u-reveal">
+      <Button href="/map-your-stack" variant="secondary" size="lg">Map your own stack</Button>
+    </div>
   </Section>
 
   <!-- 5 · CAPABILITIES ------------------------------------------------ -->
@@ -176,6 +179,7 @@ const accentVar: Record<string, string> = {
   .gg__head .eyebrow { justify-content: center; }
   .gg__stage { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
   .gg__footerline { max-width: 44rem; margin: clamp(2rem, 1rem + 3vw, 3rem) auto 0; text-align: center; color: var(--fg-muted); font-size: var(--fs-lead); }
+  .gg__cta { display: flex; justify-content: center; margin-top: clamp(1.25rem, 0.8rem + 1.5vw, 2rem); }
 
   /* 5 · Capabilities — a connected list, not six identical cards */
   .cap__list { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; }

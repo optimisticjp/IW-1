@@ -23,7 +23,7 @@ describe('Growth Graph data (Brief §7)', () => {
   });
 
   it('every loop node references a real node key', () => {
-    const keys = new Set(graphNodes.map((n) => n.key));
+    const keys = new Set<string>(graphNodes.map((n) => n.key));
     for (const g of graphGoals) for (const k of g.loop) expect(keys.has(k)).toBe(true);
   });
 

@@ -11,6 +11,7 @@ export interface NavItem {
 export const primaryNav: NavItem[] = [
   { label: 'What we do', href: '/#capabilities' },
   { label: 'How it connects', href: '/#growth-graph' },
+  { label: 'Map your stack', href: '/map-your-stack' },
   { label: 'Who we help', href: '/#three-doors' },
 ];
 
@@ -46,6 +47,7 @@ export const footerGroups: FooterGroup[] = [
     heading: 'Company',
     items: [
       { label: 'How it connects', href: '/#growth-graph' },
+      { label: 'Map your stack', href: '/map-your-stack' },
       { label: 'Our work', href: '/#proof' },
       { label: 'About', href: '/' },
       { label: 'Start a project', href: '/book-a-call' },

@@ -2,8 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { primaryNav, bookCta, footerGroups } from '../../src/data/nav';
 
 describe('navigation (Brief §4)', () => {
-  it('primary nav is exactly the three brief items', () => {
-    expect(primaryNav.map((i) => i.label)).toEqual(['What we do', 'How it connects', 'Who we help']);
+  it('primary nav carries the brief items plus the Map your stack tool', () => {
+    expect(primaryNav.map((i) => i.label)).toEqual([
+      'What we do', 'How it connects', 'Map your stack', 'Who we help',
+    ]);
+    // the tool link sits under the "How it connects" path and resolves to its route
+    const mys = primaryNav.find((i) => i.label === 'Map your stack')!;
+    expect(mys.href).toBe('/map-your-stack');
   });
 
   it('the primary CTA is Book a free call and resolves to /book-a-call', () => {

@@ -1,0 +1,389 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import StackGraph from '../components/brand/StackGraph.astro';
+import { stackTools } from '../data/stackTools';
+
+const seo = {
+  title: 'Map your stack',
+  description:
+    'A quick connection self-check. Tap the tools you use and see how well they work together, and where growth is leaking. Not a technical audit, just a plain-English read in about 30 seconds.',
+  path: '/map-your-stack',
+};
+---
+
+<BaseLayout seo={seo}>
+  <!-- 1 · INTRO + SELECTOR + LIVE GRAPH (light section, dark graph panel) -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="mys" labelledby="mys-h">
+    <div class="mys__intro">
+      <Eyebrow>Map your stack</Eyebrow>
+      <h1 id="mys-h" class="mys__head">See how connected your growth <span class="grad-text">really is</span>.</h1>
+      <p class="mys__sub">Tap the tools you use, and we'll show you how well they work together, and where growth is leaking. Takes about 30 seconds.</p>
+    </div>
+
+    <div class="mys__work">
+      <!-- Selector -->
+      <form class="mys__selector" id="mys-form" novalidate>
+        <fieldset class="chips">
+          <legend class="chips__legend">Which of these do you use?</legend>
+          <div class="chips__grid">
+            {stackTools.map((t) => (
+              <label class="chip" for={`chip-${t.key}`}>
+                <input class="chip__input" id={`chip-${t.key}`} type="checkbox" name="tools" value={t.key} />
+                <span class="chip__box" aria-hidden="true"></span>
+                <span class="chip__text">
+                  <span class="chip__label">{t.label}</span>
+                  {t.helper && <span class="chip__helper">{t.helper}</span>}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="mys__actions">
+          <button type="submit" class="mys__go" id="mys-go" disabled aria-describedby="mys-go-hint">
+            Show my connection map
+          </button>
+          <p class="mys__hint" id="mys-go-hint">Tap at least two tools to see your connection map.</p>
+        </div>
+      </form>
+
+      <!-- Live graph on the existing dark "engine room" treatment -->
+      <div class="mys__stage" data-env="dark">
+        <StackGraph />
+      </div>
+    </div>
+
+    <!-- Result panel — revealed after the button is pressed -->
+    <div class="result" id="mys-result" hidden tabindex="-1" aria-labelledby="mys-result-h">
+      <p class="result__band"><span class="result__band-dot" aria-hidden="true"></span><span id="mys-band-eyebrow">Your result</span></p>
+      <h2 class="result__head" id="mys-result-h">Your growth is: <span id="mys-band"></span>.</h2>
+      <p class="result__count" id="mys-count"></p>
+
+      <div class="result__block" id="mys-working-block">
+        <h3 class="result__block-h">What's working</h3>
+        <p class="result__working" id="mys-working"></p>
+      </div>
+
+      <div class="result__block" id="mys-gaps-block">
+        <h3 class="result__block-h">Your biggest gaps</h3>
+        <ul class="result__gaps" id="mys-gaps"></ul>
+      </div>
+
+      <p class="result__honesty">This is a quick read based on what you use, not a technical audit. On a call we map your real setup in detail.</p>
+
+      <a class="result__cta" id="mys-cta" href="/book-a-call">
+        <span>Get your full growth map on a free call</span>
+        <span class="result__cta-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <!-- concise, screen-reader-friendly announcement of the result -->
+    <p class="u-vh" id="mys-live" role="status" aria-live="polite"></p>
+  </Section>
+</BaseLayout>
+
+<style>
+  .mys__intro { max-width: 46rem; }
+  .mys__head { font-size: var(--fs-h1); margin-top: 1rem; }
+  .mys__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 44ch; margin-top: 1.2rem; }
+
+  .mys__work { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3rem); margin-top: clamp(2rem, 1rem + 3vw, 3rem); align-items: start; }
+
+  /* Selector */
+  .chips { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .chips__legend { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-h4); padding: 0; margin-bottom: 1rem; }
+  .chips__grid { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
+
+  .chip {
+    position: relative; display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0.75rem;
+    padding: 0.85rem 1rem; border-radius: var(--r-2);
+    background: var(--bg-raised); border: var(--bw-2) solid var(--rule-strong);
+    cursor: pointer; transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro), transform var(--dur-micro);
+  }
+  .chip:hover { transform: translateY(-1px); border-color: var(--accent); }
+  .chip__input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+  .chip__box {
+    width: 1.4rem; height: 1.4rem; margin-top: 0.1rem; flex: none; border-radius: 6px;
+    border: var(--bw-2) solid var(--rule-strong); background: var(--bg);
+    display: grid; place-items: center; transition: border-color var(--dur-micro), background-color var(--dur-micro);
+  }
+  .chip__box::after {
+    content: ''; width: 0.72rem; height: 0.4rem; margin-top: -0.12rem;
+    border-left: 3px solid #fff; border-bottom: 3px solid #fff; transform: rotate(-45deg) scale(0);
+    transition: transform var(--dur-micro) var(--ease-spring);
+  }
+  .chip__text { display: grid; gap: 0.1rem; min-width: 0; }
+  .chip__label { font-weight: 600; }
+  .chip__helper { font-size: var(--fs-caption); color: var(--fg-faint); }
+
+  /* Selected state — check mark + filled box + ring + accent border (not colour alone) */
+  .chip:has(.chip__input:checked) { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--bg-raised)); box-shadow: inset 0 0 0 1px var(--accent); }
+  .chip:has(.chip__input:checked) .chip__box { background: var(--accent); border-color: var(--accent); }
+  .chip:has(.chip__input:checked) .chip__box::after { transform: rotate(-45deg) scale(1); }
+  .chip__input:focus-visible + .chip__box { outline: var(--bw-2) solid var(--focus); outline-offset: 3px; }
+
+  .mys__actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+  .mys__go {
+    display: inline-flex; align-items: center; gap: 0.5em; font-weight: 700;
+    background-image: var(--grad-brand); color: #fff; border: none; border-radius: var(--r-2);
+    min-height: 52px; padding: 0.9em 1.6em; box-shadow: var(--shadow-1);
+    transition: transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-2), opacity var(--dur-micro);
+  }
+  .mys__go:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .mys__go:disabled { opacity: 0.55; cursor: not-allowed; background-image: none; background-color: var(--rule-strong); color: var(--fg-muted); box-shadow: none; }
+  .mys__hint { font-size: var(--fs-small); color: var(--fg-faint); }
+  .mys__go:not(:disabled) + .mys__hint { visibility: hidden; }
+
+  /* Dark graph stage — the "engine room" panel */
+  .mys__stage {
+    background: var(--bg); color: var(--fg); border-radius: var(--r-4);
+    padding: clamp(1.25rem, 0.8rem + 2vw, 2.25rem); box-shadow: var(--shadow-2);
+  }
+
+  /* Result panel */
+  .result {
+    margin-top: clamp(2rem, 1rem + 3vw, 3.25rem); padding: clamp(1.5rem, 1rem + 3vw, 2.75rem);
+    background: var(--c-paper-lav); border: var(--bw) solid var(--rule); border-radius: var(--r-4);
+    display: grid; gap: 1.1rem; scroll-margin-top: 6rem;
+  }
+  .result[hidden] { display: none; }
+  .result:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 4px; }
+  .result__band { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-muted); margin: 0; }
+  .result__band-dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--accent); }
+  .result__head { font-size: var(--fs-h2); }
+  .result__count { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; }
+
+  .result__block { display: grid; gap: 0.5rem; }
+  .result__block-h { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-small); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); }
+  .result__working { font-size: var(--fs-body); }
+  .result__gaps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
+  .result__gap { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem; }
+  .result__gap::before { content: ''; width: 0.7rem; height: 0.7rem; margin-top: 0.42rem; border-radius: 3px; background: var(--gap-color, var(--c-violet)); flex: none; }
+  .result__gap-title { font-weight: 700; }
+  .result__gap-cost { color: var(--fg-muted); }
+
+  .result__honesty { font-size: var(--fs-small); color: var(--fg-faint); max-width: 52ch; border-top: var(--bw) solid var(--rule); padding-top: 1.1rem; }
+
+  .result__cta {
+    justify-self: start; display: inline-flex; align-items: center; gap: 0.5em; margin-top: 0.3rem;
+    background-image: var(--grad-brand); color: #fff; text-decoration: none; font-weight: 700;
+    border-radius: var(--r-2); min-height: 52px; padding: 0.9em 1.6em; box-shadow: var(--shadow-1);
+    transition: transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-2);
+  }
+  .result__cta:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .result__cta:hover .result__cta-arrow { transform: translateX(3px); }
+  .result__cta-arrow { transition: transform var(--dur-micro) var(--ease-out); }
+
+  /* Two columns once there's room: selector beside the live graph */
+  @media (min-width: 880px) {
+    .mys__work { grid-template-columns: 0.95fr 1.05fr; }
+    .chips__grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<script>
+  import { parseToolsParam } from '../data/stackTools';
+  import { graphNodes, type NodeKey } from '../data/growthGraph';
+  import { evaluateStack, titleForList } from '../lib/stackEval';
+  import { nodePositions, pathThrough } from '../lib/graphGeometry';
+
+  const form = document.getElementById('mys-form') as HTMLFormElement | null;
+  const graph = document.querySelector('.sgraph') as HTMLElement | null;
+  const goBtn = document.getElementById('mys-go') as HTMLButtonElement | null;
+  const result = document.getElementById('mys-result') as HTMLElement | null;
+  if (form && graph && goBtn && result) {
+    const pos = nodePositions();
+    const ringOrder = new Map(graphNodes.map((n, i) => [n.key, i]));
+    const boxes = Array.from(form.querySelectorAll<HTMLInputElement>('.chip__input'));
+
+    // graph elements
+    const svgNodes = new Map(
+      Array.from(graph.querySelectorAll<SVGGElement>('.sgnode')).map((el) => [el.getAttribute('data-node')!, el])
+    );
+    const spokes = new Map(
+      Array.from(graph.querySelectorAll<SVGLineElement>('.sgspoke')).map((el) => [el.getAttribute('data-node')!, el])
+    );
+    const links = new Map(
+      Array.from(graph.querySelectorAll<SVGPathElement>('.sglink')).map((el) => [el.getAttribute('data-rule')!, el])
+    );
+    const mSteps = new Map(
+      Array.from(graph.querySelectorAll<HTMLLIElement>('.sgm__step')).map((el) => [el.getAttribute('data-node')!, el])
+    );
+    const cap = graph.querySelector('.sgcap') as HTMLElement | null;
+
+    // result elements
+    const bandEl = document.getElementById('mys-band')!;
+    const bandEyebrow = document.getElementById('mys-band-eyebrow')!;
+    const countEl = document.getElementById('mys-count')!;
+    const workingEl = document.getElementById('mys-working')!;
+    const gapsBlock = document.getElementById('mys-gaps-block')!;
+    const gapsEl = document.getElementById('mys-gaps')!;
+    const ctaEl = document.getElementById('mys-cta') as HTMLAnchorElement;
+    const liveEl = document.getElementById('mys-live')!;
+
+    const capFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+    const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let revealed = false;
+
+    const selectedKeys = (): NodeKey[] => boxes.filter((b) => b.checked).map((b) => b.value as NodeKey);
+
+    const updateGraph = (selected: NodeKey[]) => {
+      const set = new Set<NodeKey>(selected);
+      const evalResult = evaluateStack(selected);
+
+      // nodes that are the missing target of a relevant gap rule
+      const ghost = new Set<NodeKey>();
+      for (const r of evalResult.results) {
+        if (r.status === 'gap') for (const m of r.missing) if (!set.has(m)) ghost.add(m);
+      }
+
+      // desktop nodes + spokes
+      for (const n of graphNodes) {
+        const el = svgNodes.get(n.key);
+        if (el) {
+          const state = set.has(n.key) ? 'on' : ghost.has(n.key) ? 'ghost' : 'off';
+          el.classList.remove('on', 'off', 'ghost');
+          el.classList.add(state);
+        }
+        const sp = spokes.get(n.key);
+        if (sp) sp.classList.toggle('on', set.has(n.key));
+      }
+
+      // links (one reusable path per rule)
+      for (const r of evalResult.results) {
+        const path = links.get(r.rule.id);
+        if (!path) continue;
+        if (r.status === 'not relevant') {
+          path.classList.remove('solid', 'gap');
+          path.setAttribute('d', '');
+        } else {
+          path.setAttribute('d', pathThrough(r.chain, pos));
+          path.classList.toggle('solid', r.status === 'in place');
+          path.classList.toggle('gap', r.status === 'gap');
+        }
+      }
+
+      // mobile vertical list: selected first, then missing targets, hide the rest
+      for (const n of graphNodes) {
+        const step = mSteps.get(n.key);
+        if (!step) continue;
+        const stateEl = step.querySelector('.sgm__state');
+        if (set.has(n.key)) {
+          step.hidden = false;
+          step.classList.remove('ghost');
+          step.classList.add('on');
+          step.style.order = String(ringOrder.get(n.key) ?? 0);
+          if (stateEl) stateEl.textContent = '';
+        } else if (ghost.has(n.key)) {
+          step.hidden = false;
+          step.classList.remove('on');
+          step.classList.add('ghost');
+          step.style.order = String(100 + (ringOrder.get(n.key) ?? 0));
+          if (stateEl) stateEl.textContent = 'missing link';
+        } else {
+          step.hidden = true;
+          step.classList.remove('on', 'ghost');
+        }
+      }
+
+      // caption (describes the map without relying on colour). Only write when
+      // the text actually changes, so toggling chips doesn't re-announce the
+      // same sentence through the polite live region.
+      graph.setAttribute('data-count', String(selected.length));
+      if (cap) {
+        const next = selected.length === 0
+          ? 'Tap the tools you use to begin.'
+          : 'Solid lines show connections you have. Dashed lines show gaps.';
+        if (cap.textContent !== next) cap.textContent = next;
+      }
+    };
+
+    const fillResult = (selected: NodeKey[]) => {
+      const r = evaluateStack(selected);
+      bandEl.textContent = r.band;
+      bandEyebrow.textContent = 'Your result';
+
+      const gapsSuffix = r.gapTotal > 0 ? ' Here are the biggest gaps.' : ' Nothing major is missing from what you selected.';
+      countEl.textContent = `${r.inPlaceTotal} of ${r.relevantTotal} key connections are in place.${gapsSuffix}`;
+
+      // what's working (≤2)
+      if (r.topWorking.length) {
+        workingEl.textContent = `You've already got: ${r.topWorking.map((w) => titleForList(w.title)).join(', ')}.`;
+      } else {
+        workingEl.textContent = "You've got the pieces to start connecting these.";
+      }
+
+      // top gaps (≤3)
+      gapsEl.textContent = '';
+      if (r.topGaps.length) {
+        gapsBlock.hidden = false;
+        for (const g of r.topGaps) {
+          const li = document.createElement('li');
+          li.className = 'result__gap';
+          li.style.setProperty('--gap-color', g.colorVar);
+          const title = document.createElement('span');
+          title.className = 'result__gap-title';
+          title.textContent = `${g.title}. `;
+          const cost = document.createElement('span');
+          cost.className = 'result__gap-cost';
+          cost.textContent = capFirst(g.gapCost);
+          const wrap = document.createElement('span');
+          wrap.append(title, cost);
+          li.append(wrap);
+          gapsEl.append(li);
+        }
+      } else {
+        gapsBlock.hidden = true;
+      }
+
+      // booking handoff — compact, allowlisted, optional query string
+      ctaEl.href = selected.length ? `/book-a-call?tools=${selected.join(',')}` : '/book-a-call';
+
+      liveEl.textContent = `Your growth is ${r.band}. ${r.inPlaceTotal} of ${r.relevantTotal} key connections are in place.`;
+    };
+
+    const refresh = () => {
+      const selected = selectedKeys();
+      updateGraph(selected);
+      const enough = selected.length >= 2;
+      goBtn.disabled = !enough;
+      if (revealed) {
+        if (!enough) {
+          revealed = false;
+          result.hidden = true;
+          liveEl.textContent = '';
+        } else {
+          fillResult(selected); // keep a revealed panel truthful as chips change
+        }
+      }
+    };
+
+    form.addEventListener('change', refresh);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const selected = selectedKeys();
+      if (selected.length < 2) return;
+      fillResult(selected);
+      revealed = true;
+      result.hidden = false;
+      // focus the result heading (no trap), then bring it into view. A gentle
+      // scroll when motion is allowed; an instant jump under reduced motion so
+      // the panel is never left off-screen after the button is pressed.
+      result.focus({ preventScroll: true });
+      result.scrollIntoView({ behavior: prefersReduced() ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    // Pre-select from a ?tools= deep link (e.g. returning from booking), then
+    // reflect it in the graph. Never reveals the panel automatically.
+    const initial = parseToolsParam(new URLSearchParams(location.search).get('tools'));
+    if (initial.length) {
+      const want = new Set(initial);
+      boxes.forEach((b) => { if (want.has(b.value as NodeKey)) b.checked = true; });
+    }
+    refresh();
+  }
+</script>

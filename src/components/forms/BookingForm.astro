@@ -130,6 +130,15 @@ import { helpOptions, timingOptions } from '../../lib/booking';
 
 <script>
   import { validateBooking, submitBooking, type BookingValues } from '../../lib/booking';
+  import { parseToolsParam, toolsSummary } from '../../data/stackTools';
+
+  // Optional handoff from Map Your Stack: prefill the project field with a
+  // short, allowlisted, plain-English summary. The page works without it.
+  const details = document.getElementById('bk-details') as HTMLTextAreaElement | null;
+  if (details && !details.value.trim()) {
+    const tools = parseToolsParam(new URLSearchParams(location.search).get('tools'));
+    if (tools.length) details.value = toolsSummary(tools);
+  }
 
   const form = document.getElementById('booking-form') as HTMLFormElement | null;
   const success = document.getElementById('bk-success');

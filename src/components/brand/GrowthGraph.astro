@@ -5,18 +5,12 @@
 // draw-in + flowing dots + node glow; reduced-motion shows final states.
 import { graphNodes, graphGoals, HUB } from '../../data/growthGraph';
 import { labelPlacement } from '../../lib/graphLayout';
+import { RADIAL, nodePositions } from '../../lib/graphGeometry';
 
-const R = { cx: 390, cy: 300, rx: 250, ry: 215 };
-const pos: Record<string, { x: number; y: number; a: number }> = {};
-graphNodes.forEach((n) => {
-  const deg = -90 + n.ring * 40;
-  const a = (deg * Math.PI) / 180;
-  pos[n.key] = {
-    x: +(R.cx + R.rx * Math.cos(a)).toFixed(1),
-    y: +(R.cy + R.ry * Math.sin(a)).toFixed(1),
-    a: deg,
-  };
-});
+// Radial geometry is shared with the Map Your Stack graph (single source of
+// truth) so the two graphs stay in exact lockstep.
+const R = RADIAL;
+const pos = nodePositions();
 const label = (k: string) => graphNodes.find((n) => n.key === k)!.label;
 const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
 const loopPath = (loop: string[]) =>

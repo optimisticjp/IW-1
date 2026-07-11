@@ -2,8 +2,22 @@
 // Nodes are clean labelled discs in a cohesive Infinite Weblinks colour (no
 // third-party logos). `ring` = index around the desktop radial circle.
 
+// The nine tool nodes. This union is the single source of truth for tool
+// identifiers shared across the homepage graph, the Map Your Stack rules, and
+// the selection graph.
+export type NodeKey =
+  | 'social'
+  | 'googleAds'
+  | 'website'
+  | 'tracking'
+  | 'store'
+  | 'email'
+  | 'whatsapp'
+  | 'crm'
+  | 'ai';
+
 export interface GraphNode {
-  key: string;
+  key: NodeKey;
   label: string;
   color: string; // CSS custom property
   ring: number;  // position index around the circle (0 = top, clockwise)
