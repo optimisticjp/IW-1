@@ -10,7 +10,7 @@ export interface NavItem {
 
 export const primaryNav: NavItem[] = [
   { label: 'What we do', href: '/what-we-do' },
-  { label: 'How it connects', href: '/#growth-graph' },
+  { label: 'How it connects', href: '/how-it-connects' },
   { label: 'Map your stack', href: '/map-your-stack' },
   { label: 'Who we help', href: '/who-we-help' },
 ];
@@ -46,7 +46,7 @@ export const footerGroups: FooterGroup[] = [
   {
     heading: 'Company',
     items: [
-      { label: 'How it connects', href: '/#growth-graph' },
+      { label: 'How it connects', href: '/how-it-connects' },
       { label: 'Map your stack', href: '/map-your-stack' },
       { label: 'Our work', href: '/#proof' },
       { label: 'About', href: '/' },

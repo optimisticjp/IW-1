@@ -154,12 +154,14 @@ p {
   color: transparent;
 }
 
-/* Scroll-reveal (object assembly). Hidden initial state applies ONLY when
-   (a) JavaScript is running (html.js — set synchronously in <head>) and
-   (b) motion is allowed. If JS is disabled the content is fully visible, so
-   nothing ever depends on scripts (progressive enhancement). */
+/* Scroll-reveal (object assembly). Content is visible by DEFAULT; the reveal is
+   progressive enhancement only. The hidden-first state applies ONLY once the
+   reveal controller has actually initialised and added `.js-ready` to <html>
+   (see BaseLayout). If JavaScript is disabled, fails to load, or the observer
+   never runs, `.js-ready` is never set, so every section stays fully visible.
+   The hidden state is also gated on motion being allowed. */
 @media (prefers-reduced-motion: no-preference) {
-  html.js .u-reveal {
+  html.js-ready .u-reveal {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity var(--dur-entrance) var(--ease-out),
@@ -167,7 +169,7 @@ p {
     transition-delay: var(--reveal-delay, 0ms);
     will-change: opacity, transform;
   }
-  html.js .u-reveal.is-in {
+  html.js-ready .u-reveal.is-in {
     opacity: 1;
     transform: none;
   }

@@ -24,8 +24,9 @@ export interface SeoMeta {
 
 const SITE_NAME = 'Infinite Weblinks';
 const TITLE_SUFFIX = ' — Infinite Weblinks';
-// TODO(content): replace with a final designed sharing image before launch.
-const DEFAULT_OG = '/og/infinite-weblinks-default.svg';
+// Site-wide sharing image: a 1200×630 PNG (SVG is not rendered by most social
+// platforms). Brand mark, palette, and voice; no invented proof.
+const DEFAULT_OG = '/og/infinite-weblinks-default.png';
 
 /** Build a complete, resolved SeoMeta object for a page. */
 export function buildSeo(input: SeoInput, siteUrl: string | URL): SeoMeta {

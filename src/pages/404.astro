@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import InfinityMark from '../components/brand/InfinityMark.astro';
+
+const seo = {
+  title: 'Page not found',
+  description: "That page doesn't exist or has moved. Head back to the homepage, or book a free call.",
+  path: '/404',
+  robots: 'noindex, follow',
+};
+---
+
+<BaseLayout seo={seo}>
+  <Section env="paper" id="top" width="content" pad="loose" class="nf" labelledby="nf-h">
+    <div class="nf__inner">
+      <span class="nf__mark" aria-hidden="true"><InfinityMark size={56} /></span>
+      <Eyebrow>Error 404</Eyebrow>
+      <h1 id="nf-h" class="nf__h1">This link isn't connected.</h1>
+      <p class="nf__body">The page you were after doesn't exist or has moved. Let's get you back to something useful, connected growth is only a click away.</p>
+      <div class="nf__actions">
+        <Button href="/" variant="primary" size="lg">Back to the homepage</Button>
+        <Button href="/book-a-call" variant="secondary" size="lg">Book a free call</Button>
+      </div>
+      <p class="nf__alt">Or <a href="/map-your-stack">map your stack</a> in 30 seconds.</p>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .nf { text-align: center; }
+  .nf__inner { max-width: 40rem; margin-inline: auto; display: grid; justify-items: center; gap: 1rem; }
+  .nf__mark { display: inline-flex; }
+  .nf__h1 { font-size: var(--fs-h1); }
+  .nf__body { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; }
+  .nf__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.8rem; }
+  .nf__alt { color: var(--fg-faint); font-size: var(--fs-small); margin-top: 0.4rem; }
+  .nf__alt a { color: var(--link); font-weight: 600; }
+</style>

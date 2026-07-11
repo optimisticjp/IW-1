@@ -15,7 +15,7 @@ describe('navigation (Brief §4)', () => {
     const byLabel = Object.fromEntries(primaryNav.map((i) => [i.label, i.href]));
     expect(byLabel['What we do']).toBe('/what-we-do');
     expect(byLabel['Who we help']).toBe('/who-we-help');
-    expect(byLabel['How it connects']).toBe('/#growth-graph'); // unchanged, not broken
+    expect(byLabel['How it connects']).toBe('/how-it-connects'); // concept page
   });
 
   it('footer system + audience links deep-link to the new routes', () => {
