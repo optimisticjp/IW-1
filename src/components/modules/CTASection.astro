@@ -21,6 +21,10 @@ const { kicker, heading, body, cta, reassurance, env = 'flare', id } = Astro.pro
     <span class="cta__blob cta__blob--b"></span>
     <span class="cta__blob cta__blob--c"></span>
   </div>
+  <div class="cta__arrival" aria-hidden="true">
+    <span class="cta__arrival-line"></span>
+    <span class="cta__arrival-dot"></span>
+  </div>
   <div class="cta__inner u-reveal">
     <Eyebrow>{kicker}</Eyebrow>
     <h2 id={id ? `${id}-h` : undefined} class="cta__head">{heading}</h2>
@@ -39,7 +43,13 @@ const { kicker, heading, body, cta, reassurance, env = 'flare', id } = Astro.pro
   .cta__blob--a { width: 12rem; height: 12rem; background: color-mix(in oklab, var(--accent-2) 55%, transparent); top: -3rem; left: 6%; }
   .cta__blob--b { width: 9rem; height: 9rem; background: color-mix(in oklab, var(--bg-raised) 70%, transparent); bottom: -2rem; right: 10%; }
   .cta__blob--c { width: 6rem; height: 6rem; background: color-mix(in oklab, var(--bg-inset) 80%, transparent); top: 30%; right: 22%; }
-  .cta__inner { max-width: 44rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  /* The Line arrives — the whole journey resolves into this invitation. */
+  .cta__arrival { position: relative; z-index: 1; display: grid; justify-items: center; margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.6rem); }
+  .cta__arrival-line { width: 3px; height: clamp(2.5rem, 1.5rem + 4vw, 4.5rem); border-radius: var(--r-pill);
+    background: linear-gradient(180deg, transparent, var(--accent)); }
+  .cta__arrival-dot { width: 0.95rem; height: 0.95rem; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 0.4rem color-mix(in oklab, var(--accent) 22%, transparent); margin-top: -2px; }
+  .cta__inner { position: relative; z-index: 1; max-width: 44rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
   .cta__head { font-size: var(--fs-h1); }
   .cta__body { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 36rem; }
   .cta__actions { margin-top: 0.6rem; }
