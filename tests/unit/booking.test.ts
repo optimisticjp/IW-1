@@ -62,4 +62,24 @@ describe('booking submission adapter', () => {
     expect(r.ok).toBe(false);
     expect(r.retryable).toBe(true);
   });
+
+  it('posts the Formspree AJAX contract: POST + JSON, Accept: application/json, email for reply-to', async () => {
+    let seen: { url: string; init: RequestInit } | undefined;
+    const recordFetch = (async (url: string, init: RequestInit) => {
+      seen = { url, init };
+      return { ok: true, status: 200 };
+    }) as unknown as typeof fetch;
+    const endpoint = 'https://formspree.io/f/mrevywgb';
+    const r = await submitBooking(valid, { endpoint, fetchImpl: recordFetch });
+    expect(r.ok).toBe(true);
+    expect(seen?.url).toBe(endpoint);
+    expect(seen?.init.method).toBe('POST');
+    const headers = seen?.init.headers as Record<string, string>;
+    expect(headers['Accept']).toBe('application/json');
+    expect(headers['Content-Type']).toBe('application/json');
+    const body = JSON.parse(String(seen?.init.body));
+    expect(body.email).toBe(valid.email); // Formspree uses the email field as reply-to
+    for (const f of ['name', 'company', 'help', 'details']) expect(body[f]).toBeTruthy();
+    expect(body.privacy).toBe(true);
+  });
 });
