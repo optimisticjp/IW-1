@@ -1,0 +1,41 @@
+---
+interface Props {
+  accent?: 'orange' | 'blue' | 'green' | 'yellow' | 'pink' | 'violet' | 'muted';
+  class?: string;
+}
+const { accent = 'muted', class: className = '' } = Astro.props;
+---
+
+<span class:list={['tag', `tag--${accent}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--fs-caption);
+    letter-spacing: 0;
+    padding: 0.38em 0.8em;
+    border-radius: var(--r-pill);
+    background: color-mix(in oklab, var(--_c, var(--fg)) 15%, var(--bg-raised));
+    color: color-mix(in oklab, var(--_c, var(--fg)) 72%, var(--fg));
+    white-space: nowrap;
+  }
+  .tag--orange { --_c: var(--c-orange); }
+  .tag--blue { --_c: var(--c-blue); }
+  .tag--green { --_c: var(--c-green); }
+  .tag--yellow { --_c: var(--c-yellow-deep); }
+  .tag--pink { --_c: var(--c-pink); }
+  .tag--violet { --_c: var(--c-violet); }
+  .tag--muted {
+    background: color-mix(in oklab, var(--fg) 8%, var(--bg-raised));
+    color: var(--fg-muted);
+  }
+  [data-env='ink'] .tag {
+    background: color-mix(in oklab, var(--_c, var(--fg)) 26%, var(--bg-raised));
+    color: color-mix(in oklab, var(--_c, var(--fg)) 40%, var(--fg));
+  }
+</style>

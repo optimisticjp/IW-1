@@ -1,0 +1,21 @@
+---
+// Polite live region for form status/confirmation/error announcements (T009).
+// Consumed by the Phase 4 forms; empty and inert by default.
+interface Props {
+  id?: string;
+}
+const { id = 'form-status' } = Astro.props;
+---
+
+<p id={id} class="form-status" role="status" aria-live="polite"></p>
+
+<style>
+  .form-status {
+    min-height: 1.4em;
+    font-size: var(--fs-small);
+    color: var(--fg-muted);
+  }
+  .form-status:empty {
+    display: none;
+  }
+</style>

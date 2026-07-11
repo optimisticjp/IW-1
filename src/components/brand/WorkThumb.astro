@@ -1,0 +1,53 @@
+---
+// Placeholder recent-work thumbnail — a restrained, on-brand connection-map
+// scene (faint nodes + links) so tiles read as intentional brand art, not
+// empty image boxes. No implied results/clients. Four layout variants for
+// visual variation; a future project image can replace the whole tile.
+interface Props {
+  accent: string; // CSS custom property
+  variant?: number;
+  class?: string;
+}
+const { accent, variant = 0, class: className = '' } = Astro.props;
+
+// Four small system layouts (nodes + links). Coordinates in a 200×150 field.
+const layouts: { nodes: [number, number, number][]; links: [number, number][] }[] = [
+  { // loop
+    nodes: [[52, 46, 8], [150, 40, 6], [158, 104, 8], [60, 110, 6], [104, 74, 11]],
+    links: [[0, 4], [4, 1], [1, 2], [2, 4], [4, 3], [3, 0]],
+  },
+  { // hub + spokes
+    nodes: [[104, 74, 13], [44, 40, 7], [162, 46, 6], [150, 112, 8], [50, 108, 6]],
+    links: [[0, 1], [0, 2], [0, 3], [0, 4]],
+  },
+  { // stream
+    nodes: [[34, 96, 6], [78, 58, 9], [124, 92, 7], [166, 50, 10]],
+    links: [[0, 1], [1, 2], [2, 3]],
+  },
+  { // two clusters linked
+    nodes: [[50, 52, 9], [40, 104, 6], [86, 82, 6], [150, 54, 10], [160, 106, 6], [118, 90, 6]],
+    links: [[0, 1], [0, 2], [3, 4], [3, 5], [2, 5]],
+  },
+];
+const L = layouts[variant % layouts.length];
+const gid = 'wt-' + Math.random().toString(36).slice(2, 8);
+---
+<svg class:list={['wthumb', className]} viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--_a)" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="var(--_a)" stop-opacity="0.04" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill={`url(#${gid})`} />
+  {L.links.map(([i, j]) => (
+    <line x1={L.nodes[i][0]} y1={L.nodes[i][1]} x2={L.nodes[j][0]} y2={L.nodes[j][1]}
+      stroke="var(--_a)" stroke-width="1.4" stroke-linecap="round" opacity="0.35" />
+  ))}
+  {L.nodes.map(([x, y, r], idx) => (
+    <circle cx={x} cy={y} r={r} fill="var(--_a)" opacity={idx === 0 && variant !== 2 ? 0.6 : 0.32} />
+  ))}
+</svg>
+<style define:vars={{ _a: accent }}>
+  .wthumb { position: absolute; inset: 0; width: 100%; height: 100%; }
+</style>

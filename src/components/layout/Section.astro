@@ -1,0 +1,62 @@
+---
+interface Props {
+  env?: 'paper' | 'lavender' | 'mint' | 'dark' | 'grad';
+  id?: string;
+  width?: 'prose' | 'content' | 'wide';
+  class?: string;
+  /** vertical rhythm */
+  pad?: 'default' | 'tight' | 'loose';
+  labelledby?: string;
+}
+const {
+  env,
+  id,
+  width = 'content',
+  class: className = '',
+  pad = 'default',
+  labelledby,
+} = Astro.props;
+---
+
+<section
+  id={id}
+  data-env={env}
+  aria-labelledby={labelledby}
+  class:list={['section', `section--${pad}`, className]}
+>
+  <div class="section__inner">
+    <div class:list={['container', `container--${width}`]}>
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+    isolation: isolate;
+  }
+  .section--default .section__inner {
+    padding-block: var(--section-y);
+  }
+  .section--tight .section__inner {
+    padding-block: clamp(2.25rem, 1.5rem + 3.5vw, 4.5rem);
+  }
+  .section--loose .section__inner {
+    padding-block: clamp(4.5rem, 3rem + 9vw, 11rem);
+  }
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .container--prose {
+    max-width: calc(var(--w-prose) + var(--gutter) * 2);
+  }
+  .container--content {
+    max-width: calc(var(--w-content) + var(--gutter) * 2);
+  }
+  .container--wide {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+  }
+</style>

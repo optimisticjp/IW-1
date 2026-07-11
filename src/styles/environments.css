@@ -1,0 +1,98 @@
+/* =========================================================================
+   Section environments — ~80% light. Warm paper base with soft lavender/mint
+   tints; dark reserved for the Growth Graph and footer; one gradient CTA band.
+   ========================================================================= */
+
+[data-env] {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+[data-env='paper'] {
+  --bg: var(--c-paper);
+  --bg-raised: var(--c-ivory);
+  --bg-inset: var(--c-paper-lav);
+  --fg: var(--c-ink);
+  --fg-muted: var(--c-ink-2);
+  --fg-faint: color-mix(in oklab, var(--c-ink) 62%, var(--c-paper));
+  --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-paper));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 20%, var(--c-paper));
+  --link: var(--c-indigo);
+  --accent: var(--c-indigo);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-magenta);
+  --focus: var(--c-indigo);
+  color-scheme: light;
+}
+
+[data-env='lavender'] {
+  --bg: var(--c-paper-lav);
+  --bg-raised: var(--c-ivory);
+  --bg-inset: #e8e4f7;
+  --fg: var(--c-ink);
+  --fg-muted: var(--c-ink-2);
+  --fg-faint: color-mix(in oklab, var(--c-ink) 62%, var(--c-paper-lav));
+  --rule: color-mix(in oklab, var(--c-indigo) 14%, var(--c-paper-lav));
+  --rule-strong: color-mix(in oklab, var(--c-indigo) 26%, var(--c-paper-lav));
+  --link: var(--c-indigo);
+  --accent: var(--c-indigo);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-violet);
+  --focus: var(--c-indigo);
+  color-scheme: light;
+}
+
+[data-env='mint'] {
+  --bg: var(--c-paper-mint);
+  --bg-raised: var(--c-ivory);
+  --bg-inset: #dcefe3;
+  --fg: var(--c-ink);
+  --fg-muted: var(--c-ink-2);
+  --fg-faint: color-mix(in oklab, var(--c-ink) 62%, var(--c-paper-mint));
+  --rule: color-mix(in oklab, var(--c-green) 16%, var(--c-paper-mint));
+  --rule-strong: color-mix(in oklab, var(--c-green) 30%, var(--c-paper-mint));
+  --link: var(--c-indigo);
+  --accent: var(--c-green);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-indigo);
+  --focus: var(--c-indigo);
+  color-scheme: light;
+}
+
+/* Dark "engine room" — Growth Graph + footer. */
+[data-env='dark'] {
+  --bg: var(--c-dark);
+  --bg-raised: var(--c-dark-2);
+  --bg-inset: #1f1936;
+  --fg: #f3f1fb;
+  --fg-muted: color-mix(in oklab, #f3f1fb 74%, var(--c-dark));
+  --fg-faint: color-mix(in oklab, #f3f1fb 64%, var(--c-dark));
+  --rule: color-mix(in oklab, #f3f1fb 16%, var(--c-dark));
+  --rule-strong: color-mix(in oklab, #f3f1fb 30%, var(--c-dark));
+  --link: var(--c-magenta);
+  --accent: var(--c-magenta);
+  --accent-ink: #ffffff;
+  --accent-2: var(--c-indigo);
+  --focus: #b9b2ff;
+  color-scheme: dark;
+}
+
+/* Gradient CTA band — brand gradient with white text. */
+[data-env='grad'] {
+  --bg: var(--c-indigo);
+  --bg-raised: rgba(255, 255, 255, 0.14);
+  --bg-inset: rgba(255, 255, 255, 0.1);
+  --fg: #ffffff;
+  --fg-muted: rgba(255, 255, 255, 0.86);
+  --fg-faint: rgba(255, 255, 255, 0.7);
+  --rule: rgba(255, 255, 255, 0.28);
+  --rule-strong: rgba(255, 255, 255, 0.5);
+  --link: #ffffff;
+  --accent: #ffffff;
+  --accent-ink: var(--c-indigo);
+  --focus: #ffffff;
+  color-scheme: dark;
+}
+[data-env='grad'] {
+  background-image: var(--grad-brand);
+}

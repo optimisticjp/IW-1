@@ -1,0 +1,144 @@
+---
+// Map Your Stack — the selection-driven graph. Reuses the Growth Graph engine:
+// the same shared radial geometry (graphGeometry.ts), the same node/hub visual
+// language, the same radial-desktop / vertical-mobile split, live-region and
+// reduced-motion conventions. It differs only in what it draws — the visitor's
+// live selection and the rule links between tools, instead of a fixed goal loop.
+//
+// This component renders a stable, server-rendered skeleton (nodes, hub, spokes,
+// one reusable <path> per rule, a vertical mobile list). The page controller in
+// map-your-stack.astro imports the pure modules and drives the state; because
+// every element here is server-rendered, the scoped styles below apply even as
+// classes and geometry are updated from script.
+import { graphNodes, HUB } from '../../data/growthGraph';
+import { stackRules } from '../../data/stackRules';
+import { labelPlacement } from '../../lib/graphLayout';
+import { RADIAL, nodePositions } from '../../lib/graphGeometry';
+
+const R = RADIAL;
+const pos = nodePositions();
+const label = (k: string) => graphNodes.find((n) => n.key === k)!.label;
+const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
+---
+
+<div class="sgraph" data-count="0">
+  <p class="sgcap u-mono" role="status" aria-live="polite">Tap the tools you use to begin.</p>
+
+  <!-- Desktop radial map (≥720px) -->
+  <div class="sgraph__radial">
+    <svg viewBox={`0 0 ${R.viewW} ${R.viewH}`} class="sgsvg" aria-hidden="true">
+      <defs>
+        <linearGradient id="sghub" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+        </linearGradient>
+      </defs>
+
+      <!-- faint spokes hub -> every node -->
+      {graphNodes.map((n) => (
+        <line class="sgspoke" data-node={n.key} x1={R.cx} y1={R.cy} x2={pos[n.key].x} y2={pos[n.key].y} />
+      ))}
+
+      <!-- one reusable link path per rule; the controller sets d + status -->
+      <g class="sglinks">
+        {stackRules.map((r) => (
+          <path class="sglink" data-rule={r.id} style={`--lc:${r.colorVar}`} d="" fill="none" />
+        ))}
+      </g>
+
+      <!-- tool nodes -->
+      {graphNodes.map((n) => {
+        const p = pos[n.key];
+        const lp = labelPlacement(p.a);
+        const lx = p.x + lp.dx;
+        const ly = p.y + lp.dy;
+        return (
+          <g class="sgnode off" data-node={n.key} style={`--nc:${n.color}`}>
+            <circle class="sgnode__ghost" cx={p.x} cy={p.y} r="19" />
+            <circle class="sgnode__halo" cx={p.x} cy={p.y} r={R.haloR} />
+            <circle class="sgnode__disc" cx={p.x} cy={p.y} r={R.nodeR} />
+            <text class="sgnode__label" x={lx} y={ly} text-anchor={lp.anchor}>{n.label}</text>
+          </g>
+        );
+      })}
+
+      <!-- central hub: soft halo + gradient disc + bold white ∞ mark -->
+      <circle class="sghub__halo" cx={R.cx} cy={R.cy} r={R.hubHaloR} />
+      <circle cx={R.cx} cy={R.cy} r={R.hubR} fill="url(#sghub)" />
+      <g transform="translate(367 287) scale(1.15)">
+        <path d="M6 11 C 6 5 14 5 20 11 C 26 17 34 17 34 11 C 34 5 26 5 20 11 C 14 17 6 17 6 11 Z"
+          fill="none" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="6" cy="11" r="2.8" fill="#fff" /><circle cx="34" cy="11" r="2.8" fill="#fff" />
+      </g>
+      <rect class="sghub__pill" x={R.cx - 82} y={R.cy + 52} width="164" height="27" rx="13.5" />
+      <text x={R.cx} y={R.cy + 70} text-anchor="middle" class="sghub__label">{HUB.label}</text>
+    </svg>
+  </div>
+
+  <!-- Mobile vertical map (<720px): selected tools + missing targets only -->
+  <div class="sgraph__mobile">
+    <ol class="sgm">
+      {graphNodes.map((n) => (
+        <li class="sgm__step" data-node={n.key} style={`--nc:${color(n.key)}`} hidden>
+          <span class="sgm__disc" aria-hidden="true"></span>
+          <span class="sgm__label">{label(n.key)}</span>
+          <span class="sgm__state u-mono"></span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</div>
+
+<style>
+  .sgraph { position: relative; }
+  .sgcap { display: block; text-align: center; color: var(--fg-muted); min-height: 1.4em; margin-bottom: 0.6rem; }
+
+  /* Radial map */
+  .sgraph__radial { margin-top: 0.5rem; }
+  .sgsvg { width: 100%; height: auto; overflow: visible; }
+
+  .sgspoke { stroke: var(--rule); stroke-width: 1.4; transition: stroke var(--dur-2) var(--ease-out); }
+  .sgspoke.on { stroke: color-mix(in oklab, var(--fg) 34%, transparent); }
+
+  /* Rule links — solid = available, dashed = gap (pattern, not colour alone) */
+  .sglink { stroke: var(--lc); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity var(--dur-2) var(--ease-out); }
+  .sglink.solid { opacity: 0.95; filter: drop-shadow(0 0 6px color-mix(in oklab, var(--lc) 55%, transparent)); }
+  .sglink.gap { opacity: 0.5; stroke-dasharray: 5 8; filter: none; }
+
+  /* Nodes — same language as the Growth Graph */
+  .sgnode__ghost { fill: none; stroke: var(--nc); stroke-width: 2; stroke-dasharray: 4 4; opacity: 0; transition: opacity var(--dur-2) var(--ease-out); }
+  .sgnode__halo { fill: var(--nc); opacity: 0; transition: opacity var(--dur-2) var(--ease-out); }
+  .sgnode__disc { fill: var(--nc); stroke: var(--bg); stroke-width: 3; opacity: 0.2; transition: opacity var(--dur-2) var(--ease-out), stroke var(--dur-2); }
+  .sgnode__label { font-family: var(--font-body); font-weight: 600; font-size: 15px; fill: var(--fg-faint); transition: fill var(--dur-2); }
+
+  .sgnode.on .sgnode__disc { opacity: 1; stroke: #fff; }
+  .sgnode.on .sgnode__halo { opacity: 0.32; }
+  .sgnode.on .sgnode__label { fill: var(--fg); }
+  .sgnode.ghost .sgnode__ghost { opacity: 0.9; }
+  .sgnode.ghost .sgnode__disc { opacity: 0.12; }
+  .sgnode.ghost .sgnode__label { fill: var(--fg-muted); opacity: 0.85; }
+  .sgnode.off .sgnode__disc { opacity: 0.2; }
+  .sgnode.off .sgnode__label { fill: var(--fg-faint); opacity: 0.55; }
+
+  .sghub__halo { fill: var(--c-indigo); opacity: 0.2; }
+  .sghub__pill { fill: var(--bg); }
+  .sghub__label { font-family: var(--font-body); font-weight: 700; font-size: 15px; fill: var(--fg-muted); }
+
+  /* Mobile vertical map */
+  .sgraph__mobile { display: none; margin-top: 0.5rem; }
+  .sgm { list-style: none; margin: 0 auto; padding: 0; max-width: 24rem; display: flex; flex-direction: column; }
+  .sgm__step { position: relative; display: flex; align-items: center; gap: 0.9rem; padding: 0.5rem 0; }
+  .sgm__step[hidden] { display: none; }
+  .sgm__step::before { content: ''; position: absolute; left: 0.68rem; top: 1.7rem; bottom: -0.5rem; width: 2.5px; background: color-mix(in oklab, var(--nc) 55%, var(--rule)); }
+  .sgm__step:last-of-type::before { display: none; }
+  .sgm__step.ghost::before { background: none; border-left: 2.5px dashed var(--rule-strong); }
+  .sgm__disc { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--nc); flex: none; box-shadow: 0 0 0 0.28rem color-mix(in oklab, var(--nc) 22%, transparent); }
+  .sgm__step.ghost .sgm__disc { background: transparent; border: 2px dashed var(--nc); box-shadow: none; }
+  .sgm__label { font-weight: 600; }
+  .sgm__step.ghost .sgm__label { color: var(--fg-muted); }
+  .sgm__state { margin-left: auto; color: var(--fg-faint); }
+
+  @media (max-width: 719px) {
+    .sgraph__radial { display: none; }
+    .sgraph__mobile { display: block; }
+  }
+</style>

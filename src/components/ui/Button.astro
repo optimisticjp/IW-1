@@ -1,0 +1,69 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  class?: string;
+  'aria-label'?: string;
+}
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  class: className = '',
+  ...rest
+} = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, className]}
+  {...rest}
+>
+  <span class="btn__label"><slot /></span>
+  {variant === 'primary' && <span class="btn__arrow" aria-hidden="true">→</span>}
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-family: var(--font-body);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border-radius: var(--r-2);
+    border: var(--bw) solid transparent;
+    min-height: 46px;
+    padding: 0.85em 1.4em;
+    transition: transform var(--dur-micro) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out), background-color var(--dur-micro), border-color var(--dur-micro);
+  }
+  .btn--lg { font-size: var(--fs-body); padding: 1em 1.7em; min-height: 52px; }
+
+  /* Primary — brand gradient, white text, subtle lift. */
+  .btn--primary { background-image: var(--grad-brand); color: #fff; box-shadow: var(--shadow-1); }
+  .btn--primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .btn--primary .btn__arrow { transition: transform var(--dur-micro) var(--ease-out); }
+  .btn--primary:hover .btn__arrow { transform: translateX(3px); }
+  /* On the gradient band, the primary flips to a solid white button. */
+  [data-env='grad'] .btn--primary { background-image: none; background-color: #fff; color: var(--c-indigo); }
+
+  /* Ghost / secondary — transparent, hairline border, subtle fill on hover. */
+  .btn--secondary, .btn--ghost {
+    background: transparent; color: var(--fg); border-color: var(--rule-strong);
+  }
+  .btn--secondary:hover, .btn--ghost:hover {
+    transform: translateY(-2px);
+    border-color: var(--fg);
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+  }
+  [data-env='grad'] .btn--secondary, [data-env='grad'] .btn--ghost { border-color: rgba(255,255,255,0.6); }
+  [data-env='grad'] .btn--secondary:hover, [data-env='grad'] .btn--ghost:hover { border-color: #fff; background: rgba(255,255,255,0.14); }
+</style>

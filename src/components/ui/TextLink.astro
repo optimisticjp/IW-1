@@ -1,0 +1,46 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+  arrow?: boolean;
+}
+const { href, class: className = '', arrow = true } = Astro.props;
+const external = href.startsWith('http');
+---
+
+<a
+  href={href}
+  class:list={['tlink', className]}
+  {...external ? { rel: 'noopener', target: '_blank' } : {}}
+>
+  <span class="tlink__text"><slot /></span>
+  {arrow && <span class="tlink__arrow" aria-hidden="true">→</span>}
+</a>
+
+<style>
+  .tlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+    color: var(--link);
+    text-decoration: none;
+  }
+  .tlink__text {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% var(--bw-2);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size var(--dur-2) var(--ease-out);
+    padding-bottom: 0.1em;
+  }
+  .tlink:hover .tlink__text {
+    background-size: 100% var(--bw-2);
+  }
+  .tlink__arrow {
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+  .tlink:hover .tlink__arrow {
+    transform: translateX(3px);
+  }
+</style>

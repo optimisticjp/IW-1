@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import { whoWeHelp as d } from '../data/whoWeHelp';
+
+const sysColor: Record<string, string> = {
+  Build: 'var(--c-indigo)', Attract: 'var(--c-coral)', Convert: 'var(--c-magenta)',
+  Connect: 'var(--c-violet)', Retain: 'var(--c-green)', Scale: 'var(--c-amber)',
+};
+
+// Distinct-but-coherent composition per audience: alternating tint, aside side,
+// and a decorative accent rail. Chips carry the real system colours.
+const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint'; aside: 'left' | 'right'; accent: string }> = {
+  ecommerce: { env: 'paper', aside: 'right', accent: 'var(--c-coral)' },
+  creators: { env: 'lavender', aside: 'left', accent: 'var(--c-indigo)' },
+  startups: { env: 'paper', aside: 'right', accent: 'var(--c-amber)' },
+  teams: { env: 'mint', aside: 'left', accent: 'var(--c-violet)' },
+};
+
+const ctaVariant = (label: string) => (label === 'Book a free call' ? 'primary' : 'secondary');
+---
+
+<BaseLayout seo={d.seo}>
+  <!-- 1 · HERO -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="wh" labelledby="wh-h">
+    <div class="wh__hero">
+      <Eyebrow>{d.hero.eyebrow}</Eyebrow>
+      <h1 id="wh-h" class="wh__h1">Wherever you're starting from, <span class="grad-text">we handle the digital side.</span></h1>
+      <p class="wh__sub">{d.hero.sub}</p>
+      <div class="wh__actions">
+        <Button href={d.hero.primary.href} variant="primary" size="lg">{d.hero.primary.label}</Button>
+        <Button href={d.hero.secondary.href} variant="secondary" size="lg">{d.hero.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 2 · AUDIENCE SECTIONS -->
+  {d.audiences.map((a) => {
+    const lay = layouts[a.id];
+    return (
+      <Section env={lay.env} id={a.id} width="wide" class={`aud aud--${lay.aside} anchored`} labelledby={`${a.id}-h`}>
+        <div class="aud__grid u-reveal" style={`--ac:${lay.accent}`}>
+          <div class="aud__main">
+            <h2 id={`${a.id}-h`} class="aud__name">{a.name}</h2>
+            <p class="aud__pain">{a.pain}</p>
+            <p class="aud__do">{a.whatWeDo}</p>
+            <p class="aud__close">{a.closingLine}</p>
+            <Button href={a.cta.href} variant={ctaVariant(a.cta.label)} size="md">{a.cta.label}</Button>
+          </div>
+          <aside class="aud__aside">
+            <p class="aud__aside-lbl">Systems that matter most</p>
+            <ul class="chips">
+              {a.systems.map((name) => (
+                <li class="chip" style={`--cc:${sysColor[name]}`}>
+                  <span class="chip__dot" aria-hidden="true"></span>{name}
+                </li>
+              ))}
+            </ul>
+            {a.systemsNote && <p class="aud__note">{a.systemsNote}</p>}
+          </aside>
+        </div>
+      </Section>
+    );
+  })}
+
+  <!-- 3 · TWO KINDS OF CLIENTS, ONE PROMISE -->
+  <Section env="lavender" id="promise" width="content" pad="loose" class="promise" labelledby="promise-h">
+    <div class="promise__inner u-reveal">
+      <span class="promise__rule" aria-hidden="true"></span>
+      <Eyebrow>{d.promise.eyebrow}</Eyebrow>
+      <h2 id="promise-h" class="promise__head">{d.promise.h2}</h2>
+      <p class="promise__body">{d.promise.body}</p>
+    </div>
+  </Section>
+
+  <!-- 4 · CTA -->
+  <Section env="grad" id="cta" width="content" pad="loose" class="cta" labelledby="cta-h">
+    <div class="cta__inner u-reveal">
+      <h2 id="cta-h" class="cta__head">{d.cta.h2}</h2>
+      <p class="cta__body">{d.cta.body}</p>
+      <div class="cta__actions">
+        <Button href={d.cta.primary.href} variant="primary" size="lg">{d.cta.primary.label}</Button>
+        <Button href={d.cta.secondary.href} variant="secondary" size="lg">{d.cta.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .anchored { scroll-margin-top: 5.5rem; }
+
+  /* 1 · Hero */
+  .wh__hero { max-width: 54rem; }
+  .wh__h1 { font-size: var(--fs-h1); margin-top: 1rem; }
+  .wh__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.4rem; }
+  .wh__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+
+  /* 2 · Audience sections */
+  .aud__grid { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3rem); align-items: start; }
+  .aud__main { min-width: 0; border-left: 4px solid var(--ac); padding-left: clamp(1rem, 0.6rem + 1.5vw, 1.75rem); }
+  .aud__name { font-size: var(--fs-h2); }
+  .aud__pain { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
+  .aud__do { margin-top: 1.1rem; max-width: 54ch; }
+  .aud__close { margin-top: 1.1rem; font-weight: 600; color: color-mix(in oklab, var(--ac) 70%, var(--fg)); max-width: 54ch; }
+  .aud__main :global(.btn) { margin-top: 1.6rem; }
+
+  .aud__aside { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-4); padding: clamp(1.25rem, 1rem + 1.5vw, 1.75rem); }
+  .aud__aside-lbl { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.9rem; }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .chip { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: var(--fs-small); padding: 0.45rem 0.85rem; border-radius: var(--r-pill); background: color-mix(in oklab, var(--cc) 10%, var(--bg)); border: var(--bw) solid color-mix(in oklab, var(--cc) 34%, var(--rule)); color: color-mix(in oklab, var(--cc) 60%, var(--fg)); }
+  .chip__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--cc); flex: none; }
+  .aud__note { margin-top: 0.9rem; font-size: var(--fs-small); color: var(--fg-faint); }
+
+  @media (min-width: 880px) {
+    .aud__grid { grid-template-columns: 1.4fr 0.85fr; }
+    .aud--left .aud__aside { order: -1; }
+  }
+
+  /* 3 · Promise — a unifying editorial moment */
+  .promise { text-align: center; }
+  .promise__inner { max-width: 44rem; margin-inline: auto; display: grid; justify-items: center; gap: 1rem; }
+  .promise__rule { width: 4rem; height: 4px; border-radius: var(--r-pill); background: var(--grad-brand); }
+  .promise__head { font-size: var(--fs-h2); }
+  .promise__body { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 56ch; }
+
+  /* 4 · CTA */
+  .cta { text-align: center; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h2); }
+  .cta__body { font-size: var(--fs-lead); color: var(--fg-muted); }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.5rem; }
+</style>

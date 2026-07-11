@@ -1,0 +1,17 @@
+---
+interface Props { class?: string; as?: 'p' | 'span' | 'div'; }
+const { class: className = '', as: Tag = 'p' } = Astro.props;
+---
+<Tag class:list={['eyebrow', className]}>
+  <span class="eyebrow__dot" aria-hidden="true"></span>
+  <span class="eyebrow__text"><slot /></span>
+</Tag>
+<style>
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.55em;
+    font-family: var(--font-body); font-weight: 600;
+    font-size: var(--fs-caption); letter-spacing: var(--tracking-label);
+    text-transform: uppercase; color: var(--fg-muted); margin: 0;
+  }
+  .eyebrow__dot { width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--accent); flex: none; }
+</style>

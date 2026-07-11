@@ -1,0 +1,124 @@
+---
+import '../styles/global.css';
+import SkipLink from '../components/layout/SkipLink.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import { buildSeo, type SeoInput } from '../lib/seo';
+import { organizationSchema, webSiteSchema, jsonLd } from '../lib/schema';
+
+interface Props {
+  seo: SeoInput;
+  /** include Organization + WebSite JSON-LD (site-wide, used on home) */
+  siteSchema?: boolean;
+}
+const { seo, siteSchema = false } = Astro.props;
+const meta = buildSeo(seo, Astro.site ?? 'https://www.infiniteweblinks.example');
+const structured = siteSchema
+  ? jsonLd(
+      organizationSchema(Astro.site ?? 'https://www.infiniteweblinks.example'),
+      webSiteSchema(Astro.site ?? 'https://www.infiniteweblinks.example')
+    )
+  : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={meta.canonical} />
+    <meta name="robots" content={meta.robots} />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content={meta.ogType} />
+    <meta property="og:site_name" content="Infinite Weblinks" />
+    <meta property="og:title" content={meta.ogTitle} />
+    <meta property="og:description" content={meta.ogDescription} />
+    <meta property="og:url" content={meta.canonical} />
+    <meta property="og:image" content={meta.ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={meta.ogTitle} />
+    <meta name="twitter:description" content={meta.ogDescription} />
+    <meta name="twitter:image" content={meta.ogImage} />
+
+    <meta name="theme-color" content="#faf7f2" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {structured && <script type="application/ld+json" set:html={structured} />}
+  </head>
+  <body>
+    <SkipLink />
+    <SiteHeader />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+
+    <script>
+      // Scroll-reveal controller (progressive enhancement). Content is visible
+      // by default in the server-rendered HTML; the hidden-first state is gated
+      // in CSS on `html.js-ready`, which is added ONLY here, once this controller
+      // is actually running. If this script never loads or throws, `.js-ready`
+      // is never set and every section stays fully visible. Wrapped so any
+      // failure leaves content visible rather than blank.
+      try {
+        const root = document.documentElement;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const reveals = Array.from(document.querySelectorAll<HTMLElement>('.u-reveal'));
+        const lines = Array.from(document.querySelectorAll<HTMLElement>('.line'));
+
+        // Compute exact path length for each Line so the draw is crisp.
+        document.querySelectorAll<SVGPathElement>('.line__draw').forEach((p) => {
+          try {
+            p.style.setProperty('--len', String(Math.ceil(p.getTotalLength())));
+          } catch {
+            /* getTotalLength unsupported — CSS fallback length applies */
+          }
+        });
+
+        if (prefersReduced || !('IntersectionObserver' in window)) {
+          // No animation path: leave everything in its final, visible state and
+          // do NOT arm the hidden-first CSS (never add js-ready).
+          reveals.forEach((el) => el.classList.add('is-in'));
+          lines.forEach((el) => el.classList.add('is-drawn'));
+        } else {
+          // Arm the hidden-first state now that we can drive the reveal, then in
+          // the SAME synchronous task mark everything already on screen as shown
+          // so on-screen content never visibly flashes to hidden.
+          root.classList.add('js-ready');
+          const vh = window.innerHeight || document.documentElement.clientHeight;
+          const onScreen = (el: Element) => el.getBoundingClientRect().top < vh * 0.98;
+          reveals.forEach((el) => { if (onScreen(el)) el.classList.add('is-in'); });
+          lines.forEach((el) => { if (onScreen(el)) el.classList.add('is-drawn'); });
+
+          const io = new IntersectionObserver(
+            (entries, obs) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.add('is-in', 'is-drawn');
+                obs.unobserve(entry.target);
+              }
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0 }
+          );
+          reveals.forEach((el) => { if (!el.classList.contains('is-in')) io.observe(el); });
+          lines.forEach((el) => { if (!el.classList.contains('is-drawn')) io.observe(el); });
+
+          // Safety net after load: reveal anything still hidden but in view.
+          window.addEventListener('load', () => {
+            requestAnimationFrame(() => {
+              document.querySelectorAll<HTMLElement>('.u-reveal:not(.is-in)').forEach((el) => {
+                if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in', 'is-drawn');
+              });
+            });
+          });
+        }
+      } catch {
+        /* Any failure: ensure nothing stays hidden. */
+        document.documentElement.classList.remove('js-ready');
+      }
+    </script>
+  </body>
+</html>

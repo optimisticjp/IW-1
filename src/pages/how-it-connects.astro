@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import { howItConnects as d } from '../data/howItConnects';
+
+const accentVar: Record<string, string> = {
+  indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
+  coral: 'var(--c-coral)', green: 'var(--c-green)', amber: 'var(--c-amber)',
+};
+
+// Shared 6-node layout for the disconnected diagram and the before/after
+// comparison, so the "same underlying system" reads across all three states.
+const W = 620, H = 340;
+const ring = [
+  { label: 'Ads', accent: 'amber', x: 140, y: 92 },
+  { label: 'Website', accent: 'indigo', x: 310, y: 66 },
+  { label: 'Store', accent: 'coral', x: 480, y: 92 },
+  { label: 'Analytics', accent: 'violet', x: 480, y: 250 },
+  { label: 'Email', accent: 'green', x: 310, y: 276 },
+  { label: 'Customer list', accent: 'magenta', x: 140, y: 250 },
+];
+const ringEdges: [number, number][] = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [1, 4]];
+// "Before": a few faint, deliberately incomplete (broken) links.
+const brokenEdges: [number, number][] = [[0, 1], [2, 3], [4, 5]];
+const partial = (a: { x: number; y: number }, b: { x: number; y: number }, t: number) => ({
+  x2: +(a.x + (b.x - a.x) * t).toFixed(1),
+  y2: +(a.y + (b.y - a.y) * t).toFixed(1),
+});
+
+// Tool colours for the story flows.
+const toolColor: Record<string, string> = {
+  Ads: 'var(--c-amber)', Website: 'var(--c-indigo)', Tracking: 'var(--c-violet)',
+  Store: 'var(--c-coral)', CRM: 'var(--c-indigo)', 'Email or WhatsApp': 'var(--c-green)',
+  'Repeat purchase': 'var(--c-magenta)', 'One dashboard': 'var(--c-violet)',
+};
+const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentVar[accent];
+---
+
+<BaseLayout seo={d.seo}>
+  <!-- 1 · HERO -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="hc" labelledby="hc-h">
+    <div class="hc__hero">
+      <Eyebrow>{d.hero.eyebrow}</Eyebrow>
+      <h1 id="hc-h" class="hc__h1">More tools won't fix <span class="grad-text">disconnected growth.</span></h1>
+      <p class="hc__sub">{d.hero.sub}</p>
+      <div class="hc__actions">
+        <Button href={d.hero.primary.href} variant="primary" size="lg">{d.hero.primary.label}</Button>
+        <Button href={d.hero.secondary.href} variant="secondary" size="lg">{d.hero.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 2 · THE DISCONNECTED REALITY (dark engine room) -->
+  <Section env="dark" id="disconnected" width="wide" class="dis" labelledby="dis-h">
+    <div class="dis__grid u-reveal">
+      <div class="dis__copy">
+        <Eyebrow>{d.disconnected.eyebrow}</Eyebrow>
+        <h2 id="dis-h" class="section-head">{d.disconnected.h2}</h2>
+        <p class="lead">{d.disconnected.body}</p>
+      </div>
+      <div class="dis__viz">
+        <svg viewBox={`0 0 ${W} ${H}`} class="diag" role="img"
+          aria-label="Six separate tools — Ads, Website, Store, Customer list, Email, and Analytics — sitting apart with no connections between them.">
+          {d.disconnected.nodes.map((n, i) => {
+            const p = ring[i];
+            return (
+              <g class="diag__node diag__node--dim" style={`--nc:${accentVar[n.accent]}`}>
+                <circle class="diag__disc" cx={p.x} cy={p.y} r="11" />
+                <text class="diag__label" x={p.x} y={p.y + 28} text-anchor="middle">{n.label}</text>
+              </g>
+            );
+          })}
+        </svg>
+        <p class="dis__cap u-mono">Six tools, no shared data.</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 3 · WHAT CONNECTION LOOKS LIKE (three stories) -->
+  <Section env="paper" id="stories" width="wide" class="st" labelledby="st-h">
+    <div class="st__head u-reveal">
+      <Eyebrow>{d.stories.eyebrow}</Eyebrow>
+      <h2 id="st-h" class="section-head">{d.stories.h2}</h2>
+    </div>
+    <div class="st__list">
+      {d.stories.items.map((s, i) => (
+        <article class={`story story--${s.id} u-reveal`} style={`--ac:${accentVar[s.accent]}; --reveal-delay:${i * 70}ms`}>
+          <div class="story__text">
+            <h3 class="story__title">{s.title}</h3>
+            <p class="story__copy">{s.copy}</p>
+          </div>
+          {s.kind === 'flow' ? (
+            <ol class="flow" aria-label={`Path: ${s.path.join(', then ')}`}>
+              {s.path.map((label, j) => (
+                <li class="flow__node" style={`--nc:${nodeColor(label, s.accent)}`}>
+                  <span class="flow__dot" aria-hidden="true"></span>
+                  <span class="flow__label">{label}</span>
+                  {j < s.path.length - 1 && <span class="flow__arrow" aria-hidden="true">→</span>}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <div class="fanin" aria-label={`Path: ${s.sources.join(', ')}, all into ${s.target}`}>
+              <ul class="fanin__sources">
+                {s.sources.map((label) => (
+                  <li class="fanin__src" style={`--nc:${nodeColor(label, s.accent)}`}>
+                    <span class="fanin__dot" aria-hidden="true"></span>{label}
+                  </li>
+                ))}
+              </ul>
+              <span class="fanin__arrow" aria-hidden="true">→</span>
+              <div class="fanin__target" style={`--nc:${accentVar[s.accent]}`}>
+                <span class="fanin__tdot" aria-hidden="true"></span>{s.target}
+              </div>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <!-- 4 · BEFORE AND AFTER -->
+  <Section env="lavender" id="before-after" width="wide" class="ba" labelledby="ba-h">
+    <div class="ba__head u-reveal">
+      <Eyebrow>{d.beforeAfter.eyebrow}</Eyebrow>
+      <h2 id="ba-h" class="section-head">{d.beforeAfter.h2}</h2>
+    </div>
+    <div class="ba__grid u-reveal">
+      <div class="ba__panel ba__panel--before">
+        <h3 class="ba__h">{d.beforeAfter.before.heading}</h3>
+        <svg viewBox={`0 0 ${W} ${H}`} class="diag" role="img"
+          aria-label="Before: the same tools with incomplete, broken links between them.">
+          {brokenEdges.map(([a, b]) => {
+            const e = partial(ring[a], ring[b], 0.5);
+            return <line class="diag__link diag__link--broken" x1={ring[a].x} y1={ring[a].y} x2={e.x2} y2={e.y2} />;
+          })}
+          {ring.map((p) => (
+            <g class="diag__node diag__node--muted" style={`--nc:${accentVar[p.accent]}`}>
+              <circle class="diag__disc" cx={p.x} cy={p.y} r="11" />
+              <text class="diag__label" x={p.x} y={p.y + 28} text-anchor="middle">{p.label}</text>
+            </g>
+          ))}
+        </svg>
+        <p class="ba__copy">{d.beforeAfter.before.copy}</p>
+      </div>
+
+      <div class="ba__panel ba__panel--after">
+        <h3 class="ba__h">{d.beforeAfter.after.heading}</h3>
+        <svg viewBox={`0 0 ${W} ${H}`} class="diag" role="img"
+          aria-label="After: the same tools joined into one connected system.">
+          <defs>
+            <linearGradient id="ba-link" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+            </linearGradient>
+          </defs>
+          {ringEdges.map(([a, b]) => (
+            <line class="diag__link diag__link--live" x1={ring[a].x} y1={ring[a].y} x2={ring[b].x} y2={ring[b].y} />
+          ))}
+          {ring.map((p) => (
+            <g class="diag__node" style={`--nc:${accentVar[p.accent]}`}>
+              <circle class="diag__halo" cx={p.x} cy={p.y} r="18" />
+              <circle class="diag__disc" cx={p.x} cy={p.y} r="11" />
+              <text class="diag__label" x={p.x} y={p.y + 28} text-anchor="middle">{p.label}</text>
+            </g>
+          ))}
+        </svg>
+        <p class="ba__copy">{d.beforeAfter.after.copy}</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 5 · CTA -->
+  <Section env="grad" id="cta" width="content" pad="loose" class="cta" labelledby="cta-h">
+    <div class="cta__inner u-reveal">
+      <h2 id="cta-h" class="cta__head">{d.cta.h2}</h2>
+      <div class="cta__actions">
+        <Button href={d.cta.primary.href} variant="primary" size="lg">{d.cta.primary.label}</Button>
+        <Button href={d.cta.secondary.href} variant="secondary" size="lg">{d.cta.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-head { font-size: var(--fs-h2); max-width: 24ch; margin-top: 0.7rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 54ch; margin-top: 1rem; }
+
+  /* 1 · Hero */
+  .hc__hero { max-width: 52rem; }
+  .hc__h1 { font-size: var(--fs-h1); margin-top: 1rem; }
+  .hc__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.4rem; }
+  .hc__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+
+  /* Shared diagram primitives */
+  .diag { width: 100%; height: auto; overflow: visible; }
+  .diag__disc { fill: var(--nc); stroke: var(--bg); stroke-width: 3; }
+  .diag__label { font-family: var(--font-body); font-weight: 600; font-size: 15px; fill: var(--fg-muted); }
+  .diag__node--dim .diag__disc { opacity: 0.34; }
+  .diag__node--dim .diag__label { fill: var(--fg-faint); }
+  .diag__node--muted .diag__disc { opacity: 0.45; }
+  .diag__halo { fill: var(--nc); opacity: 0.26; }
+  .diag__node .diag__disc { opacity: 1; }
+  .diag__link { stroke-width: 3; stroke-linecap: round; fill: none; }
+  .diag__link--broken { stroke: var(--rule-strong); stroke-dasharray: 5 9; opacity: 0.6; }
+  .diag__link--live { stroke: url(#ba-link); opacity: 0.9; filter: drop-shadow(0 0 5px color-mix(in oklab, var(--c-violet) 45%, transparent)); }
+
+  /* 2 · Disconnected reality */
+  .dis__grid { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3rem); align-items: center; }
+  .dis__copy { min-width: 0; }
+  .dis__viz { min-width: 0; background: color-mix(in oklab, #fff 4%, var(--bg)); border: var(--bw) solid var(--rule); border-radius: var(--r-4); padding: clamp(1rem, 0.6rem + 1.5vw, 1.75rem); }
+  .dis__cap { text-align: center; color: var(--fg-faint); margin-top: 0.4rem; }
+  @media (min-width: 880px) { .dis__grid { grid-template-columns: 1fr 1.05fr; } }
+
+  /* 3 · Stories */
+  .st__head { max-width: 44rem; }
+  .st__list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: clamp(1.75rem, 1rem + 3vw, 2.75rem); }
+  .story {
+    min-width: 0; display: grid; gap: 1.25rem; align-items: center;
+    background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--ac);
+    border-radius: var(--r-4); padding: clamp(1.4rem, 1rem + 1.6vw, 2rem);
+  }
+  .story__text { min-width: 0; }
+  .story__title { font-size: var(--fs-h3); color: color-mix(in oklab, var(--ac) 70%, var(--fg)); }
+  .story__copy { color: var(--fg-muted); margin-top: 0.5rem; max-width: 52ch; }
+  @media (min-width: 820px) {
+    .story { grid-template-columns: 1fr 1fr; }
+    .story--understand { grid-template-columns: 1fr 1.1fr; }
+  }
+
+  /* linear flow */
+  .flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.2rem; }
+  .flow__node { display: inline-flex; align-items: center; gap: 0.55rem; }
+  .flow__dot { width: 0.95rem; height: 0.95rem; border-radius: 50%; background: var(--nc); box-shadow: 0 0 0 0.28rem color-mix(in oklab, var(--nc) 18%, transparent); flex: none; }
+  .flow__label { font-weight: 600; font-size: var(--fs-small); }
+  .flow__arrow { color: var(--fg-faint); margin: 0 0.4rem; }
+
+  /* fan-in flow — wraps gracefully on narrow screens */
+  .fanin { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 0.9rem; }
+  .fanin__sources { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; min-width: 0; }
+  .fanin__src { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: var(--fs-small); }
+  .fanin__dot { width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--nc); flex: none; }
+  .fanin__arrow { color: var(--fg-faint); font-size: 1.3rem; }
+  .fanin__target { min-width: 0; display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); padding: 0.6rem 0.9rem; border-radius: var(--r-2); background: color-mix(in oklab, var(--nc) 12%, var(--bg-raised)); border: var(--bw) solid color-mix(in oklab, var(--nc) 34%, var(--rule)); }
+  .fanin__tdot { width: 1rem; height: 1rem; border-radius: 50%; background: var(--nc); box-shadow: 0 0 0 0.3rem color-mix(in oklab, var(--nc) 20%, transparent); flex: none; }
+
+  /* 4 · Before and after */
+  .ba__head { max-width: 44rem; }
+  .ba__grid { display: grid; gap: 1.25rem; margin-top: clamp(1.75rem, 1rem + 3vw, 2.75rem); }
+  .ba__panel { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-4); padding: clamp(1.25rem, 1rem + 1.5vw, 2rem); }
+  .ba__panel--after { border-color: color-mix(in oklab, var(--c-violet) 32%, var(--rule)); box-shadow: var(--shadow-1); }
+  .ba__h { font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.9rem; }
+  .ba__panel--after .ba__h { color: color-mix(in oklab, var(--c-violet) 70%, var(--fg)); }
+  .ba__copy { color: var(--fg-muted); margin-top: 0.6rem; }
+  @media (min-width: 820px) { .ba__grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+
+  /* 5 · CTA */
+  .cta { text-align: center; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.3rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h2); }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+</style>

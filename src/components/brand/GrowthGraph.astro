@@ -1,0 +1,244 @@
+---
+// The Growth Graph (Brief §7) — the homepage centrepiece and only named
+// interactive. Radial map on desktop (≥720px), vertical loop on mobile.
+// Accessible goal buttons (aria-pressed) + a live caption region. Motion is
+// draw-in + flowing dots + node glow; reduced-motion shows final states.
+import { graphNodes, graphGoals, HUB } from '../../data/growthGraph';
+import { labelPlacement } from '../../lib/graphLayout';
+import { RADIAL, nodePositions } from '../../lib/graphGeometry';
+
+// Radial geometry is shared with the Map Your Stack graph (single source of
+// truth) so the two graphs stay in exact lockstep.
+const R = RADIAL;
+const pos = nodePositions();
+const label = (k: string) => graphNodes.find((n) => n.key === k)!.label;
+const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
+const loopPath = (loop: string[]) =>
+  'M ' + loop.map((k) => `${pos[k].x} ${pos[k].y}`).join(' L ') + ' Z';
+
+const active0 = graphGoals[0];
+---
+
+<div class="ggraph" data-active={active0.id} style={`--goal-accent:${active0.accent}`}>
+  <!-- Goal tabs -->
+  <div class="ggtabs" role="group" aria-label="Pick a growth goal">
+    {graphGoals.map((g, i) => (
+      <button
+        type="button"
+        class="ggtab"
+        data-goal={g.id}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        style={`--tc:${g.accent}`}
+      >{g.label}</button>
+    ))}
+  </div>
+
+  <!-- Active goal label + live caption -->
+  <p class="gglabel"><span class="gglabel__dot" aria-hidden="true"></span><span class="gglabel__text">{active0.label}</span></p>
+  <p class="ggcap" role="status" aria-live="polite">{active0.caption}</p>
+
+  <!-- Desktop radial map -->
+  <div class="ggraph__radial">
+    <svg viewBox="0 0 780 640" class="ggsvg" role="presentation" aria-hidden="true">
+      <defs>
+        <linearGradient id="gghub" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+        </linearGradient>
+      </defs>
+      <!-- faint spokes hub -> every node -->
+      {graphNodes.map((n) => (
+        <line class="ggspoke" x1={R.cx} y1={R.cy} x2={pos[n.key].x} y2={pos[n.key].y} />
+      ))}
+      <!-- loop paths (one per goal; active one shown) -->
+      {graphGoals.map((g) => (
+        <g class="ggloop" data-goal={g.id}>
+          <path class="ggloop__base" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
+          <path class="ggloop__draw" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
+          <path class="ggloop__dots" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
+        </g>
+      ))}
+      <!-- tool nodes -->
+      {graphNodes.map((n) => {
+        const p = pos[n.key];
+        // Geometry-driven placement (clears the active halo in every state).
+        const lp = labelPlacement(p.a);
+        const anchor = lp.anchor;
+        const lx = p.x + lp.dx;
+        const ly = p.y + lp.dy;
+        return (
+          <g class="ggnode" data-node={n.key} style={`--nc:${n.color}`}>
+            <circle class="ggnode__halo" cx={p.x} cy={p.y} r="26" />
+            <circle class="ggnode__disc" cx={p.x} cy={p.y} r="13" />
+            <text class="ggnode__label" x={lx} y={ly} text-anchor={anchor}>{label(n.key)}</text>
+          </g>
+        );
+      })}
+      <!-- central hub: one soft halo + gradient disc + bold white ∞ mark -->
+      <circle class="gghub__halo" cx={R.cx} cy={R.cy} r="54" />
+      <circle cx={R.cx} cy={R.cy} r="38" fill="url(#gghub)" />
+      <g transform="translate(367 287) scale(1.15)">
+        <path d="M6 11 C 6 5 14 5 20 11 C 26 17 34 17 34 11 C 34 5 26 5 20 11 C 14 17 6 17 6 11 Z"
+          fill="none" stroke="#fff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="6" cy="11" r="2.8" fill="#fff" /><circle cx="34" cy="11" r="2.8" fill="#fff" />
+      </g>
+      <!-- backing pill keeps the hub label crisp over any loop line -->
+      <rect class="gghub__pill" x={R.cx - 82} y={R.cy + 52} width="164" height="27" rx="13.5" />
+      <text x={R.cx} y={R.cy + 70} text-anchor="middle" class="gghub__label">{HUB.label}</text>
+    </svg>
+  </div>
+
+  <!-- Mobile vertical loop (one block per goal; active shown) -->
+  <div class="ggraph__mobile">
+    {graphGoals.map((g) => (
+      <ol class="ggm" data-goal={g.id}>
+        {g.loop.map((k) => (
+          <li class="ggm__step" style={`--nc:${color(k)}`}>
+            <span class="ggm__disc" aria-hidden="true"></span>
+            <span class="ggm__label">{label(k)}</span>
+          </li>
+        ))}
+        <li class="ggm__return" aria-hidden="true"><span class="ggm__returntxt">back to {label(g.loop[0])}</span></li>
+      </ol>
+    ))}
+  </div>
+
+  <script type="application/json" class="gg-data" set:html={JSON.stringify(
+    graphGoals.map((g) => ({ id: g.id, label: g.label, accent: g.accent, caption: g.caption, loop: g.loop }))
+  )} />
+</div>
+
+<style>
+  .ggraph { --goal-accent: var(--c-magenta); }
+
+  /* Tabs */
+  .ggtabs { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+  .ggtab {
+    font-family: var(--font-body); font-weight: 600; font-size: var(--fs-small);
+    padding: 0.6rem 1.05rem; border-radius: var(--r-2);
+    border: var(--bw) solid var(--rule-strong); background: var(--bg-raised); color: var(--fg);
+    transition: transform var(--dur-micro) var(--ease-out), border-color var(--dur-micro), background-color var(--dur-micro);
+  }
+  .ggtab:hover { transform: translateY(-1px); border-color: var(--tc); }
+  .ggtab[aria-pressed='true'] { background: var(--tc); color: #fff; border-color: transparent; }
+
+  .gglabel { display: inline-flex; align-items: center; gap: 0.5rem; justify-self: center; margin: 1.6rem auto 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-small); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .ggraph > .gglabel { display: flex; justify-content: center; }
+  .gglabel__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--goal-accent); }
+  .ggcap { max-width: 46rem; margin: 0 auto; text-align: center; color: var(--fg-muted); min-height: 4.5em; transition: opacity var(--dur-2) var(--ease-out); }
+
+  /* Radial map */
+  .ggraph__radial { margin-top: 1.5rem; }
+  .ggsvg { width: 100%; height: auto; overflow: visible; }
+  .ggspoke { stroke: var(--rule); stroke-width: 1.4; }
+
+  .ggloop { display: none; }
+  .ggraph .ggloop.on { display: block; }
+  .ggloop__base { fill: none; stroke: var(--lc); stroke-width: 3.5; opacity: 0.28; stroke-linecap: round; stroke-linejoin: round; }
+  .ggloop__draw { fill: none; stroke: var(--lc); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 6px color-mix(in oklab, var(--lc) 60%, transparent)); }
+  .ggloop.draw .ggloop__draw { animation: gg-draw 1.4s var(--ease-out) forwards; }
+  @keyframes gg-draw { to { stroke-dashoffset: 0; } }
+  .ggloop__dots { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 0.6 7; stroke-dashoffset: 0; opacity: 0.9; }
+  .ggloop.on .ggloop__dots { animation: gg-dots 2.2s linear infinite; }
+  @keyframes gg-dots { to { stroke-dashoffset: -30.4; } }
+
+  .ggnode__halo { fill: var(--nc); opacity: 0; transition: opacity var(--dur-2) var(--ease-out); }
+  .ggnode__disc { fill: var(--nc); stroke: var(--bg); stroke-width: 3; opacity: 0.34; transition: opacity var(--dur-2) var(--ease-out), stroke var(--dur-2); }
+  .ggnode__label { font-family: var(--font-body); font-weight: 600; font-size: 15px; fill: var(--fg-faint); transition: fill var(--dur-2); }
+  .ggnode.on .ggnode__disc { opacity: 1; stroke: #fff; }
+  .ggnode.on .ggnode__halo { opacity: 0.32; }
+  .ggnode.on .ggnode__label { fill: var(--fg); }
+  .ggnode.off .ggnode__disc { opacity: 0.2; }
+  .ggnode.off .ggnode__label { fill: var(--fg-faint); opacity: 0.6; }
+
+  .gghub__halo { fill: var(--c-indigo); opacity: 0.18; }
+  .gghub__pill { fill: var(--bg); }
+  .gghub__label { font-family: var(--font-body); font-weight: 700; font-size: 15px; fill: var(--fg-muted); }
+
+  /* Mobile vertical loop */
+  .ggraph__mobile { display: none; margin-top: 1.75rem; }
+  .ggm { list-style: none; margin: 0 auto; padding: 0; max-width: 22rem; position: relative; }
+  .ggraph .ggm { display: none; }
+  .ggraph .ggm.on { display: block; }
+  .ggm__step { position: relative; display: flex; align-items: center; gap: 0.9rem; padding: 0.55rem 0; }
+  .ggm__step::before { content: ''; position: absolute; left: 0.68rem; top: 1.7rem; bottom: -0.55rem; width: 2.5px; background: color-mix(in oklab, var(--nc) 60%, var(--rule)); }
+  .ggm__step:last-of-type::before { display: none; }
+  .ggm__disc { width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--nc); box-shadow: 0 0 0 0.28rem color-mix(in oklab, var(--nc) 22%, transparent); flex: none; }
+  .ggm__label { font-weight: 600; }
+  .ggm__return { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0 0 2.3rem; color: var(--fg-faint); font-family: var(--font-mono); font-size: var(--fs-caption); }
+  .ggm__return::before { content: '↻'; font-size: 1.1rem; }
+
+  @media (max-width: 719px) {
+    .ggraph__radial { display: none; }
+    .ggraph__mobile { display: block; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ggloop.draw .ggloop__draw { animation: none; stroke-dashoffset: 0; }
+    .ggloop__draw { stroke-dashoffset: 0; }
+    .ggloop.on .ggloop__dots { animation: none; }
+    .ggcap { transition: none; }
+  }
+</style>
+
+<script>
+  // Growth Graph controller — accessible goal selection, node/loop state,
+  // caption + live-region update, and animation re-trigger.
+  interface GGGoal { id: string; label: string; accent: string; caption: string; loop: string[] }
+  document.querySelectorAll<HTMLElement>('.ggraph').forEach((root) => {
+    const dataEl = root.querySelector('.gg-data');
+    if (!dataEl) return;
+    const goals: GGGoal[] = JSON.parse(dataEl.textContent || '[]');
+    const byId: Record<string, GGGoal> = Object.fromEntries(goals.map((g) => [g.id, g]));
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.ggtab'));
+    const nodes = Array.from(root.querySelectorAll('.ggnode'));
+    const loops = Array.from(root.querySelectorAll('.ggloop'));
+    const mobiles = Array.from(root.querySelectorAll('.ggm'));
+    const cap = root.querySelector('.ggcap');
+    const labelText = root.querySelector('.gglabel__text');
+
+    function select(id: string, focusTab = false) {
+      const goal = byId[id];
+      if (!goal) return;
+      root.setAttribute('data-active', id);
+      root.style.setProperty('--goal-accent', goal.accent);
+      tabs.forEach((t) => {
+        const on = t.getAttribute('data-goal') === id;
+        t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (on && focusTab) t.focus();
+      });
+      const inLoop = new Set(goal.loop);
+      nodes.forEach((n) => {
+        const k = n.getAttribute('data-node') || '';
+        n.classList.toggle('on', inLoop.has(k));
+        n.classList.toggle('off', !inLoop.has(k));
+      });
+      loops.forEach((l) => {
+        const on = l.getAttribute('data-goal') === id;
+        l.classList.toggle('on', on);
+        l.classList.remove('draw');
+      });
+      mobiles.forEach((m) => m.classList.toggle('on', m.getAttribute('data-goal') === id));
+      if (cap) cap.textContent = goal.caption;
+      if (labelText) labelText.textContent = goal.label;
+      // re-trigger the draw animation on the active loop
+      const active = loops.find((l) => l.getAttribute('data-goal') === id);
+      if (active) requestAnimationFrame(() => active.classList.add('draw'));
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab.getAttribute('data-goal') || goals[0].id));
+      tab.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const dir = e.key === 'ArrowRight' ? 1 : -1;
+          const next = tabs[(i + dir + tabs.length) % tabs.length];
+          select(next.getAttribute('data-goal') || goals[0].id, true);
+        }
+      });
+    });
+
+    // initialise selected state (draw first goal once visible)
+    select(root.getAttribute('data-active') || goals[0].id);
+  });
+</script>

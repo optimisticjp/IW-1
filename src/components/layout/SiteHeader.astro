@@ -1,0 +1,110 @@
+---
+// Site header (Brief §4): Logo · What we do · How it connects · Who we help ·
+// [Book a free call]. Accessible mobile-nav island.
+import { primaryNav, bookCta } from '../../data/nav';
+import Button from '../ui/Button.astro';
+import InfinityMark from '../brand/InfinityMark.astro';
+---
+
+<header class="hdr" data-env="paper">
+  <div class="hdr__bar">
+    <a class="brand" href="/" aria-label="Infinite Weblinks — home">
+      <InfinityMark size={34} />
+      <span class="brand__word">Infinite&nbsp;Weblinks</span>
+    </a>
+
+    <nav class="nav-d" aria-label="Primary">
+      <ul class="nav-d__list">
+        {primaryNav.map((item) => (
+          <li><a href={item.href} class="nav-d__link">{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hdr__cta">
+      <Button href={bookCta.href} variant="primary" size="md">{bookCta.label}</Button>
+    </div>
+
+    <button class="hdr__toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+      <span class="hdr__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+
+  <div class="mnav" id="mobile-nav" data-env="paper" hidden>
+    <nav class="mnav__inner" aria-label="Primary (mobile)">
+      <ul class="mnav__list">
+        {primaryNav.map((item) => (
+          <li><a href={item.href} class="mnav__link">{item.label}</a></li>
+        ))}
+      </ul>
+      <a href={bookCta.href} class="mnav__cta">{bookCta.label} <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky; top: 0; z-index: var(--z-header);
+    background: color-mix(in oklab, var(--c-paper) 84%, transparent);
+    backdrop-filter: saturate(1.3) blur(12px);
+    border-bottom: var(--bw) solid var(--rule);
+  }
+  .hdr__bar {
+    max-width: var(--w-wide); margin-inline: auto;
+    padding: 0.7rem var(--gutter); display: flex; align-items: center; gap: 1rem;
+  }
+  .brand { display: inline-flex; align-items: center; gap: 0.55rem; text-decoration: none; color: var(--fg);
+    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; margin-right: auto; }
+
+  .nav-d { display: none; }
+  .nav-d__list { display: flex; gap: clamp(1rem, 0.4rem + 1.6vw, 2rem); list-style: none; margin: 0; padding: 0; }
+  .nav-d__link { position: relative; color: var(--fg); text-decoration: none; font-weight: 500; font-size: var(--fs-small); padding: 0.35rem 0; }
+  .nav-d__link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-2) var(--ease-out); }
+  .nav-d__link:hover::after { transform: scaleX(1); }
+
+  .hdr__cta { display: none; }
+
+  .hdr__toggle { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; margin-left: auto; border-radius: var(--r-2); border: var(--bw) solid var(--rule-strong); }
+  .hdr__bars { display: grid; gap: 4px; width: 20px; }
+  .hdr__bars i { display: block; height: 2px; background: var(--fg); border-radius: 2px; transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-micro); }
+  .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(2) { opacity: 0; }
+  .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  .mnav { position: fixed; inset: 0; z-index: var(--z-nav); background: var(--bg); color: var(--fg); padding: 5rem var(--gutter) 2rem; overflow-y: auto; }
+  .mnav[hidden] { display: none; }
+  .mnav__inner { display: grid; gap: 1.4rem; max-width: 30rem; margin-inline: auto; }
+  .mnav__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
+  .mnav__link { display: block; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h3); color: var(--fg); text-decoration: none; padding: 0.5rem 0; border-bottom: var(--bw) solid var(--rule); }
+  .mnav__cta { display: inline-flex; align-items: center; gap: 0.5em; background-image: var(--grad-brand); color: #fff; padding: 0.9rem 1.5rem; border-radius: var(--r-2); font-weight: 700; text-decoration: none; justify-self: start; min-height: 48px; }
+
+  @media (min-width: 900px) {
+    .nav-d { display: block; margin-inline: auto; }
+    .hdr__cta { display: block; }
+    .hdr__toggle { display: none; }
+    .mnav { display: none !important; }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+  if (toggle && panel) {
+    const focusables = () => Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+    const open = () => { panel.hidden = false; toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Close menu'); document.body.style.overflow = 'hidden'; focusables()[0]?.focus(); };
+    const close = (rf = true) => { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open menu'); document.body.style.overflow = ''; if (rf) toggle.focus(); };
+    toggle.addEventListener('click', () => (toggle.getAttribute('aria-expanded') === 'true' ? close() : open()));
+    panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) close(false); });
+    document.addEventListener('keydown', (e) => {
+      if (panel.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      if (e.key === 'Tab') {
+        const f = focusables(); if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); (last as HTMLElement).focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); (first as HTMLElement).focus(); }
+      }
+    });
+    window.matchMedia('(min-width: 900px)').addEventListener('change', (ev) => { if (ev.matches && !panel.hidden) close(false); });
+  }
+</script>

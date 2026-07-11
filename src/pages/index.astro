@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import Constellation from '../components/brand/Constellation.astro';
+import GrowthGraph from '../components/brand/GrowthGraph.astro';
+import InfinityMark from '../components/brand/InfinityMark.astro';
+import WorkThumb from '../components/brand/WorkThumb.astro';
+import { home } from '../data/home';
+
+const accentVar: Record<string, string> = {
+  indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
+  coral: 'var(--c-coral)', green: 'var(--c-green)', amber: 'var(--c-amber)',
+};
+---
+
+<BaseLayout seo={home.meta} siteSchema>
+  <!-- 1 · HERO -------------------------------------------------------- -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="hero" labelledby="hero-h">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <Eyebrow>{home.hero.eyebrow}</Eyebrow>
+        <h1 id="hero-h" class="hero__head">
+          {home.hero.h1a} <span class="grad-text">{home.hero.h1b}</span>
+        </h1>
+        <p class="hero__sub">{home.hero.sub}</p>
+        <div class="hero__actions">
+          <Button href={home.hero.primary.href} variant="primary" size="lg">{home.hero.primary.label}</Button>
+          <Button href={home.hero.secondary.href} variant="secondary" size="lg">{home.hero.secondary.label}</Button>
+        </div>
+        <p class="hero__trust">{home.hero.trust}</p>
+      </div>
+      <div class="hero__vis"><Constellation /></div>
+    </div>
+  </Section>
+
+  <!-- 2 · THE IDEA ---------------------------------------------------- -->
+  <Section env="lavender" width="content" class="idea" labelledby="idea-h">
+    <div class="idea__inner u-reveal">
+      <Eyebrow>{home.idea.eyebrow}</Eyebrow>
+      <h2 id="idea-h" class="idea__head">{home.idea.h2}</h2>
+      <p class="idea__body">{home.idea.body}</p>
+    </div>
+  </Section>
+
+  <!-- 3 · THREE DOORS ------------------------------------------------- -->
+  <Section env="paper" id="three-doors" width="wide" class="doors" labelledby="doors-h">
+    <div class="doors__head u-reveal">
+      <Eyebrow>{home.doors.eyebrow}</Eyebrow>
+      <h2 id="doors-h" class="section-head">{home.doors.h2}</h2>
+      <p class="lead">{home.doors.sub}</p>
+    </div>
+    <ol class="doors__track">
+      {home.doors.items.map((d, i) => (
+        <li class:list={['door', 'u-reveal']} style={`--dc:${accentVar[d.accent]}; --reveal-delay:${i * 100}ms`}>
+          <div class="door__marker" aria-hidden="true">
+            <span class="door__step">{i + 1}</span>
+          </div>
+          <div class="door__card">
+            <h3 class="door__name">{d.name}</h3>
+            <p class="door__body">{d.body}</p>
+            <span class="door__tag">{d.tag}</span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- 4 · THE GROWTH GRAPH (dark, interactive centrepiece) ------------ -->
+  <Section env="dark" id="growth-graph" width="wide" pad="loose" class="gg" labelledby="gg-h">
+    <div class="gg__head u-reveal">
+      <Eyebrow>{home.graph.eyebrow}</Eyebrow>
+      <h2 id="gg-h" class="section-head">{home.graph.h2}</h2>
+      <p class="lead">{home.graph.sub}</p>
+    </div>
+    <div class="gg__stage u-reveal"><GrowthGraph /></div>
+    <p class="gg__footerline u-reveal">{home.graph.footerLine}</p>
+    <div class="gg__cta u-reveal">
+      <Button href="/map-your-stack" variant="secondary" size="lg">Map your own stack</Button>
+    </div>
+  </Section>
+
+  <!-- 5 · CAPABILITIES ------------------------------------------------ -->
+  <Section env="paper" id="capabilities" width="wide" class="cap" labelledby="cap-h">
+    <div class="cap__head u-reveal">
+      <Eyebrow>{home.capabilities.eyebrow}</Eyebrow>
+      <h2 id="cap-h" class="section-head">{home.capabilities.h2}</h2>
+      <p class="lead">{home.capabilities.sub}</p>
+    </div>
+    <ul class="cap__list">
+      {home.capabilities.items.map((c, i) => (
+        <li class="cab u-reveal" style={`--cc:${accentVar[c.accent]}; --reveal-delay:${i * 60}ms`}>
+          <span class="cab__node" aria-hidden="true"></span>
+          <div class="cab__body">
+            <div class="cab__top">
+              <h3 class="cab__name">{c.name}</h3>
+              <span class="cab__linked"><InfinityMark size={16} /> linked</span>
+            </div>
+            <p class="cab__desc">{c.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 6 · PROOF ------------------------------------------------------- -->
+  <Section env="mint" id="proof" width="wide" class="prf" labelledby="prf-h">
+    <div class="prf__head u-reveal">
+      <h2 id="prf-h" class="section-head">{home.proof.h2}</h2>
+      <p class="lead">{home.proof.sub}</p>
+    </div>
+    <ul class="prf__strip">
+      {home.proof.items.map((w, i) => (
+        <li class="work u-reveal" style={`--wc:${accentVar[w.accent]}; --reveal-delay:${i * 70}ms`}>
+          <div class="work__thumb"><WorkThumb accent={accentVar[w.accent]} variant={i} /></div>
+          <div class="work__meta">
+            <span class="work__kind">{w.kind}</span>
+            <h3 class="work__title">{w.title}</h3>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 7 · FINAL CTA (gradient band) ----------------------------------- -->
+  <Section env="grad" id="book" width="content" pad="loose" class="cta" labelledby="cta-h">
+    <div class="cta__inner u-reveal">
+      <h2 id="cta-h" class="cta__head">{home.finalCta.h2}</h2>
+      <p class="cta__body">{home.finalCta.body}</p>
+      <div class="cta__actions">
+        <Button href={home.finalCta.primary.href} variant="primary" size="lg">{home.finalCta.primary.label}</Button>
+        <Button href={home.finalCta.secondary.href} variant="secondary" size="lg">{home.finalCta.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-head { font-size: var(--fs-h2); max-width: 20ch; margin-top: 0.7rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 48ch; margin-top: 1rem; }
+
+  /* 1 · Hero */
+  .hero__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
+  .hero__copy { min-width: 0; }
+  .hero__head { font-size: var(--fs-h1); margin: 1.2rem 0 0; }
+  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.5rem; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+  .hero__trust { margin-top: 1.5rem; color: var(--fg-faint); font-size: var(--fs-small); }
+  .hero__vis { min-width: 0; }
+  @media (min-width: 940px) { .hero__grid { grid-template-columns: 1fr 1.05fr; } }
+
+  /* 2 · Idea */
+  .idea__inner { max-width: 40rem; }
+  .idea__head { font-size: var(--fs-h2); margin-top: 0.7rem; }
+  .idea__body { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1.1rem; }
+
+  /* 3 · Three doors — progression with a connector line */
+  .doors__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 1.25rem; position: relative; counter-reset: door; }
+  .door { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
+  .door__marker { position: relative; display: grid; place-items: start center; }
+  .door__step { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: var(--r-2); background: var(--dc); color: #fff; font-family: var(--font-display); font-weight: 800; }
+  .door__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--dc); border-radius: var(--r-3); padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); box-shadow: var(--shadow-1); }
+  .door__name { font-size: var(--fs-h3); }
+  .door__body { color: var(--fg-muted); margin-top: 0.5rem; }
+  .door__tag { display: inline-block; margin-top: 0.9rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--dc) 72%, var(--fg)); background: color-mix(in oklab, var(--dc) 12%, var(--bg)); padding: 0.28rem 0.7rem; border-radius: var(--r-pill); }
+  @media (min-width: 860px) {
+    .doors__track { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    /* connector line runs through the three step markers */
+    .doors__track::before { content: ''; position: absolute; top: 1.3rem; left: 16%; right: 16%; height: 3px; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--c-indigo), var(--c-violet), var(--c-magenta)); z-index: 0; }
+    .door { grid-template-columns: 1fr; gap: 1rem; text-align: left; }
+    .door__marker { justify-items: start; }
+    .door__step { position: relative; z-index: 1; box-shadow: 0 0 0 6px var(--bg); }
+  }
+
+  /* 4 · Growth Graph section */
+  .gg__head { text-align: center; margin-inline: auto; }
+  .gg__head .section-head, .gg__head .lead { margin-inline: auto; }
+  .gg__head .eyebrow { justify-content: center; }
+  .gg__stage { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+  .gg__footerline { max-width: 44rem; margin: clamp(2rem, 1rem + 3vw, 3rem) auto 0; text-align: center; color: var(--fg-muted); font-size: var(--fs-lead); }
+  .gg__cta { display: flex; justify-content: center; margin-top: clamp(1.25rem, 0.8rem + 1.5vw, 2rem); }
+
+  /* 5 · Capabilities — a connected list, not six identical cards */
+  .cap__list { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; }
+  .cab { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; padding: 1.3rem 0; border-top: var(--bw) solid var(--rule); }
+  .cab:last-child { border-bottom: var(--bw) solid var(--rule); }
+  .cab__node { width: 1.1rem; height: 1.1rem; margin-top: 0.35rem; border-radius: 50%; background: var(--cc); box-shadow: 0 0 0 0.32rem color-mix(in oklab, var(--cc) 18%, transparent); flex: none; }
+  .cab__top { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+  .cab__name { font-size: var(--fs-h3); }
+  .cab__linked { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); }
+  .cab__desc { color: var(--fg-muted); margin-top: 0.3rem; max-width: 60ch; }
+  @media (min-width: 820px) {
+    .cap__list { grid-template-columns: 1fr 1fr; column-gap: 3rem; }
+    .cab:nth-child(2) { border-top: var(--bw) solid var(--rule); }
+  }
+
+  /* 6 · Proof — recent-work strip (no invented data) */
+  .prf__strip { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.25rem; }
+  .work { display: grid; gap: 0.9rem; }
+  .work__thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--r-3); background: var(--bg-raised); border: var(--bw) solid var(--rule); overflow: clip; box-shadow: var(--shadow-1); }
+  .work__kind { font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--wc) 70%, var(--fg)); }
+  .work__title { font-size: var(--fs-h4); margin-top: 0.2rem; }
+  @media (min-width: 620px) { .prf__strip { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .prf__strip { grid-template-columns: repeat(4, 1fr); } }
+
+  /* 7 · Final CTA */
+  .cta { text-align: center; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h1); }
+  .cta__body { color: #fff; font-size: var(--fs-lead); max-width: 36rem; }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.6rem; }
+</style>
