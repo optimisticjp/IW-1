@@ -9,8 +9,8 @@ export function organizationSchema(siteUrl: string | URL) {
     name: 'Infinite Weblinks',
     url: base + '/',
     description:
-      'A full-stack growth studio that connects the systems behind ecommerce growth so they compound instead of leak.',
-    slogan: 'Connected growth for ecommerce brands',
+      'A connected growth agency. We build and connect the digital systems behind modern businesses, so every part works together.',
+    slogan: 'Grow your business digitally.',
     logo: new URL('/favicon.svg', siteUrl).href,
     // TODO(content): real social profiles before launch.
     sameAs: [] as string[],

@@ -138,6 +138,14 @@ p {
   letter-spacing: 0.02em;
 }
 
+/* Brand-gradient text (second hero line, wordmark, accents). */
+.grad-text {
+  background: var(--grad-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Scroll-reveal (object assembly). Hidden initial state applies ONLY when
    (a) JavaScript is running (html.js — set synchronously in <head>) and
    (b) motion is allowed. If JS is disabled the content is fully visible, so
@@ -145,9 +153,9 @@ p {
 @media (prefers-reduced-motion: no-preference) {
   html.js .u-reveal {
     opacity: 0;
-    transform: translateY(18px);
-    transition: opacity var(--dur-3) var(--ease-out),
-      transform var(--dur-3) var(--ease-out);
+    transform: translateY(20px);
+    transition: opacity var(--dur-entrance) var(--ease-out),
+      transform var(--dur-entrance) var(--ease-out);
     transition-delay: var(--reveal-delay, 0ms);
     will-change: opacity, transform;
   }

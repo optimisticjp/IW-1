@@ -1,136 +1,116 @@
 /* =========================================================================
-   Infinite Weblinks — Design Tokens (light-first, colorful universe)
-   Warm ivory canvas, saturated orange signature, and a controlled family of
-   bright supporting colors (sky, grass, mint, yellow, pink, violet). Deep
-   warm ink for type. Original palette — inspired by warm/vibrant light UIs,
-   not copied from any one site.
+   Infinite Weblinks — Design Tokens (Master Website Brief v1)
+   Warm paper base, indigo→magenta brand gradient, colour concentrated in the
+   system graphics (constellation + Growth Graph) and capability accents.
+   Typography intentionally KEEPS the current approved system-font stack
+   (typography override) — not Bricolage Grotesque / Inter / Google Fonts.
    ========================================================================= */
 
 :root {
-  /* --- Color primitives ------------------------------------------------ */
-  --c-cream: #faf3e6;          /* warm ivory canvas */
-  --c-cream-2: #f2e7d1;        /* deeper cream */
-  --c-ivory: #fffdf8;          /* lightest raised surface */
-  --c-ink: #2a2013;            /* warm near-black (type) */
-  --c-ink-2: #241b10;          /* deeper ink (footer) */
+  /* --- Palette (Section 6) --------------------------------------------- */
+  --c-paper: #faf7f2;          /* main background — warm off-white */
+  --c-paper-lav: #f2f0fb;      /* soft lavender tint */
+  --c-paper-mint: #edf6f0;     /* soft mint tint */
+  --c-ivory: #ffffff;          /* white cards on light */
+  --c-ink: #17161c;            /* primary text — warm near-black */
+  --c-ink-2: #565462;          /* secondary text */
+  --c-ink-3: #8b8894;          /* muted / captions */
 
-  /* signature + supporting families (saturated, friendly) */
-  --c-orange: #ff6a2c;         /* signature */
-  --c-orange-deep: #dd4e0d;    /* accessible orange for text/links on light */
-  --c-pink: #ff6f9c;
-  --c-pink-deep: #db3f74;
-  --c-blue: #3d9bec;           /* sky */
-  --c-blue-deep: #1f74bd;
-  --c-green: #23b27a;          /* grass */
-  --c-green-deep: #0e875a;
-  --c-mint: #9be7c6;
-  --c-yellow: #ffc24a;
-  --c-yellow-deep: #c98a10;
-  --c-violet: #9a7cf0;
-  --c-violet-deep: #6a49d4;
+  --c-indigo: #4b3fea;         /* brand / Build */
+  --c-violet: #7b3fe4;         /* gradient mid / Connect */
+  --c-magenta: #e8409a;        /* gradient end / Convert */
+  --c-coral: #ff6a3d;          /* Attract */
+  --c-green: #12b36a;          /* Retain */
+  --c-amber: #f5a524;          /* Scale */
 
-  /* soft light section tints (backgrounds for colored-light bands) */
-  --tint-peach: #fdeddf;
-  --tint-sky: #e6f1fc;
-  --tint-mint: #e4f5ec;
-  --tint-lemon: #fcf2d8;
-  --tint-lavender: #efeafc;
-  --tint-pink: #fce7ef;
+  --c-dark: #0c0b14;           /* dark sections — near-black, violet undertone */
+  --c-dark-2: #161227;         /* dark surface / cards */
 
-  /* --- Semantic defaults (cream environment) --------------------------- */
-  --bg: var(--c-cream);
+  /* Brand gradient — the "connection" signature (indigo → magenta). */
+  --grad-brand: linear-gradient(100deg, #4b3fea 0%, #7b3fe4 52%, #e8409a 100%);
+
+  /* --- Semantic defaults (paper environment) --------------------------- */
+  --bg: var(--c-paper);
   --bg-raised: var(--c-ivory);
-  --bg-inset: var(--c-cream-2);
+  --bg-inset: var(--c-paper-lav);
   --fg: var(--c-ink);
-  --fg-muted: color-mix(in oklab, var(--c-ink) 66%, var(--c-cream));
-  --fg-faint: color-mix(in oklab, var(--c-ink) 46%, var(--c-cream));
-  --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-cream));
-  --rule-strong: color-mix(in oklab, var(--c-ink) 24%, var(--c-cream));
-  --link: var(--c-orange-deep);
-  --accent: var(--c-orange);
+  --fg-muted: var(--c-ink-2);
+  --fg-faint: var(--c-ink-3);
+  --rule: color-mix(in oklab, var(--c-ink) 12%, var(--c-paper));
+  --rule-strong: color-mix(in oklab, var(--c-ink) 20%, var(--c-paper));
+  --link: var(--c-indigo);
+  --accent: var(--c-indigo);
   --accent-ink: #ffffff;
-  --accent-2: var(--c-blue);
-  --spark: var(--c-violet);
-  --focus: var(--c-blue-deep);
+  --accent-2: var(--c-magenta);
+  --focus: var(--c-indigo);
 
-  /* --- Type families (Phase 1: swappable system-stack placeholders) ---- */
-  /* Friendly bold sans display + legible sans interface + mono for labels.
-     TODO(content): validate + self-host final variable typefaces. */
+  /* --- Typography (KEPT — current approved system-font system) --------- */
   --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, 'Apple Color Emoji', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code',
     Menlo, Consolas, monospace;
-
   --weight-display: 800;
 
-  /* --- Fluid type scale ------------------------------------------------ */
-  --fs-caption: clamp(0.72rem, 0.69rem + 0.15vw, 0.8rem);
-  --fs-small: clamp(0.85rem, 0.82rem + 0.18vw, 0.95rem);
-  --fs-body: clamp(1rem, 0.96rem + 0.26vw, 1.14rem);
-  --fs-lead: clamp(1.16rem, 1.02rem + 0.68vw, 1.55rem);
-  --fs-h4: clamp(1.22rem, 1.06rem + 0.75vw, 1.6rem);
-  --fs-h3: clamp(1.5rem, 1.18rem + 1.5vw, 2.3rem);
-  --fs-h2: clamp(2.1rem, 1.5rem + 2.9vw, 3.7rem);
-  --fs-h1: clamp(2.75rem, 1.95rem + 4vw, 5.3rem);
-  --fs-mega: clamp(3.4rem, 2rem + 7vw, 7.5rem);
+  /* Fluid scale (kept from the approved implementation). */
+  --fs-caption: clamp(0.78rem, 0.74rem + 0.16vw, 0.86rem);
+  --fs-small: clamp(0.9rem, 0.86rem + 0.2vw, 1rem);
+  --fs-body: clamp(1rem, 0.96rem + 0.2vw, 1.08rem); /* ~17px */
+  --fs-lead: clamp(1.14rem, 1rem + 0.66vw, 1.5rem);
+  --fs-h4: clamp(1.2rem, 1.05rem + 0.72vw, 1.55rem);
+  --fs-h3: clamp(1.45rem, 1.15rem + 1.4vw, 2.15rem);
+  --fs-h2: clamp(1.9rem, 1.4rem + 2.6vw, 3rem);
+  --fs-h1: clamp(2.6rem, 1.7rem + 4.6vw, 4.55rem);
 
-  --lh-tight: 0.98;
-  --lh-snug: 1.06;
-  --lh-body: 1.62;
-  --tracking-tight: -0.035em;
-  --tracking-display: -0.045em;
-  --tracking-label: 0.14em;
+  --lh-tight: 1.02;
+  --lh-snug: 1.08;
+  --lh-body: 1.6;
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.025em;
+  --tracking-label: 0.12em;
 
-  /* --- Spacing scale (4px base) ---------------------------------------- */
-  --sp-1: 0.25rem;
-  --sp-2: 0.5rem;
-  --sp-3: 0.75rem;
-  --sp-4: 1rem;
-  --sp-5: 1.5rem;
-  --sp-6: 2rem;
-  --sp-7: 3rem;
-  --sp-8: 4rem;
-  --sp-9: 6rem;
-  --sp-10: 8rem;
-  --section-y: clamp(4rem, 2.5rem + 7vw, 9rem);
+  /* --- Spacing (8px grid) ---------------------------------------------- */
+  --sp-1: 0.5rem;
+  --sp-2: 1rem;
+  --sp-3: 1.5rem;
+  --sp-4: 2rem;
+  --sp-5: 3rem;
+  --sp-6: 4rem;
+  --sp-7: 6rem;
+  --section-y: clamp(4.75rem, 10vw, 8.25rem); /* 76 → 132px */
 
   /* --- Layout widths --------------------------------------------------- */
-  --w-prose: 42rem;
-  --w-content: 70rem;
-  --w-wide: 84rem;
-  --gutter: clamp(1.15rem, 0.5rem + 3vw, 3rem);
+  --w-prose: 40rem;
+  --w-content: 1180px;
+  --w-wide: 1180px;
+  --gutter: clamp(20px, 4vw, 40px);
 
-  /* --- Radius (friendly, rounded) -------------------------------------- */
-  --r-1: 8px;
-  --r-2: 14px;
-  --r-3: 22px;
-  --r-4: 32px;
+  /* --- Radius (12–16px; pills reserved for small chips) ---------------- */
+  --r-1: 10px;
+  --r-2: 12px;
+  --r-3: 16px;
+  --r-4: 20px;
   --r-pill: 999px;
 
-  /* --- Borders --------------------------------------------------------- */
-  --bw: 1.5px;
-  --bw-2: 2.5px;
+  --bw: 1px;
+  --bw-2: 2px;
 
-  /* --- Elevation (soft, dimensional) ----------------------------------- */
-  --shadow-1: 0 1px 2px color-mix(in oklab, var(--c-ink) 8%, transparent),
-    0 6px 16px -10px color-mix(in oklab, var(--c-ink) 20%, transparent);
+  /* --- Elevation (soft) ------------------------------------------------ */
+  --shadow-1: 0 1px 2px color-mix(in oklab, var(--c-ink) 6%, transparent),
+    0 8px 20px -12px color-mix(in oklab, var(--c-ink) 22%, transparent);
   --shadow-2: 0 2px 4px color-mix(in oklab, var(--c-ink) 6%, transparent),
-    0 14px 34px -16px color-mix(in oklab, var(--c-ink) 26%, transparent);
-  --shadow-pop: 0 8px 18px -8px color-mix(in oklab, var(--c-ink) 22%, transparent),
-    0 30px 60px -28px color-mix(in oklab, var(--c-ink) 32%, transparent);
+    0 18px 40px -18px color-mix(in oklab, var(--c-ink) 26%, transparent);
+  --shadow-pop: 0 10px 24px -10px color-mix(in oklab, var(--c-ink) 24%, transparent),
+    0 34px 60px -30px color-mix(in oklab, var(--c-ink) 30%, transparent);
 
-  /* --- Motion ---------------------------------------------------------- */
-  --dur-1: 150ms;
+  /* --- Motion (Section 8) ---------------------------------------------- */
+  --dur-micro: 180ms;
   --dur-2: 340ms;
-  --dur-3: 660ms;
-  --dur-line: 1150ms;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring: cubic-bezier(0.34, 1.32, 0.5, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-entrance: 600ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.3, 0.5, 1);
 
-  /* --- Z-index --------------------------------------------------------- */
   --z-header: 50;
   --z-overlay: 90;
   --z-nav: 100;

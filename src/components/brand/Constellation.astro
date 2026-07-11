@@ -1,0 +1,72 @@
+---
+// Hero constellation (Brief §5.1 / §8): a central Infinite Weblinks hub
+// connected by animated links to labelled nodes, with light flowing along the
+// links and gentle node pulsing. Calm and ambient — a meaningful connection
+// map, not an abstract blob. Decorative (meaning is in the copy).
+import InfinityMark from './InfinityMark.astro';
+
+const CX = 280, CY = 238, RX = 205, RY = 170;
+const nodes = [
+  { label: 'Website', color: 'var(--c-indigo)', a: -90 },
+  { label: 'Ads', color: 'var(--c-amber)', a: -45 },
+  { label: 'Social', color: 'var(--c-magenta)', a: 0 },
+  { label: 'Email', color: 'var(--c-green)', a: 45 },
+  { label: 'CRM', color: 'var(--c-violet)', a: 90 },
+  { label: 'Store', color: 'var(--c-coral)', a: 135 },
+  { label: 'Analytics', color: 'var(--c-indigo)', a: 180 },
+  { label: 'AI', color: 'var(--c-amber)', a: 225 },
+].map((n, i) => {
+  const r = (n.a * Math.PI) / 180;
+  return { ...n, i, x: +(CX + RX * Math.cos(r)).toFixed(1), y: +(CY + RY * Math.sin(r)).toFixed(1) };
+});
+---
+
+<div class="cons" aria-hidden="true">
+  <svg viewBox="0 0 560 480" class="cons__svg" preserveAspectRatio="xMidYMid meet">
+    <!-- spokes + flowing light -->
+    {nodes.map((n) => (
+      <g>
+        <line class="spoke" x1={CX} y1={CY} x2={n.x} y2={n.y} stroke="var(--rule-strong)" stroke-width="1.5" />
+        <line class="flow" style={`--fc:${n.color}; --fd:${(n.i % 2 ? '-' : '')}${(2.6 + n.i * 0.25).toFixed(2)}s`}
+          x1={CX} y1={CY} x2={n.x} y2={n.y} stroke={n.color} stroke-width="2.4" stroke-linecap="round" stroke-dasharray="3 24" />
+      </g>
+    ))}
+    <!-- tool nodes -->
+    {nodes.map((n) => (
+      <g class="node" style={`--nc:${n.color}; --nd:${(n.i * 0.4).toFixed(2)}s`}>
+        <circle class="node__halo" cx={n.x} cy={n.y} r="20" fill={n.color} opacity="0.14" />
+        <circle class="node__disc" cx={n.x} cy={n.y} r="11" fill={n.color} stroke="var(--bg-raised)" stroke-width="3" />
+        <text class="node__label" x={n.x} y={n.y + 34} text-anchor="middle">{n.label}</text>
+      </g>
+    ))}
+    <!-- central hub -->
+    <circle class="hub__halo" cx={CX} cy={CY} r="46" fill="var(--c-indigo)" opacity="0.12" />
+    <circle cx={CX} cy={CY} r="34" fill="var(--bg-raised)" stroke="var(--rule)" stroke-width="1.5" />
+    <circle cx={CX} cy={CY} r="30" fill="url(#hubgrad)" />
+    <defs>
+      <linearGradient id="hubgrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="cons__hubmark"><InfinityMark size={38} /></div>
+</div>
+
+<style>
+  .cons { position: relative; width: 100%; }
+  .cons__svg { width: 100%; height: auto; overflow: visible; }
+  .cons__hubmark { position: absolute; left: 50%; top: 49.6%; transform: translate(-50%, -50%); pointer-events: none; }
+  .node__label { font-family: var(--font-body); font-weight: 600; font-size: 15px; fill: var(--fg-muted); }
+
+  /* Ambient motion: gentle node pulse + light flowing along links. */
+  .node__halo { animation: pulse 3.6s var(--nd, 0s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes pulse { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.26; } }
+  .flow { animation: flow 3s linear infinite; animation-duration: var(--fd, 3s); }
+  @keyframes flow { to { stroke-dashoffset: -27; } }
+  .hub__halo { animation: pulse 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flow { display: none; }
+    .node__halo, .hub__halo { animation: none; opacity: 0.16; }
+  }
+</style>

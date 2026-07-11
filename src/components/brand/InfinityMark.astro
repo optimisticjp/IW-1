@@ -1,0 +1,44 @@
+---
+// Infinity logo mark — two connected nodes forming an ∞, in the brand
+// gradient (or solid indigo). Reads at favicon size and on light or dark.
+interface Props {
+  size?: number;
+  solid?: boolean;
+  class?: string;
+  title?: string;
+}
+const { size = 34, solid = false, class: className = '', title } = Astro.props;
+const gid = 'inf-' + Math.random().toString(36).slice(2, 8);
+const stroke = solid ? 'var(--c-indigo)' : `url(#${gid})`;
+---
+<svg
+  class:list={['inf', className]}
+  width={size}
+  height={(size * 20) / 34}
+  viewBox="0 0 34 20"
+  role={title ? 'img' : 'presentation'}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+>
+  {!solid && (
+    <defs>
+      <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#4b3fea" />
+        <stop offset="52%" stop-color="#7b3fe4" />
+        <stop offset="100%" stop-color="#e8409a" />
+      </linearGradient>
+    </defs>
+  )}
+  <path
+    d="M10 10 C 10 4 4 4 4 10 C 4 16 10 16 17 10 C 24 4 30 4 30 10 C 30 16 24 16 17 10 Z"
+    fill="none"
+    stroke={stroke}
+    stroke-width="3.2"
+    stroke-linecap="round"
+  />
+  <circle cx="4" cy="10" r="2.4" fill={stroke} />
+  <circle cx="30" cy="10" r="2.4" fill={stroke} />
+</svg>
+<style>
+  .inf { display: block; }
+</style>

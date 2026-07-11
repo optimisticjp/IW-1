@@ -1,22 +1,19 @@
 ---
 import { footerGroups } from '../../data/nav';
+import { home } from '../../data/home';
 import Button from '../ui/Button.astro';
-const year = 2026; // TODO(content): source dynamically at build if desired.
+import InfinityMark from '../brand/InfinityMark.astro';
 ---
 
-<footer class="ft" data-env="ink">
+<footer class="ft" data-env="dark">
   <div class="ft__inner">
     <div class="ft__lead">
-      <a class="ft__brand" href="/" aria-label="Infinite Weblinks — home">
-        <svg viewBox="0 0 40 24" width="44" height="26" aria-hidden="true">
-          <path d="M4 12 C 10 2 16 22 22 12 S 34 2 36 12" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="4" cy="12" r="3" fill="var(--fg)"/>
-          <circle cx="36" cy="12" r="3" fill="var(--accent-2)"/>
-        </svg>
-        <span>Infinite Weblinks</span>
-      </a>
-      <p class="ft__tag">Connected growth for ecommerce brands.</p>
-      <Button href="/request-a-proposal" variant="primary" size="md">Request a proposal</Button>
+      <div class="ft__brand">
+        <InfinityMark size={40} />
+        <span>INFINITE WEBLINKS</span>
+      </div>
+      <p class="ft__blurb">{home.footer.blurb}</p>
+      <Button href="#book" variant="primary" size="md">Book a free call</Button>
     </div>
 
     <nav class="ft__nav" aria-label="Footer">
@@ -25,11 +22,7 @@ const year = 2026; // TODO(content): source dynamically at build if desired.
           <h2 class="ft__heading">{group.heading}</h2>
           <ul>
             {group.items.map((item) => (
-              <li>
-                <a href={item.href} class:list={['ft__link', item.emphasis === 'quiet' && 'ft__link--quiet']}>
-                  {item.label}
-                </a>
-              </li>
+              <li><a href={item.href} class="ft__link">{item.label}</a></li>
             ))}
           </ul>
         </div>
@@ -38,47 +31,25 @@ const year = 2026; // TODO(content): source dynamically at build if desired.
   </div>
 
   <div class="ft__base">
-    <p>© {year} Infinite Weblinks. All rights reserved.</p>
-    <p class="u-mono">Serving US · UK · CA · AU · NZ · EU</p>
+    <p>{home.footer.legal}</p>
+    <p class="ft__slogan">{home.footer.slogan}</p>
   </div>
 </footer>
 
 <style>
-  .ft { background: var(--bg); color: var(--fg); border-top: var(--bw-2) solid var(--accent); }
-  .ft__inner {
-    max-width: calc(var(--w-wide) + var(--gutter) * 2);
-    margin-inline: auto;
-    padding: clamp(3rem, 2rem + 4vw, 5rem) var(--gutter) 2.5rem;
-    display: grid;
-    gap: 2.5rem;
-  }
-  .ft__lead { display: grid; gap: 1.1rem; justify-items: start; max-width: 26rem; }
-  .ft__brand {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    color: var(--fg); text-decoration: none;
-    font-family: var(--font-display); font-weight: 600; font-size: 1.25rem;
-  }
-  .ft__tag { color: var(--fg-muted); font-size: var(--fs-lead); }
+  .ft { background: var(--bg); color: var(--fg); }
+  .ft__inner { max-width: var(--w-wide); margin-inline: auto; padding: clamp(3rem, 2rem + 4vw, 5rem) var(--gutter) 2.5rem; display: grid; gap: 2.5rem; }
+  .ft__lead { display: grid; gap: 1.1rem; justify-items: start; max-width: 28rem; }
+  .ft__brand { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; letter-spacing: 0.02em; }
+  .ft__blurb { color: var(--fg-muted); font-size: var(--fs-small); }
   .ft__nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
-  .ft__heading {
-    font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 500;
-    letter-spacing: var(--tracking-label); text-transform: uppercase;
-    color: var(--fg-faint); margin-bottom: 0.9rem;
-  }
+  .ft__heading { font-family: var(--font-body); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.9rem; }
   .ft__group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
   .ft__link { color: var(--fg-muted); text-decoration: none; font-size: var(--fs-small); }
   .ft__link:hover { color: var(--fg); }
-  .ft__link--quiet { color: var(--fg-faint); }
-  .ft__base {
-    max-width: calc(var(--w-wide) + var(--gutter) * 2);
-    margin-inline: auto;
-    padding: 1.5rem var(--gutter);
-    border-top: var(--bw) solid var(--rule);
-    display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between;
-    color: var(--fg-faint); font-size: var(--fs-caption);
-  }
+  .ft__base { max-width: var(--w-wide); margin-inline: auto; padding: 1.5rem var(--gutter); border-top: var(--bw) solid var(--rule); display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; color: var(--fg-faint); font-size: var(--fs-caption); }
   @media (min-width: 720px) {
     .ft__inner { grid-template-columns: 1fr 1.4fr; gap: 3rem; }
-    .ft__nav { grid-template-columns: repeat(4, 1fr); }
+    .ft__nav { grid-template-columns: repeat(3, 1fr); }
   }
 </style>

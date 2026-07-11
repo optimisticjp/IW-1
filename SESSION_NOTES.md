@@ -64,3 +64,16 @@ Verified: build ✓, 14/14 tests ✓, `astro check` 0 errors ✓, no horizontal 
 
 ### Next phase
 **Phase 2 — Primary Pages** (T036–T047): content-collection schemas, the seven service/pillar pages via a reusable `ServiceLayout`, What We Do, cross-linking, and per-page metadata. Phase 2 has **not** been started.
+
+## Homepage rework to the Master Website Brief (v1)
+
+Reworked the homepage to the brief as source of truth (typography override kept the current system-font display):
+
+- New IA & copy (verbatim §5): nav (What we do · How it connects · Who we help · Book a free call); sections Hero → The idea → Three doors → Growth Graph → Capabilities → Proof → Final CTA → Footer. Primary CTA "Book a free call"; hero secondary "See how it connects"; final secondary "See what we do".
+- New palette (§6): warm paper base + indigo/violet/magenta/coral/green/amber; indigo→magenta brand gradient on logo, second hero line, primary buttons, CTA band. ~80% light; dark only for the Growth Graph + footer.
+- Hero **constellation** (central hub + Website/Ads/Social/Email/CRM/Store/Analytics/AI, animated links).
+- **Growth Graph** centerpiece (`src/components/brand/GrowthGraph.astro` + `src/data/growthGraph.ts`): 9 nodes + hub, 4 accessible goal tabs (aria-pressed), radial desktop map / vertical mobile flow, loop draw + flowing dots + node glow, live-region caption. Reduced-motion shows final states and stays usable.
+- Capabilities as a connected list (six, "linked ∞"); Three Doors as a connected Launch→Connect→Scale progression; Proof as a placeholder recent-work strip (no invented data); gradient CTA band; dark footer; infinity logo mark + favicon.
+- Removed the previous orange-led homepage components; tests rewritten (nav, content copy, Growth Graph goals, rendered section order / one-h1 / no public placeholder labels). 27 tests pass.
+
+Known placeholders: recent-work tiles, and the final CTA "Book a free call" → `/book-a-call` (future booking page). QA scripts: `node scripts/review.mjs`, `node scripts/gg.mjs`.

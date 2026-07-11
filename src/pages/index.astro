@@ -3,518 +3,208 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Button from '../components/ui/Button.astro';
-import Tag from '../components/ui/Tag.astro';
-import TextLink from '../components/ui/TextLink.astro';
-import Line from '../components/brand/Line.astro';
-import Campaign from '../components/brand/Campaign.astro';
-import Storefront from '../components/brand/Storefront.astro';
-import RetentionLoop from '../components/brand/RetentionLoop.astro';
-import AnalyticsPanel from '../components/brand/AnalyticsPanel.astro';
-import ContentStream from '../components/brand/ContentStream.astro';
-import FlowMarker from '../components/brand/FlowMarker.astro';
-import TestimonialModule from '../components/modules/TestimonialModule.astro';
-import LogoWall from '../components/modules/LogoWall.astro';
-import CTASection from '../components/modules/CTASection.astro';
+import Constellation from '../components/brand/Constellation.astro';
+import GrowthGraph from '../components/brand/GrowthGraph.astro';
+import InfinityMark from '../components/brand/InfinityMark.astro';
 import { home } from '../data/home';
-import { pillars, foundation } from '../data/pillars';
 
-const objFor: Record<string, any> = {
-  demand: Campaign, storefront: Storefront, retention: RetentionLoop, intelligence: AnalyticsPanel,
+const accentVar: Record<string, string> = {
+  indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
+  coral: 'var(--c-coral)', green: 'var(--c-green)', amber: 'var(--c-amber)',
 };
-const proofMeta = [
-  { accent: 'orange', c: 'var(--c-orange-deep)' },
-  { accent: 'green', c: 'var(--c-green-deep)' },
-  { accent: 'violet', c: 'var(--c-violet-deep)' },
-  { accent: 'blue', c: 'var(--c-blue-deep)' },
-] as const;
 ---
 
 <BaseLayout seo={home.meta} siteSchema>
-  <!-- 1 · HERO — the main visual event -------------------------------- -->
-  <Section env="cream" width="wide" pad="loose" class="hero" labelledby="hero-h">
-    <div class="hero__wrap">
-    <div class="hero__atmos" aria-hidden="true">
-      <span class="blob blob--o"></span>
-      <span class="blob blob--v"></span>
-      <span class="blob blob--b"></span>
-      <span class="blob blob--g"></span>
-    </div>
-
-    <div class="hero__inner">
+  <!-- 1 · HERO -------------------------------------------------------- -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="hero" labelledby="hero-h">
+    <div class="hero__grid">
       <div class="hero__copy">
-        <Eyebrow>{home.hero.kicker}</Eyebrow>
+        <Eyebrow>{home.hero.eyebrow}</Eyebrow>
         <h1 id="hero-h" class="hero__head">
-          <span class="hl">Disconnected growth <span class="kw kw--leak">leaks<svg class="kw__u" viewBox="0 0 120 12" aria-hidden="true" preserveAspectRatio="none"><path d="M2 8 q18 -6 30 0 t30 0 t30 0 t26 0" fill="none" stroke="var(--c-orange)" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 11"/></svg>.</span></span>
-          <span class="hl">Connected growth <span class="kw kw--comp">compounds<svg class="kw__u" viewBox="0 0 150 12" aria-hidden="true" preserveAspectRatio="none"><path d="M2 8 q22 -7 38 0 t38 0 t38 0 t32 0" fill="none" stroke="var(--c-green)" stroke-width="4.5" stroke-linecap="round"/></svg>.</span></span>
+          {home.hero.h1a} <span class="grad-text">{home.hero.h1b}</span>
         </h1>
         <p class="hero__sub">{home.hero.sub}</p>
         <div class="hero__actions">
-          <Button href={home.hero.primaryCta.href} variant="primary" size="lg">{home.hero.primaryCta.label}</Button>
-          <Button href={home.hero.secondaryCta.href} variant="secondary" size="lg">{home.hero.secondaryCta.label}</Button>
+          <Button href={home.hero.primary.href} variant="primary" size="lg">{home.hero.primary.label}</Button>
+          <Button href={home.hero.secondary.href} variant="secondary" size="lg">{home.hero.secondary.label}</Button>
         </div>
-        <ul class="hero__signals" aria-label="What we run">
-          {home.hero.signals.map((s) => <li><Tag accent="muted">{s}</Tag></li>)}
-        </ul>
+        <p class="hero__trust">{home.hero.trust}</p>
       </div>
-
-      <div class="hero__eco" aria-hidden="true">
-        <svg class="hero__weave" viewBox="0 0 620 560" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="weave" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0%" stop-color="var(--c-orange)" />
-              <stop offset="35%" stop-color="var(--c-pink)" />
-              <stop offset="60%" stop-color="var(--c-violet)" />
-              <stop offset="82%" stop-color="var(--c-blue)" />
-              <stop offset="100%" stop-color="var(--c-green)" />
-            </linearGradient>
-          </defs>
-          <path class="weave__base" d="M-40 470 C 120 470 150 300 300 300 S 470 150 430 70 C 400 12 540 40 660 120"
-                fill="none" stroke="url(#weave)" stroke-width="7" stroke-linecap="round"/>
-          <path class="weave__pulse" d="M-40 470 C 120 470 150 300 300 300 S 470 150 430 70 C 400 12 540 40 660 120"
-                fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 240" opacity="0.85"/>
-        </svg>
-
-        <div class="eco__obj eco__obj--camp"><Campaign /><span class="eco__tag eco__tag--o">Demand</span></div>
-        <div class="eco__obj eco__obj--content"><ContentStream /><span class="eco__tag eco__tag--v">Social</span></div>
-        <div class="eco__obj eco__obj--store">
-          <Storefront />
-          <span class="eco__tag eco__tag--bl eco__tag--store">Storefront</span>
-        </div>
-        <div class="eco__obj eco__obj--retain"><RetentionLoop /><span class="eco__tag eco__tag--g">Retention</span></div>
-        <div class="eco__obj eco__obj--intel"><AnalyticsPanel /><span class="eco__tag eco__tag--bl2">Intelligence</span></div>
-
-        <span class="eco__pop eco__pop--order">New order ✦</span>
-        <span class="eco__pop eco__pop--comp">Compounding ↗</span>
-      </div>
-    </div>
+      <div class="hero__vis"><Constellation /></div>
     </div>
   </Section>
 
-  <!-- 2 · Cost of disconnected growth (editorial) ---------------------- -->
-  <Section env="peach" width="content" class="disc" labelledby="disc-h">
-    <div class="disc__head u-reveal">
-      <Eyebrow>{home.disconnected.kicker}</Eyebrow>
-      <h2 id="disc-h" class="section-head">{home.disconnected.heading}</h2>
-      <p class="lead">{home.disconnected.body}</p>
-    </div>
-    <ol class="disc__leaks">
-      {home.disconnected.leaks.map((leak, i) => (
-        <li class="leak u-reveal" style={`--reveal-delay:${i * 70}ms`}>
-          <span class="leak__no">{String(i + 1).padStart(2, '0')}</span>
-          <span class="leak__body">
-            <span class="leak__where">{leak.where}</span>
-            <span class="leak__loss">{leak.loss}</span>
-          </span>
-          <span class="leak__gap" aria-hidden="true"></span>
-        </li>
-      ))}
-    </ol>
-  </Section>
-
-  <!-- 3 · Signature: Leak to Compound (pause moment) ------------------- -->
-  <Section env="cream" width="content" class="lc" labelledby="lc-h">
-    <div class="lc__head u-reveal">
-      <Eyebrow>Leak → Compound</Eyebrow>
-      <h2 id="lc-h" class="section-head">The same effort, two very different outcomes.</h2>
-    </div>
-    <div class="lc__grid">
-      <figure class="lc__panel lc__panel--leak u-reveal">
-        <figcaption class="lc__label"><span class="lc__dot lc__dot--leak" aria-hidden="true"></span>Disconnected</figcaption>
-        <div class="lc__vis"><Line variant="flow" state="leak" /></div>
-        <p class="lc__note">Value drips out between the gaps. You spend more to stand still.</p>
-        <span class="lc__delta lc__delta--down">value leaks</span>
-      </figure>
-      <span class="lc__arrow" aria-hidden="true">→</span>
-      <figure class="lc__panel lc__panel--comp u-reveal" style="--reveal-delay:120ms">
-        <figcaption class="lc__label"><span class="lc__dot lc__dot--comp" aria-hidden="true"></span>Connected</figcaption>
-        <div class="lc__vis"><Line variant="flow" state="continuous" width={7} /></div>
-        <p class="lc__note">Each system hands value to the next. The same spend does more, then more again.</p>
-        <span class="lc__delta lc__delta--up">value compounds</span>
-      </figure>
+  <!-- 2 · THE IDEA ---------------------------------------------------- -->
+  <Section env="lavender" width="content" class="idea" labelledby="idea-h">
+    <div class="idea__inner u-reveal">
+      <Eyebrow>{home.idea.eyebrow}</Eyebrow>
+      <h2 id="idea-h" class="idea__head">{home.idea.h2}</h2>
+      <p class="idea__body">{home.idea.body}</p>
     </div>
   </Section>
 
-  <!-- 4 · Connected ecosystem — The Connection (pause moment) ---------- -->
-  <Section env="sky" width="wide" id="connected" class="conn" labelledby="conn-h">
-    <div class="conn__grid">
-      <div class="conn__copy u-reveal">
-        <Eyebrow>{home.connected.kicker}</Eyebrow>
-        <h2 id="conn-h" class="section-head">{home.connected.heading}</h2>
-        <p class="lead">{home.connected.body}</p>
-        <p class="conn__foundation"><strong>{foundation.name}.</strong> {foundation.role}</p>
-      </div>
-
-      <figure class="conn__loop u-reveal" style="--reveal-delay:120ms">
-        <svg class="loop" viewBox="0 0 560 380" role="presentation" aria-hidden="true">
-          <defs>
-            <linearGradient id="loopgrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="var(--c-orange)" />
-              <stop offset="40%" stop-color="var(--c-blue)" />
-              <stop offset="70%" stop-color="var(--c-green)" />
-              <stop offset="100%" stop-color="var(--c-violet)" />
-            </linearGradient>
-          </defs>
-          <path class="loop__track" d="M120 70 H440 A62 62 0 0 1 440 310 H120 A62 62 0 0 1 120 70 Z"
-                fill="none" stroke="var(--rule-strong)" stroke-width="2"/>
-          <path class="loop__draw line__draw" d="M120 70 H440 A62 62 0 0 1 440 310 H120 A62 62 0 0 1 120 70 Z"
-                fill="none" stroke="url(#loopgrad)" stroke-width="6" stroke-linecap="round"/>
-        </svg>
-        <ul class="loop__labels">
-          <li class="loop__label loop__label--tl"><FlowMarker accent="orange" /> Demand</li>
-          <li class="loop__label loop__label--tr"><FlowMarker accent="blue" /> Storefront</li>
-          <li class="loop__label loop__label--br"><FlowMarker accent="green" /> Retention</li>
-          <li class="loop__label loop__label--bl"><FlowMarker accent="violet" /> Intelligence</li>
-        </ul>
-      </figure>
+  <!-- 3 · THREE DOORS ------------------------------------------------- -->
+  <Section env="paper" id="three-doors" width="wide" class="doors" labelledby="doors-h">
+    <div class="doors__head u-reveal">
+      <Eyebrow>{home.doors.eyebrow}</Eyebrow>
+      <h2 id="doors-h" class="section-head">{home.doors.h2}</h2>
+      <p class="lead">{home.doors.sub}</p>
     </div>
-    <p class="conn__closure u-reveal">Demand → Storefront → Retention → Intelligence → <span class="conn__back">back into Demand</span>. That’s the loop.</p>
-  </Section>
-
-  <!-- 5 · The four pillars, threaded by the Line ----------------------- -->
-  <Section env="cream" width="wide" class="pil" labelledby="pil-h">
-    <div class="pil__head u-reveal">
-      <Eyebrow>Four connected systems</Eyebrow>
-      <h2 id="pil-h" class="section-head">Demand, Storefront, Retention, Intelligence.</h2>
-    </div>
-    <div class="pil__rail" aria-hidden="true"></div>
-    <ul class="pil__grid">
-      {pillars.map((p, i) => {
-        const Obj = objFor[p.key];
-        return (
-          <li class:list={['pcol', `pcol--${p.accent}`, 'u-reveal']} style={`--reveal-delay:${i * 70}ms`}>
-            <span class="pcol__node" aria-hidden="true"></span>
-            <div class="pcol__obj"><Obj /></div>
-            <span class="pcol__idx">{p.index}</span>
-            <h3 class="pcol__name">{p.name}</h3>
-            <p class="pcol__role">{p.role}</p>
-            <ul class="pcol__svc">
-              {p.services.slice(0, 4).map((s) => <li><Tag accent={p.accent}>{s}</Tag></li>)}
-            </ul>
-          </li>
-        );
-      })}
-    </ul>
-  </Section>
-
-  <!-- 6 · Five priority services --------------------------------------- -->
-  <Section env="lemon" width="wide" class="svc" labelledby="svc-h">
-    <div class="svc__head u-reveal">
-      <span class="svc__kicker-rot" aria-hidden="true">05 priority services</span>
-      <Eyebrow>{home.services.kicker}</Eyebrow>
-      <h2 id="svc-h" class="section-head">{home.services.heading}</h2>
-      <p class="lead">{home.services.body}</p>
-    </div>
-    <ul class="svc__grid">
-      {home.services.items.map((s, i) => (
-        <li class:list={['scard', `scard--${['orange','blue','green','violet','pink'][i]}`, 'u-reveal']} style={`--reveal-delay:${i * 60}ms`}>
-          <a class="scard__link" href={s.href}>
-            <span class="scard__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <span class="scard__pillar">{s.pillar}</span>
-            <h3 class="scard__name">{s.name}</h3>
-            <p class="scard__promise">{s.promise}</p>
-            <span class="scard__connect">{s.connects}</span>
-            <span class="scard__cta" aria-hidden="true">Explore <span>→</span></span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </Section>
-
-  <!-- 7 · Contextual proof — value read off the Line (pause moment) ---- -->
-  <Section env="mint" width="wide" class="prf" labelledby="prf-h">
-    <div class="prf__head u-reveal">
-      <Eyebrow>{home.proof.kicker}</Eyebrow>
-      <h2 id="prf-h" class="section-head">{home.proof.heading}</h2>
-      <p class="lead">{home.proof.body}</p>
-    </div>
-
-    <div class="prf__rail u-reveal">
-      <div class="prf__line" aria-hidden="true"><Line variant="flow" width={7} /></div>
-      <ul class="prf__metrics">
-        {home.proof.metrics.map((m, i) => (
-          <li class:list={['metric', `metric--${proofMeta[i % 4].accent}`]}>
-            <span class="metric__node" aria-hidden="true"></span>
-            <span class="metric__value" style={`color:${proofMeta[i % 4].c}`}>{m.value}</span>
-            <span class="metric__label">{m.label}</span>
-            <span class="metric__system">{m.system}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <div class="prf__lower">
-      <div class="prf__quote u-reveal">
-        <TestimonialModule
-          quote={home.proof.testimonial.quote}
-          name={home.proof.testimonial.name}
-          role={home.proof.testimonial.role}
-          brand={home.proof.testimonial.brand}
-          assetStatus={home.proof.testimonial.assetStatus}
-        />
-      </div>
-      <div class="prf__logos u-reveal">
-        <LogoWall count={home.proof.logoCount} note={home.proof.logosNote} />
-      </div>
-    </div>
-  </Section>
-
-  <!-- 8 · How Infinite Weblinks works — steps on the Line -------------- -->
-  <Section env="cream" width="content" class="how" labelledby="how-h">
-    <div class="how__head u-reveal">
-      <Eyebrow>{home.how.kicker}</Eyebrow>
-      <h2 id="how-h" class="section-head">{home.how.heading}</h2>
-    </div>
-    <ol class="how__steps">
-      {home.how.steps.map((step, i) => (
-        <li class:list={['hstep', `hstep--${['orange','blue','green'][i]}`, 'u-reveal']} style={`--reveal-delay:${i * 90}ms`}>
-          <span class="hstep__n">{step.n}</span>
-          <div class="hstep__body">
-            <h3 class="hstep__title">{step.title}</h3>
-            <p class="hstep__text">{step.text}</p>
+    <ol class="doors__track">
+      {home.doors.items.map((d, i) => (
+        <li class:list={['door', 'u-reveal']} style={`--dc:${accentVar[d.accent]}; --reveal-delay:${i * 100}ms`}>
+          <div class="door__marker" aria-hidden="true">
+            <span class="door__step">{i + 1}</span>
+          </div>
+          <div class="door__card">
+            <h3 class="door__name">{d.name}</h3>
+            <p class="door__body">{d.body}</p>
+            <span class="door__tag">{d.tag}</span>
           </div>
         </li>
       ))}
     </ol>
   </Section>
 
-  <!-- 9 · Secondary audience paths (calm) ------------------------------ -->
-  <Section env="lavender" width="content" pad="tight" class="sec" labelledby="sec-h">
-    <div class="sec__head u-reveal">
-      <Eyebrow>{home.secondary.kicker}</Eyebrow>
-      <h2 id="sec-h" class="section-head section-head--sm">{home.secondary.heading}</h2>
+  <!-- 4 · THE GROWTH GRAPH (dark, interactive centrepiece) ------------ -->
+  <Section env="dark" id="growth-graph" width="wide" pad="loose" class="gg" labelledby="gg-h">
+    <div class="gg__head u-reveal">
+      <Eyebrow>{home.graph.eyebrow}</Eyebrow>
+      <h2 id="gg-h" class="section-head">{home.graph.h2}</h2>
+      <p class="lead">{home.graph.sub}</p>
     </div>
-    <ul class="sec__grid">
-      {home.secondary.paths.map((p) => (
-        <li class="sec__card u-reveal">
-          <h3 class="sec__name">{p.label}</h3>
-          <p class="sec__text">{p.text}</p>
-          <TextLink href={p.href}>Take this path</TextLink>
+    <div class="gg__stage u-reveal"><GrowthGraph /></div>
+    <p class="gg__footerline u-reveal">{home.graph.footerLine}</p>
+  </Section>
+
+  <!-- 5 · CAPABILITIES ------------------------------------------------ -->
+  <Section env="paper" id="capabilities" width="wide" class="cap" labelledby="cap-h">
+    <div class="cap__head u-reveal">
+      <Eyebrow>{home.capabilities.eyebrow}</Eyebrow>
+      <h2 id="cap-h" class="section-head">{home.capabilities.h2}</h2>
+      <p class="lead">{home.capabilities.sub}</p>
+    </div>
+    <ul class="cap__list">
+      {home.capabilities.items.map((c, i) => (
+        <li class="cab u-reveal" style={`--cc:${accentVar[c.accent]}; --reveal-delay:${i * 60}ms`}>
+          <span class="cab__node" aria-hidden="true"></span>
+          <div class="cab__body">
+            <div class="cab__top">
+              <h3 class="cab__name">{c.name}</h3>
+              <span class="cab__linked"><InfinityMark size={16} /> linked</span>
+            </div>
+            <p class="cab__desc">{c.desc}</p>
+          </div>
         </li>
       ))}
     </ul>
   </Section>
 
-  <!-- 10 · Final invitation — the story resolves ----------------------- -->
-  <CTASection
-    id="proposal"
-    env="flare"
-    kicker={home.finalCta.kicker}
-    heading={home.finalCta.heading}
-    body={home.finalCta.body}
-    cta={home.finalCta.cta}
-    reassurance={home.finalCta.reassurance}
-  />
+  <!-- 6 · PROOF ------------------------------------------------------- -->
+  <Section env="mint" id="proof" width="wide" class="prf" labelledby="prf-h">
+    <div class="prf__head u-reveal">
+      <h2 id="prf-h" class="section-head">{home.proof.h2}</h2>
+      <p class="lead">{home.proof.sub}</p>
+    </div>
+    <ul class="prf__strip">
+      {home.proof.items.map((w, i) => (
+        <li class="work u-reveal" style={`--wc:${accentVar[w.accent]}; --reveal-delay:${i * 70}ms`}>
+          <div class="work__thumb" aria-hidden="true"><span class="work__mark"><InfinityMark size={26} /></span></div>
+          <div class="work__meta">
+            <span class="work__kind">{w.kind}</span>
+            <h3 class="work__title">{w.title}</h3>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 7 · FINAL CTA (gradient band) ----------------------------------- -->
+  <Section env="grad" id="book" width="content" pad="loose" class="cta" labelledby="cta-h">
+    <div class="cta__inner u-reveal">
+      <h2 id="cta-h" class="cta__head">{home.finalCta.h2}</h2>
+      <p class="cta__body">{home.finalCta.body}</p>
+      <div class="cta__actions">
+        <Button href={home.finalCta.primary.href} variant="primary" size="lg">{home.finalCta.primary.label}</Button>
+        <Button href={home.finalCta.secondary.href} variant="secondary" size="lg">{home.finalCta.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
 </BaseLayout>
 
 <style>
-  /* Shared typography ------------------------------------------------- */
-  .section-head { font-size: var(--fs-h2); max-width: 17ch; margin-top: 0.7rem; }
-  .section-head--sm { font-size: var(--fs-h3); }
-  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; margin-top: 1.1rem; }
+  .section-head { font-size: var(--fs-h2); max-width: 20ch; margin-top: 0.7rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 48ch; margin-top: 1rem; }
 
-  /* ================================================================== */
-  /* 1 · HERO                                                            */
-  /* ================================================================== */
-  .hero__wrap { position: relative; overflow: clip; }
-  .hero__atmos { position: absolute; inset: 0; z-index: 0; }
-  .blob { position: absolute; border-radius: 50%; filter: blur(60px); }
-  .blob--o { width: 40vw; max-width: 620px; aspect-ratio: 1; background: var(--c-orange); opacity: 0.22; top: -8%; right: 6%; }
-  .blob--v { width: 30vw; max-width: 460px; aspect-ratio: 1; background: var(--c-violet); opacity: 0.18; top: 24%; right: 30%; }
-  .blob--b { width: 34vw; max-width: 520px; aspect-ratio: 1; background: var(--c-blue); opacity: 0.16; bottom: -14%; right: 2%; }
-  .blob--g { width: 24vw; max-width: 360px; aspect-ratio: 1; background: var(--c-green); opacity: 0.14; bottom: -6%; left: 30%; }
-
-  .hero__inner { position: relative; z-index: 1; display: grid; gap: clamp(1.5rem, 0.5rem + 5vw, 3rem); }
+  /* 1 · Hero */
+  .hero__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
   .hero__copy { min-width: 0; }
-  .hero__head { font-size: var(--fs-h1); margin: 1.3rem 0 0; display: grid; gap: 0.1em; }
-  .hl { display: block; }
-  .kw { position: relative; white-space: nowrap; }
-  .kw--leak { color: var(--c-orange-deep); }
-  .kw--comp { color: var(--c-green-deep); }
-  .kw__u { position: absolute; left: 0; right: 0; bottom: -0.14em; width: 100%; height: 0.42em; overflow: visible; }
-  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 46ch; margin-top: 1.6rem; }
+  .hero__head { font-size: var(--fs-h1); margin: 1.2rem 0 0; }
+  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.5rem; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
-  .hero__signals { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 1.8rem 0 0; }
+  .hero__trust { margin-top: 1.5rem; color: var(--fg-faint); font-size: var(--fs-small); }
+  .hero__vis { min-width: 0; }
+  @media (min-width: 940px) { .hero__grid { grid-template-columns: 1fr 1.05fr; } }
 
-  /* Ecosystem: objects float on the canvas along the weaving Line. */
-  .hero__eco { position: relative; min-height: 340px; }
-  .hero__weave { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
-    filter: drop-shadow(0 10px 22px color-mix(in oklab, var(--c-violet) 24%, transparent)); }
-  .weave__pulse { animation: weave-pulse 3.4s linear infinite; }
-  @keyframes weave-pulse { from { stroke-dashoffset: 246; } to { stroke-dashoffset: 0; } }
-  @media (prefers-reduced-motion: reduce) { .weave__pulse { display: none; } }
+  /* 2 · Idea */
+  .idea__inner { max-width: 40rem; }
+  .idea__head { font-size: var(--fs-h2); margin-top: 0.7rem; }
+  .idea__body { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1.1rem; }
 
-  .eco__obj { position: absolute; display: grid; justify-items: center; gap: 0.4rem; filter: drop-shadow(0 14px 24px color-mix(in oklab, var(--c-ink) 16%, transparent)); }
-  .eco__obj > :global(svg.obj) { max-width: none; width: 100%; }
-  .eco__tag { font-family: var(--font-body); font-weight: 700; font-size: 0.72rem; padding: 0.18em 0.6em; border-radius: var(--r-pill); background: var(--c-ivory); box-shadow: var(--shadow-1); white-space: nowrap; }
-  .eco__tag--o { color: var(--c-orange-deep); }
-  .eco__tag--bl, .eco__tag--bl2 { color: var(--c-blue-deep); }
-  .eco__tag--g { color: var(--c-green-deep); }
-  .eco__tag--v { color: var(--c-violet-deep); }
-
-  .eco__obj--store { width: 34%; left: 33%; top: 40%; z-index: 3; }
-  .eco__obj--store > :global(svg.obj) { filter: drop-shadow(0 16px 26px color-mix(in oklab, var(--c-orange) 30%, transparent)); }
-  .eco__obj--camp { width: 19%; left: 4%; top: 6%; rotate: -6deg; z-index: 2; }
-  .eco__obj--content { width: 18%; right: 3%; top: 2%; rotate: 5deg; z-index: 2; }
-  .eco__obj--retain { width: 20%; left: 2%; bottom: 4%; rotate: 5deg; z-index: 2; }
-  .eco__obj--intel { width: 19%; right: 4%; bottom: 6%; rotate: -5deg; z-index: 2; }
-
-  .eco__pop { position: absolute; z-index: 4; font-family: var(--font-body); font-weight: 700; font-size: 0.72rem; padding: 0.34em 0.7em; border-radius: var(--r-pill); box-shadow: var(--shadow-2); white-space: nowrap; }
-  .eco__pop--order { top: 34%; left: 20%; background: var(--c-green); color: #06301f; rotate: -4deg; }
-  .eco__pop--comp { bottom: 30%; right: 12%; background: var(--c-ink); color: var(--c-cream); rotate: 3deg; }
-
-  @media (min-width: 940px) {
-    .hero__inner { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); align-items: center; }
-    .hero__eco { min-height: min(56vh, 560px); }
-  }
-  @media (max-width: 939px) {
-    .hero__eco { min-height: 300px; max-width: 30rem; margin-inline: auto; width: 100%; }
-    .eco__obj--store { width: 40%; left: 30%; }
-    .eco__pop--order { left: 12%; }
+  /* 3 · Three doors — progression with a connector line */
+  .doors__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 1.25rem; position: relative; counter-reset: door; }
+  .door { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
+  .door__marker { position: relative; display: grid; place-items: start center; }
+  .door__step { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: var(--r-2); background: var(--dc); color: #fff; font-family: var(--font-display); font-weight: 800; }
+  .door__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--dc); border-radius: var(--r-3); padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); box-shadow: var(--shadow-1); }
+  .door__name { font-size: var(--fs-h3); }
+  .door__body { color: var(--fg-muted); margin-top: 0.5rem; }
+  .door__tag { display: inline-block; margin-top: 0.9rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--dc) 72%, var(--fg)); background: color-mix(in oklab, var(--dc) 12%, var(--bg)); padding: 0.28rem 0.7rem; border-radius: var(--r-pill); }
+  @media (min-width: 860px) {
+    .doors__track { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    /* connector line runs through the three step markers */
+    .doors__track::before { content: ''; position: absolute; top: 1.3rem; left: 16%; right: 16%; height: 3px; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--c-indigo), var(--c-violet), var(--c-magenta)); z-index: 0; }
+    .door { grid-template-columns: 1fr; gap: 1rem; text-align: left; }
+    .door__marker { justify-items: start; }
+    .door__step { position: relative; z-index: 1; box-shadow: 0 0 0 6px var(--bg); }
   }
 
-  /* ================================================================== */
-  /* 2 · Disconnected (editorial numbered leaks)                        */
-  /* ================================================================== */
-  .disc__leaks { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 0; counter-reset: leak; }
-  .leak { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1rem 1.4rem; align-items: baseline;
-    padding: 1.4rem 0; border-top: var(--bw) solid var(--rule-strong); }
-  .leak:last-child { border-bottom: var(--bw) solid var(--rule-strong); }
-  .leak__no { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 1rem + 3vw, 2.6rem); color: color-mix(in oklab, var(--c-orange) 55%, var(--fg-faint)); letter-spacing: var(--tracking-display); line-height: 1; }
-  .leak__where { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--c-orange-deep); font-weight: 600; margin-bottom: 0.2rem; }
-  .leak__loss { display: block; font-size: var(--fs-h4); font-family: var(--font-display); font-weight: 700; line-height: 1.24; letter-spacing: var(--tracking-tight); text-wrap: balance; }
-  .leak__gap { position: absolute; right: 0; top: 50%; width: 40px; height: 3px; background: repeating-linear-gradient(90deg, var(--c-orange) 0 5px, transparent 5px 12px); opacity: 0.55; display: none; }
-  @media (min-width: 760px) { .leak { grid-template-columns: auto 12rem 1fr; } .leak__gap { display: block; } }
+  /* 4 · Growth Graph section */
+  .gg__head { text-align: center; margin-inline: auto; }
+  .gg__head .section-head, .gg__head .lead { margin-inline: auto; }
+  .gg__head .eyebrow { justify-content: center; }
+  .gg__stage { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+  .gg__footerline { max-width: 44rem; margin: clamp(2rem, 1rem + 3vw, 3rem) auto 0; text-align: center; color: var(--fg-muted); font-size: var(--fs-lead); }
 
-  /* ================================================================== */
-  /* 3 · Leak to Compound                                               */
-  /* ================================================================== */
-  .lc__grid { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); align-items: stretch; }
-  .lc__arrow { display: none; align-self: center; font-size: 2rem; color: var(--c-green); font-weight: 800; }
-  .lc__panel { padding: clamp(1.6rem, 1rem + 2vw, 2.4rem); border-radius: var(--r-3); display: grid; gap: 1rem; box-shadow: var(--shadow-1); }
-  .lc__panel--leak { background: color-mix(in oklab, var(--fg) 5%, var(--bg-raised)); }
-  .lc__panel--leak .lc__vis { filter: grayscale(0.72); opacity: 0.85; }
-  .lc__panel--comp { background: var(--bg-raised); border: var(--bw-2) solid color-mix(in oklab, var(--c-green) 38%, transparent); }
-  .lc__label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  .lc__dot { width: 0.7rem; height: 0.7rem; border-radius: 50%; }
-  .lc__dot--leak { background: var(--fg-faint); }
-  .lc__dot--comp { background: var(--c-green); }
-  .lc__note { color: var(--fg-muted); }
-  .lc__delta { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); padding: 0.28rem 0.7rem; border-radius: var(--r-pill); justify-self: start; }
-  .lc__delta--down { color: var(--fg-muted); background: color-mix(in oklab, var(--fg) 8%, transparent); }
-  .lc__delta--up { color: #06301f; background: var(--c-green); }
-  @media (min-width: 760px) { .lc__grid { grid-template-columns: 1fr auto 1fr; } .lc__arrow { display: block; } }
-
-  /* ================================================================== */
-  /* 4 · Connection                                                     */
-  /* ================================================================== */
-  .conn__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
-  .conn__foundation { margin-top: 1.5rem; padding-top: 1.25rem; border-top: var(--bw) solid var(--rule-strong); color: var(--fg-muted); max-width: 48ch; }
-  .conn__foundation strong { color: var(--fg); }
-  .conn__loop { position: relative; margin: 0; }
-  .loop { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 12px 22px color-mix(in oklab, var(--c-blue) 22%, transparent)); }
-  .loop__labels { list-style: none; margin: 0; padding: 0; }
-  .loop__label { position: absolute; display: inline-flex; align-items: center; gap: 0.4rem; background: var(--c-ivory); padding: 0.4rem 0.75rem; border-radius: var(--r-pill); font-weight: 700; font-size: var(--fs-small); white-space: nowrap; box-shadow: var(--shadow-1); }
-  .loop__label--tl { top: 3%; left: 1%; }
-  .loop__label--tr { top: 3%; right: 1%; }
-  .loop__label--br { bottom: 3%; right: 1%; }
-  .loop__label--bl { bottom: 3%; left: 1%; }
-  .conn__closure { margin-top: 2rem; font-family: var(--font-body); font-weight: 600; font-size: var(--fs-small); color: var(--fg-muted); text-align: center; text-wrap: balance; }
-  .conn__back { color: var(--c-orange-deep); }
-  @media (min-width: 900px) { .conn__grid { grid-template-columns: 0.92fr 1.08fr; } }
-
-  /* ================================================================== */
-  /* 5 · Pillars threaded by the Line                                   */
-  /* ================================================================== */
-  .pil { position: relative; }
-  .pil__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.5rem 1rem; position: relative; }
-  .pil__rail { display: none; }
-  .pcol { position: relative; display: grid; gap: 0.55rem; align-content: start; padding-top: 1.5rem; --pc: var(--c-orange); }
-  .pcol--orange { --pc: var(--c-orange); }
-  .pcol--blue { --pc: var(--c-blue); }
-  .pcol--green { --pc: var(--c-green); }
-  .pcol--violet { --pc: var(--c-violet); }
-  .pcol__node { position: absolute; top: 0; left: 0; width: 1rem; height: 1rem; border-radius: 50%; background: var(--pc); box-shadow: 0 0 0 0.35rem color-mix(in oklab, var(--pc) 20%, transparent); }
-  .pcol__obj { width: 3.8rem; margin-bottom: 0.2rem; }
-  .pcol__idx { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); letter-spacing: 0.1em; }
-  .pcol__name { font-size: var(--fs-h3); }
-  .pcol__role { color: var(--fg-muted); }
-  .pcol__svc { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  @media (min-width: 620px) { .pil__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1040px) {
-    .pil__grid { grid-template-columns: repeat(4, 1fr); }
-    /* the Line runs along the top of the four systems */
-    .pil__rail { display: block; position: absolute; left: 0; right: 0; top: 0.5rem; height: 3px;
-      background: linear-gradient(90deg, var(--c-orange), var(--c-blue) 40%, var(--c-green) 70%, var(--c-violet));
-      border-radius: var(--r-pill); opacity: 0.9; }
+  /* 5 · Capabilities — a connected list, not six identical cards */
+  .cap__list { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; }
+  .cab { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; padding: 1.3rem 0; border-top: var(--bw) solid var(--rule); }
+  .cab:last-child { border-bottom: var(--bw) solid var(--rule); }
+  .cab__node { width: 1.1rem; height: 1.1rem; margin-top: 0.35rem; border-radius: 50%; background: var(--cc); box-shadow: 0 0 0 0.32rem color-mix(in oklab, var(--cc) 18%, transparent); flex: none; }
+  .cab__top { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+  .cab__name { font-size: var(--fs-h3); }
+  .cab__linked { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); }
+  .cab__desc { color: var(--fg-muted); margin-top: 0.3rem; max-width: 60ch; }
+  @media (min-width: 820px) {
+    .cap__list { grid-template-columns: 1fr 1fr; column-gap: 3rem; }
+    .cab:nth-child(2) { border-top: var(--bw) solid var(--rule); }
   }
 
-  /* ================================================================== */
-  /* 6 · Services                                                        */
-  /* ================================================================== */
-  .svc__head { position: relative; }
-  .svc__kicker-rot { display: none; }
-  .svc__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
-  .scard { display: grid; --sc: var(--c-orange); }
-  .scard--orange { --sc: var(--c-orange); } .scard--blue { --sc: var(--c-blue); }
-  .scard--green { --sc: var(--c-green); } .scard--violet { --sc: var(--c-violet); } .scard--pink { --sc: var(--c-pink); }
-  .scard__link { position: relative; display: grid; gap: 0.5rem; align-content: start;
-    padding: clamp(1.6rem, 1rem + 1.5vw, 2.2rem); padding-top: clamp(2.6rem, 2rem + 2vw, 3.4rem);
-    background: var(--c-ivory); border-radius: var(--r-3); text-decoration: none; color: var(--fg); overflow: clip;
-    box-shadow: var(--shadow-1); transition: transform var(--dur-1) var(--ease-spring), box-shadow var(--dur-2); }
-  .scard__link::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--sc); }
-  .scard__link:hover { transform: translateY(-4px); box-shadow: var(--shadow-pop); }
-  .scard__no { position: absolute; top: 0.9rem; right: 1.1rem; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); color: color-mix(in oklab, var(--sc) 30%, transparent); }
-  .scard__pillar { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: color-mix(in oklab, var(--sc) 74%, var(--fg)); }
-  .scard__name { font-size: var(--fs-h4); }
-  .scard__promise { color: var(--fg-muted); font-size: var(--fs-small); }
-  .scard__connect { font-size: var(--fs-caption); color: var(--fg-faint); }
-  .scard__cta { font-weight: 700; color: var(--link); font-size: var(--fs-small); margin-top: 0.3rem; display: inline-flex; gap: 0.35rem; }
-  @media (min-width: 620px) { .svc__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1000px) {
-    .svc__grid { grid-template-columns: repeat(6, 1fr); }
-    .scard { grid-column: span 2; }
-    .scard:first-child { grid-column: span 3; }
-    .scard:nth-child(2) { grid-column: span 3; }
-    .svc__kicker-rot { display: block; position: absolute; top: 0; right: -0.5rem; writing-mode: vertical-rl; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-faint); }
-  }
+  /* 6 · Proof — recent-work strip (no invented data) */
+  .prf__strip { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.25rem; }
+  .work { display: grid; gap: 0.9rem; }
+  .work__thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--r-3); background: color-mix(in oklab, var(--wc) 22%, var(--bg-raised)); display: grid; place-items: center; overflow: clip; box-shadow: var(--shadow-1); }
+  .work__thumb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 120% at 20% 12%, color-mix(in oklab, var(--wc) 40%, transparent), transparent 60%); }
+  .work__mark { position: relative; z-index: 1; opacity: 0.9; }
+  .work__kind { font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--wc) 70%, var(--fg)); }
+  .work__title { font-size: var(--fs-h4); margin-top: 0.2rem; }
+  @media (min-width: 620px) { .prf__strip { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .prf__strip { grid-template-columns: repeat(4, 1fr); } }
 
-  /* ================================================================== */
-  /* 7 · Proof — metrics read off the Line                              */
-  /* ================================================================== */
-  .prf__rail { position: relative; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; padding-top: 1.5rem; }
-  .prf__line { position: absolute; inset-inline: 0; top: 0; opacity: 0.9; }
-  .prf__metrics { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
-  .metric { position: relative; display: grid; gap: 0.25rem; padding-top: 1.2rem; --mc: var(--c-orange); }
-  .metric--orange { --mc: var(--c-orange); } .metric--green { --mc: var(--c-green); }
-  .metric--violet { --mc: var(--c-violet); } .metric--blue { --mc: var(--c-blue); }
-  .metric__node { position: absolute; top: 0; left: 0; width: 0.85rem; height: 0.85rem; border-radius: 50%; background: var(--mc); box-shadow: 0 0 0 0.3rem color-mix(in oklab, var(--mc) 20%, transparent); }
-  .metric__value { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 1.6rem + 4vw, 4rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
-  .metric__label { font-weight: 700; font-size: var(--fs-small); max-width: 22ch; }
-  .metric__system { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); }
-  .prf__lower { display: grid; gap: 1.5rem; margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem); }
-  @media (min-width: 720px) { .prf__metrics { grid-template-columns: repeat(4, 1fr); } }
-  @media (min-width: 900px) { .prf__lower { grid-template-columns: 1.1fr 1fr; align-items: center; } }
-
-  /* ================================================================== */
-  /* 8 · How — steps strung on a vertical Line                          */
-  /* ================================================================== */
-  .how__steps { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; position: relative; }
-  .how__steps::before { content: ''; position: absolute; left: 1.4rem; top: 1.6rem; bottom: 1.6rem; width: 3px; border-radius: var(--r-pill);
-    background: linear-gradient(180deg, var(--c-orange), var(--c-blue), var(--c-green)); opacity: 0.85; }
-  .hstep { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.3rem; padding: 1.5rem 0; align-items: start; --hc: var(--c-orange); }
-  .hstep--orange { --hc: var(--c-orange); } .hstep--blue { --hc: var(--c-blue); } .hstep--green { --hc: var(--c-green); }
-  .hstep__n { position: relative; z-index: 1; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4);
-    width: 2.8rem; height: 2.8rem; display: grid; place-items: center; flex: none; border-radius: var(--r-pill);
-    background: var(--hc); color: #fff; box-shadow: 0 0 0 0.4rem var(--bg); }
-  .hstep__title { font-size: var(--fs-h4); }
-  .hstep__text { color: var(--fg-muted); margin-top: 0.35rem; max-width: 52ch; }
-
-  /* ================================================================== */
-  /* 9 · Secondary                                                       */
-  /* ================================================================== */
-  .sec__grid { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1rem; }
-  .sec__card { padding: clamp(1.5rem, 1rem + 1.5vw, 2rem); border-radius: var(--r-3); background: var(--bg-raised); display: grid; gap: 0.6rem; align-content: start; box-shadow: var(--shadow-1); }
-  .sec__name { font-size: var(--fs-h4); }
-  .sec__text { color: var(--fg-muted); font-size: var(--fs-small); }
-  @media (min-width: 680px) { .sec__grid { grid-template-columns: 1fr 1fr; } }
+  /* 7 · Final CTA */
+  .cta { text-align: center; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h1); }
+  .cta__body { color: #fff; font-size: var(--fs-lead); max-width: 36rem; }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.6rem; }
 </style>
