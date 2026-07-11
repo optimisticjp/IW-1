@@ -4,6 +4,15 @@ import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import BookingForm from '../components/forms/BookingForm.astro';
 
+// Surface the single required production config value at build time, so a
+// misconfigured deploy is caught in the build log rather than silently
+// dropping leads.
+if (import.meta.env.PROD && !import.meta.env.PUBLIC_BOOKING_ENDPOINT) {
+  console.warn(
+    '[booking] PUBLIC_BOOKING_ENDPOINT is not set — production booking submissions will NOT be delivered. Set it before deploying (see .env.example).'
+  );
+}
+
 const seo = {
   title: 'Book a free call',
   description:

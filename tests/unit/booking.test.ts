@@ -33,10 +33,16 @@ describe('booking validation', () => {
 });
 
 describe('booking submission adapter', () => {
-  it('uses the dev-safe mock when no endpoint is configured', async () => {
-    const r = await submitBooking(valid, { endpoint: '' });
+  it('uses the dev-safe mock only in development', async () => {
+    const r = await submitBooking(valid, { endpoint: '', dev: true });
     expect(r.ok).toBe(true);
     expect(r.mock).toBe(true);
+  });
+  it('never fakes success in production with no endpoint (no silent lead drop)', async () => {
+    const r = await submitBooking(valid, { endpoint: '', dev: false });
+    expect(r.ok).toBe(false);
+    expect(r.unconfigured).toBe(true);
+    expect(r.mock).toBeUndefined();
   });
   it('silently drops a filled honeypot (spam)', async () => {
     const r = await submitBooking({ ...valid, _hp: 'bot' }, { endpoint: 'https://x' });

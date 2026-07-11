@@ -61,15 +61,19 @@ export interface SubmitResult {
   ok: boolean;
   retryable?: boolean;
   mock?: boolean;
+  /** true when no endpoint is configured in a production build */
+  unconfigured?: boolean;
 }
 
 export interface SubmitOpts {
   endpoint?: string;
   fetchImpl?: typeof fetch;
+  /** override the dev/prod detection (defaults to import.meta.env.DEV) */
+  dev?: boolean;
 }
 
 export function bookingEndpoint(): string {
-  // PUBLIC_ vars are inlined at build; undefined in tests → mock path.
+  // PUBLIC_ vars are inlined at build; undefined in tests → mock/unconfigured path.
   try {
     return (import.meta as any).env?.PUBLIC_BOOKING_ENDPOINT || '';
   } catch {
@@ -77,18 +81,33 @@ export function bookingEndpoint(): string {
   }
 }
 
+export function isDevEnv(): boolean {
+  try {
+    return !!(import.meta as any).env?.DEV;
+  } catch {
+    return false;
+  }
+}
+
 export async function submitBooking(
   payload: BookingValues,
   opts: SubmitOpts = {}
 ): Promise<SubmitResult> {
-  // Spam: silently accept-and-drop a filled honeypot or an implausibly fast submit.
+  // Spam: silently accept-and-drop a filled honeypot.
   if (payload._hp) return { ok: true };
   const endpoint = opts.endpoint ?? bookingEndpoint();
+  const dev = opts.dev ?? isDevEnv();
 
   if (!endpoint) {
-    // Dev-safe mock — no network, no persistence. NOT a real submission.
-    await new Promise((r) => setTimeout(r, 650));
-    return { ok: true, mock: true };
+    if (dev) {
+      // Dev-only mock — no network, no persistence. NOT a real submission,
+      // and it never runs in a production build.
+      await new Promise((r) => setTimeout(r, 650));
+      return { ok: true, mock: true };
+    }
+    // Production with no endpoint configured: never show a false success —
+    // report a safe, recoverable error so no lead is silently dropped.
+    return { ok: false, retryable: true, unconfigured: true };
   }
 
   const f = opts.fetchImpl ?? fetch;
