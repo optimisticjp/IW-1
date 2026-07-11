@@ -51,6 +51,7 @@ Result caps: at most **3** gaps and at most **2** working items, both in priorit
 ## Accessibility & storage
 
 - Semantic fieldset/legend, real checkboxes, associated labels, visible focus, keyboard selection, disabled-until-2 state conveyed accessibly, meaning not colour-dependent, result live region, meaningful result heading, logical focus order, reduced-motion parity, no-JS static fallback.
+- Graph text equivalent (FR-048, see seo-metadata.md): the SVG exposes its meaning as text (accessible name summarising the current connected state; state changes announced via the live region); decorative SVG sub-parts are `aria-hidden`. No connection is conveyed by colour or picture alone.
 - No server storage; no cross-session persistence; selection stated plainly as URL/session only.
 
 ## Tests (existing + extended, `tests/unit/stackeval.test.ts`)

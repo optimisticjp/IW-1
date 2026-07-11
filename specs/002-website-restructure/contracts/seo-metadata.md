@@ -67,6 +67,21 @@ Allow: /
 Sitemap: {PUBLIC_SITE_URL}/sitemap-index.xml
 ```
 
+## Images & alternative text (FR-048)
+
+Alt text is both an accessibility and an SEO requirement; it is enforced as one policy:
+
+| Element | Requirement |
+|---|---|
+| Informational image / screenshot | Descriptive `alt` conveying purpose and content |
+| Purely decorative image | Empty `alt=""` (or CSS background); hidden from assistive tech |
+| Icon carrying meaning | Accessible label (`aria-label` / visually-hidden text) |
+| Decorative icon | `aria-hidden="true"` |
+| Growth Graph / Map Your Stack SVG | Meaning exposed as **text** — accessible name summarising current state + announced changes via live region; decorative SVG sub-parts `aria-hidden` |
+| Anonymized work artwork (placeholder connection-map) | Honest alt that names it as illustrative and **never** implies a real client, screenshot or result |
+
+No image conveys required information by the picture alone; every graph/diagram has a text equivalent (User Story 9, FR-020/021).
+
 ## Claims & honesty guard (FR-037, SC-007)
 
 - No guaranteed AI citation, ranking or commercial result; "can help" / "makes it easier to" phrasing only.

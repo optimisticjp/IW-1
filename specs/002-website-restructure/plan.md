@@ -24,9 +24,9 @@ Technical approach: keep the current static-first Astro 5 + TypeScript baseline.
 
 **Project Type**: Static content-led website (single project, `src/` + `tests/`). Not a web-service or mobile app.
 
-**Performance Goals**: Lighthouse mobile performance 90+ (best effort 95+) on audited page types (FR/SC-006); healthy Core Web Vitals (LCP, INP, CLS). Minimal client JS: only the two islands ship script; CSS-first motion; self-hosted subset fonts with `font-display: swap`; no layout shift; no autoplay video.
+**Performance Goals**: Lighthouse mobile performance 90+ (best effort 95+) on audited page types (FR/SC-006); healthy Core Web Vitals (LCP < 2.5s, INP < 200ms, CLS < 0.1). Measurable per-page mobile budgets (FR-051, compressed transfer): JS ≤ 30 KB content pages / ≤ 50 KB the two interactive pages; CSS ≤ 40 KB; self-hosted subset fonts ≤ 200 KB total; LCP image ≤ 150 KB; initial page ≤ 500 KB excluding below-fold lazy media; zero third-party JS at initial load. Minimal client JS: only the two islands ship script; CSS-first motion; `font-display: swap`; no layout shift; no autoplay video.
 
-**Constraints**: Mobile-first, verified at 360/390/768/1024/desktop with a 320px hard floor and zero horizontal scroll (FR-046). WCAG 2.2 AA across audited pages (SC-005). Motion limited to two families (Connect, Reveal), `prefers-reduced-motion` collapses to final states, motion pauses off-screen and on hidden tab (FR-045). Never show a false form success; preserve answers and offer an email fallback on failure (FR-027/028). No invented figures or flagged claims; no em dashes; no buzzwords (FR-036/037). Crawler allowlist: allow search + AI-citation crawlers, block AI-training crawlers (FR-041).
+**Constraints**: Mobile-first, verified at 360/390/768/1024/desktop with a 320px hard floor and zero horizontal scroll (FR-046). WCAG 2.2 AA across audited pages (SC-005), including a non-text-content alt-text policy (FR-048). Motion limited to two families (Connect, Reveal), `prefers-reduced-motion` collapses to final states, motion pauses off-screen and on hidden tab (FR-045). Never show a false form success; explicit accessible submitting state prevents duplicate submissions; preserve answers and offer an email fallback on failure (FR-027/028). Baseline security headers + CSP scoped to self plus the form-endpoint origin via `public/_headers` (FR-049). No enquiry data stored server-side; delivered by email through the form processor (FR-047). No invented figures or flagged claims; no em dashes; no buzzwords (FR-036/037). Crawler allowlist: allow search + AI-citation crawlers, block AI-training crawlers (FR-041).
 
 **Scale/Scope**: ~50 page types across nine groups (core, six capabilities, up to 25 service pages phased with seven at launch, six audiences, Work index + case studies, Insights index + articles, conversion/utility). One shared Growth Graph model with per-context variants; one Map Your Stack engine. Owner-supplied assets (fonts, domain, endpoint, people/photos, real work, testimonials, credentials, legal wording) are dependencies with honest fallbacks, not structural blockers.
 
@@ -65,11 +65,13 @@ specs/002-website-restructure/
 ├── data-model.md        # Phase 1 output
 ├── quickstart.md        # Phase 1 output
 ├── contracts/           # Phase 1 output
-│   ├── routes.md            # Route table, canonical rules, phasing
-│   ├── content-schemas.md   # TS data-module + content-collection contracts
-│   ├── consultation-form.md # Field contract, validation, submission, states
-│   ├── map-your-stack.md     # Tool set, rules, scoring, handoff allowlist
-│   └── seo-metadata.md      # Title/description/canonical/schema/sitemap/robots
+│   ├── routes.md              # Route table, canonical rules, phasing
+│   ├── content-schemas.md     # TS data-module + content-collection contracts
+│   ├── consultation-form.md   # Consultation + contact + newsletter: fields, validation, submitting/success/failure states, data flow
+│   ├── map-your-stack.md       # Tool set, rules, scoring, handoff allowlist, graph text equivalents
+│   ├── seo-metadata.md        # Title/description/canonical/schema/sitemap/robots + alt-text policy
+│   ├── security-headers.md    # Security response headers + CSP for the static site and form flow
+│   └── performance-budgets.md # Measurable per-page JS/CSS/font/image/CWV budgets
 ├── checklists/
 │   └── requirements.md  # Spec quality checklist (complete)
 └── tasks.md             # Phase 2 output (/speckit-tasks - NOT created here)
@@ -184,7 +186,7 @@ Remaining (post-launch) service pages phase in by intent after Phase D behind th
 Structure ships with honest fallbacks; these unblock final polish, not the build:
 
 - **Licensed Geist WOFF2 fonts** (Sans + Mono): self-hosted subset; system-font fallback stack remains until supplied.
-- **Production config** (never hardcoded, injected as env `PUBLIC_*`): `PUBLIC_SITE_URL` (canonical/sitemap/OG absolute URLs) and `PUBLIC_BOOKING_ENDPOINT` (provider-neutral consultation delivery; currently the verified Formspree endpoint).
+- **Production config** (never hardcoded, injected as env `PUBLIC_*`): `PUBLIC_SITE_URL` (canonical/sitemap/OG absolute URLs), `PUBLIC_BOOKING_ENDPOINT` (provider-neutral consultation and contact delivery; currently the verified Formspree endpoint) and, when the newsletter is enabled, `PUBLIC_NEWSLETTER_ENDPOINT` (the CSP `connect-src`/`form-action` allowlist derives from these endpoint origins).
 - **Proof content**: at least three real work examples and two or three permissioned/named case studies, plus testimonials and verifiable credentials. Until then Work/homepage show honest interim states and anonymized work with connection-map placeholder art.
 - **People & photography**: founder/team names, roles and photos for About and any named expertise.
 - **Legal wording**: jurisdiction-reviewed Privacy, Cookies and Terms copy (interface shells ship first).
@@ -204,6 +206,9 @@ Structure ships with honest fallbacks; these unblock final polish, not the build
 | Owner content late (proof, people, legal, fonts) | Perceived incompleteness | Honest interim/empty states, placeholder connection-map art, system-font fallback, interface-only legal shells; nothing structural blocked. |
 | Performance drift from fonts/SVG/motion as pages grow | Misses Lighthouse 90+ | Subset fonts + `font-display: swap`, CSS-first motion, lazy non-critical assets, no framework/anim-library, Lighthouse audit at the hardening gate with documented choices. |
 | Crawler policy misapplied (blocks search or allows training) | SEO loss or unwanted training use | Env-aware robots with an explicit allow/block list (allow search + OAI-SearchBot; block GPTBot/CCBot/Google-Extended), covered by tests; sitemap excludes 404. |
+| CSP too strict (breaks form POST or scoped styles) or too loose | Broken submission or weakened protection | CSP derives `connect-src`/`form-action` from the configured endpoint origins and allows Astro's scoped styles; verified against the consultation and contact submit paths at the hardening gate (FR-049, contracts/security-headers.md). |
+| Performance budget overage as pages/assets grow | Misses Lighthouse 90+ and CWV | Explicit per-page byte budgets (FR-051) checked at the hardening gate; overage documented, not hidden; no framework/anim-library, subset fonts, lazy non-critical media. |
+| Newsletter shipped without a working provider | Dead form or false success | Newsletter deferred behind `PUBLIC_NEWSLETTER_ENDPOINT`; footer omits the opt-in until configured; when enabled it uses the never-false-success contract with submitting/success/error states (FR-050). |
 
 ## Complexity Tracking
 

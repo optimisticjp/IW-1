@@ -12,7 +12,7 @@
 - [ ] CHK002 Are all nine page groups (core, capability, service, audience, work, insights, conversion, utility, legal) represented in the route table without a group left undefined? [Coverage, contracts/routes.md]
 - [ ] CHK003 Is every real service from source scope mapped to exactly one capability, with a stated rule that services lacking unique intent become anchored sections rather than pages? [Completeness, Spec §FR-015, §SC-003]
 - [ ] CHK004 Are the utility and legal routes (`/about`, `/faq`, `/contact`, `/privacy`, `/cookies`, `/terms`, `/404`, `/robots.txt`, sitemap) each specified with a page type and index policy? [Completeness, contracts/routes.md]
-- [ ] CHK005 Is the distinction between `/book-a-call` and `/contact` (purpose, content, and why both exist) unambiguously specified? [Ambiguity, Spec §FR-029]
+- [x] CHK005 Is the distinction between `/book-a-call` and `/contact` (purpose, content, and why both exist) unambiguously specified? [Resolved 2026-07-11 → Spec §FR-029, contracts/consultation-form.md: book-a-call = primary consultation with qualification + handoff; contact = lighter general enquiry, shared never-false-success path]
 
 ## B. Service Pages — Launch Set & Phasing
 
@@ -41,7 +41,7 @@
 - [ ] CHK019 Is the honest confirmation copy specified verbatim with the three-outcomes expectation and no response-time promise? [Clarity, Spec §FR-028]
 - [ ] CHK020 Is the never-false-success rule and the failure recovery path (preserve answers, retry, email fallback) unambiguous for the unconfigured, server-failure and network-throw cases? [Coverage, Spec §FR-027, §SC-010]
 - [ ] CHK021 Is the Map Your Stack → consultation prefill requirement (allowlist-parsed, optional, works with no parameter) specified for both presence and absence of the parameter? [Coverage, Spec §FR-025, §SC-009]
-- [ ] CHK022 Are data-handling and retention expectations for a submitted enquiry (where it is delivered, whether/where it is stored, retention) specified beyond "delivered to endpoint"? [Gap, Spec §FR-027]
+- [x] CHK022 Are data-handling and retention expectations for a submitted enquiry (where it is delivered, whether/where it is stored, retention) specified? [Resolved 2026-07-11 → Spec §FR-047, contracts/consultation-form.md: no server-side storage; delivered by email via the form processor; retained per processor + owner inbox; disclosed on Privacy]
 
 ## F. Map Your Stack Journey
 
@@ -89,7 +89,7 @@
 - [ ] CHK049 Is "visible focus as an outline independent of shadow" required everywhere, and is the contrast matrix (no white text on bright non-Build fills) specified? [Clarity, Spec §FR-044]
 - [ ] CHK050 Are live-region announcement requirements specified for graph state, tool state and form validation changes? [Completeness, Spec §US9, §FR-021]
 - [ ] CHK051 Are accessible form-error requirements (icon plus text, never colour alone, associated with the field) specified? [Coverage, Spec §FR-027]
-- [ ] CHK052 Are alternative-text requirements defined for the Growth Graph/Map Your Stack SVGs and for anonymized placeholder connection-map art (meaningful vs decorative)? [Gap, Spec §FR-043, §VIII]
+- [x] CHK052 Are alternative-text requirements defined for the Growth Graph/Map Your Stack SVGs and for anonymized placeholder connection-map art (meaningful vs decorative)? [Resolved 2026-07-11 → Spec §FR-048, contracts/seo-metadata.md "Images & alternative text", contracts/map-your-stack.md graph text equivalent]
 
 ## L. Technical SEO, Metadata, Schema, Sitemap & Crawler Policy
 
@@ -105,8 +105,8 @@
 - [ ] CHK059 Is spam protection (honeypot, silent drop) specified without weakening the never-false-success guarantee? [Consistency, contracts/consultation-form.md]
 - [ ] CHK060 Is the secrets rule (endpoint injected via `PUBLIC_BOOKING_ENDPOINT`, never hardcoded; no secret in logs/commits) stated as a security requirement? [Coverage, Spec §Assumptions, §IX]
 - [ ] CHK061 Is handoff-parameter tampering handled by an allowlist so unknown/malicious values are ignored and cannot inject content? [Coverage, Spec §Edge Cases]
-- [ ] CHK062 Are security-header / CSP expectations for the static site and its single external form endpoint specified, or explicitly deferred? [Gap, Spec §IX]
-- [ ] CHK063 Is the newsletter opt-in required to be separate from the enquiry, and are its own success/error states specified? [Gap, Spec §FR-029]
+- [x] CHK062 Are security-header / CSP expectations for the static site and its single external form endpoint specified? [Resolved 2026-07-11 → Spec §FR-049, contracts/security-headers.md: CSP scoped to self + form-endpoint origin, nosniff, Referrer-Policy, Permissions-Policy, HSTS via `public/_headers`]
+- [x] CHK063 Is the newsletter opt-in required to be separate from the enquiry, and are its own submitting/success/error states specified (or a launch deferral recorded)? [Resolved 2026-07-11 → Spec §FR-050: deferred until `PUBLIC_NEWSLETTER_ENDPOINT` is configured (footer omits it until then); submitting/success/error states + confirmed double opt-in defined for when enabled]
 
 ## N. Honest Proof & Anonymized Work
 
@@ -120,13 +120,13 @@
 - [ ] CHK068 Is the Lighthouse mobile target (90+, best effort 95+) stated with the audited page types, and is a policy against fabricating scores included? [Measurability, Spec §SC-006, quickstart.md]
 - [ ] CHK069 Is the font strategy (self-hosted subset WOFF2, `font-display: swap`, system fallback until supplied) specified to prevent layout shift and blocking? [Completeness, plan.md, research.md]
 - [ ] CHK070 Are image and SVG optimisation requirements (lazy non-critical assets, no layout shift, responsive/optimised SVG) specified concretely rather than as "minimise"? [Clarity, Spec §FR-043, plan.md]
-- [ ] CHK071 Is a quantified JavaScript/asset budget defined, or is "minimal JavaScript / only two islands ship script" the measurable ceiling? [Measurability, Gap, plan.md]
+- [x] CHK071 Is a quantified JavaScript/asset budget defined? [Resolved 2026-07-11 → Spec §FR-051, contracts/performance-budgets.md: JS ≤30/50 KB, CSS ≤40 KB, fonts ≤200 KB, LCP image ≤150 KB, initial page ≤500 KB, zero third-party JS, CWV targets]
 - [ ] CHK072 Is the requirement to add no new runtime dependencies (no framework, no animation library, no CSS framework, no Google Fonts) stated as a constraint? [Consistency, plan.md Constitution Check]
 
 ## P. UI States — Loading, Success, Error, Empty & Unavailable
 
 - [ ] CHK073 Are success, error and empty states specified for the form, for Work/Insights empty filters, and for the no-input tool state? [Completeness, Spec §FR-030]
-- [ ] CHK074 Are in-flight/loading states specified for the consultation submission and any asynchronous interaction (e.g., a "submitting" state), or is their absence intentional on a static site? [Gap, Spec §FR-030]
+- [x] CHK074 Are in-flight/loading states specified for the consultation submission (a "submitting" state)? [Resolved 2026-07-11 → Spec §FR-027, contracts/consultation-form.md "Submission states": accessible submitting state, `aria-busy`, progress as text, repeat activation ignored (no duplicate submit)]
 - [ ] CHK075 Is the "unavailable/unconfigured" state (delivery not configured or failing; honest interim proof) distinguished from the error state and specified? [Clarity, Spec §Edge Cases]
 - [ ] CHK076 Is the 404 state (on-brand, noindex, excluded from sitemap, links to Home and consultation) specified as its own state? [Coverage, Spec §FR-030]
 
@@ -161,5 +161,6 @@
 ## Notes
 
 - Check items off as validated: `[x]`. Record findings inline.
-- `[Gap]` / `[Ambiguity]` items (CHK005, CHK022, CHK052, CHK062, CHK063, CHK071, CHK074) are the probable weaknesses surfaced while writing this checklist; resolve or consciously defer each before `/speckit-tasks`.
+- **Resolved (2026-07-11)**: the seven probable weaknesses this checklist surfaced (CHK005, CHK022, CHK052, CHK062, CHK063, CHK071, CHK074) were all closed by the spec refinements — new Spec §FR-047 (enquiry data flow/retention), §FR-048 (alt text), §FR-049 (security headers/CSP), §FR-050 (newsletter states/deferral) and §FR-051 (performance budgets), updated §FR-004/§FR-027/§FR-029, and the new contracts/security-headers.md + contracts/performance-budgets.md. No `[Gap]`/`[Ambiguity]` items remain open.
+- The one intentional raised bar (CHK047: WCAG 2.2 AA above the constitution's 2.1 AA baseline) is documented in plan.md's Constitution Check and is a strengthening, not a conflict.
 - Traceability: ≥80% of items cite a spec section, contract, plan section, or a `[Gap]/[Ambiguity]/[Conflict]/[Assumption]` marker.

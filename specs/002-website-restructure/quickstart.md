@@ -27,8 +27,9 @@ Each scenario is verified by the tests noted, then spot-checked in `npm run prev
 1. **Understand fast & convert (US1 / SC-001, SC-002, SC-010)**
    - Homepage first screen states who it is for, what changes, next action, with primary + secondary CTA and no dependence on motion.
    - Consultation CTA present in header and closing section of every commercial page.
-   - Submit with only name/work-email/business/privacy → honest confirmation ("Thank you. We have your enquiry.") with the three-outcomes message and no time promise.
+   - Submit with only name/work-email/business/privacy → an accessible submitting state ("Sending…", `aria-busy`, repeat activation ignored) → honest confirmation ("Thank you. We have your enquiry.") with the three-outcomes message and no time promise.
    - Force a delivery failure → answers preserved, retry + email fallback, never a false success.
+   - `/contact` offers a lighter name/email/message enquiry (no qualification, no handoff) on the same never-false-success path; the site stores no enquiry data server-side (delivered by email through the form processor), disclosed on Privacy.
    - Verified by: `tests/unit/booking.test.ts`, e2e critical-flow + confirmation.
 
 2. **Explore first with Map Your Stack (US2 / SC-004, SC-009)**
@@ -60,11 +61,12 @@ Each scenario is verified by the tests noted, then spot-checked in `npm run prev
    - Verified by: content-collection schema tests, `tests/unit/seo.test.ts`.
 
 8. **Cross-cutting quality gate (US9 / SC-005, SC-006, SC-008, SC-012)**
-   - **Accessibility**: axe pass (WCAG 2.2 AA), visible outline focus, keyboard operability of chrome + both islands + forms, announced state changes, contrast matrix (no white text on bright non-Build fills).
+   - **Accessibility**: axe pass (WCAG 2.2 AA), visible outline focus, keyboard operability of chrome + both islands + forms, announced state changes, contrast matrix (no white text on bright non-Build fills), and the alt-text policy (informational vs decorative vs graph text-equivalent vs honest anonymized-artwork alt — FR-048, contracts/seo-metadata.md).
+   - **Security headers**: baseline headers + CSP present; the consultation/contact submit paths succeed under the CSP (`connect-src`/`form-action` include the endpoint origin); no third-party JS at initial load; no `*`/`unsafe-eval` (FR-049, contracts/security-headers.md).
    - **Responsive**: 360/390/768/1024/desktop, 320px floor, zero horizontal scroll; radial ≥720px / vertical <720px; 44px targets; primary CTA never buried.
-   - **No-JS**: scripting disabled → all meaningful content + core message present; islands degrade to readable static states.
-   - **Performance**: Lighthouse mobile 90+ (best effort 95+) on audited page types; report exact scores; never fabricate.
-   - Verified by: e2e axe/keyboard/responsive/no-JS suites + Lighthouse at the hardening gate.
+   - **No-JS**: scripting disabled → all meaningful content + core message present; islands degrade to readable static states; footer omits the newsletter opt-in until a provider is configured.
+   - **Performance**: Lighthouse mobile 90+ (best effort 95+) on audited page types; report exact scores; never fabricate. Built asset sizes checked against the per-page budgets (JS 30/50 KB, CSS 40 KB, fonts 200 KB, LCP image 150 KB, initial page 500 KB, zero third-party JS; CWV LCP<2.5s/INP<200ms/CLS<0.1 — FR-051, contracts/performance-budgets.md); any overage documented.
+   - Verified by: e2e axe/keyboard/responsive/no-JS suites + Lighthouse and header/budget checks at the hardening gate.
 
 ## Screenshot QA (visual, `reducedMotion: 'reduce'`)
 
@@ -72,4 +74,4 @@ Capture 1440/1024/768/390/360 for: homepage first screen + Growth Graph, a capab
 
 ## Definition of Done gate (per phase and at convergence)
 
-Requirements implemented; mobile correct; visual direction coherent; copy humanized (ban list clean); SEO basics present; accessibility basics present; security checks complete (never-false-success, allowlist handoff, no hardcoded secrets); relevant tests passing; `npm run build` + `npm run check` green; no unnecessary dependencies; no stray placeholders; performance choices documented; residual gaps recorded via `/speckit-converge`.
+Requirements implemented; mobile correct; visual direction coherent; copy humanized (ban list clean); SEO basics present; accessibility basics present including the alt-text policy; security checks complete (never-false-success, submitting state prevents duplicates, allowlist handoff, no hardcoded secrets, security headers + CSP present, no enquiry data stored server-side); relevant tests passing; `npm run build` + `npm run check` green; no unnecessary dependencies; no stray placeholders; performance budgets met or overage documented; residual gaps recorded via `/speckit-converge`.
