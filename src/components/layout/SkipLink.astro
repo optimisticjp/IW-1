@@ -1,5 +1,8 @@
 ---
-// Keyboard skip link — first focusable element on the page.
+// Keyboard skip link — the first focusable element on every page. Visually
+// hidden (clipped, not merely translated off-screen) until a keyboard user
+// focuses it, so it can never paint over page content when unfocused. Appears
+// above the sticky header on :focus / :focus-visible.
 ---
 
 <a class="skip" href="#main">Skip to content</a>
@@ -7,19 +10,32 @@
 <style>
   .skip {
     position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: var(--z-nav);
-    transform: translateY(-160%);
+    top: 0;
+    left: 0;
+    /* above the sticky header (--z-header) and the mobile nav (--z-nav) */
+    z-index: calc(var(--z-nav) + 10);
     background: var(--accent);
     color: var(--accent-ink);
-    padding: 0.65rem 1rem;
     border-radius: var(--r-2);
     font-weight: 600;
     text-decoration: none;
-    transition: transform var(--dur-1) var(--ease-out);
+    white-space: nowrap;
+    /* hidden until focused — clipped to nothing so it never shows or takes space */
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
   }
+  .skip:focus,
   .skip:focus-visible {
-    transform: translateY(0);
+    width: auto;
+    height: auto;
+    margin: 0.5rem;
+    padding: 0.65rem 1rem;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
   }
 </style>

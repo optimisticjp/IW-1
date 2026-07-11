@@ -1,0 +1,232 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Button from '../components/ui/Button.astro';
+import WorkThumb from '../components/brand/WorkThumb.astro';
+import InfinityMark from '../components/brand/InfinityMark.astro';
+import { whatWeDo as d } from '../data/whatWeDo';
+
+const accentVar: Record<string, string> = {
+  indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
+  coral: 'var(--c-coral)', green: 'var(--c-green)', amber: 'var(--c-amber)',
+};
+
+// Per-system layout: alternating tint + media side for rhythm; Connect gets the
+// dark "engine room" treatment because it genuinely is the connective layer.
+const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint' | 'dark'; media: 'left' | 'right'; variant: number }> = {
+  build: { env: 'paper', media: 'right', variant: 0 },
+  attract: { env: 'lavender', media: 'left', variant: 1 },
+  convert: { env: 'paper', media: 'right', variant: 2 },
+  connect: { env: 'dark', media: 'left', variant: 3 },
+  retain: { env: 'mint', media: 'right', variant: 0 },
+  scale: { env: 'paper', media: 'left', variant: 1 },
+};
+---
+
+<BaseLayout seo={d.seo}>
+  <!-- 1 · HERO -->
+  <Section env="paper" id="top" width="wide" pad="loose" class="wh" labelledby="wh-h">
+    <div class="wh__hero">
+      <Eyebrow>{d.hero.eyebrow}</Eyebrow>
+      <h1 id="wh-h" class="wh__h1">One partner. <span class="grad-text">Six connected systems.</span></h1>
+      <p class="wh__sub">{d.hero.sub}</p>
+      <div class="wh__actions">
+        <Button href={d.hero.primary.href} variant="primary" size="lg">{d.hero.primary.label}</Button>
+        <Button href={d.hero.secondary.href} variant="secondary" size="lg">{d.hero.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 2 · SIX SYSTEMS AT A GLANCE -->
+  <Section env="paper" id="systems" width="wide" class="glance" labelledby="glance-h">
+    <div class="glance__head u-reveal">
+      <Eyebrow>{d.glance.eyebrow}</Eyebrow>
+      <h2 id="glance-h" class="section-head">{d.glance.h2}</h2>
+      <p class="lead">{d.glance.sub}</p>
+    </div>
+    <ul class="glance__list">
+      {d.glance.items.map((s, i) => (
+        <li class="gcard u-reveal" style={`--cc:${accentVar[s.accent]}; --reveal-delay:${i * 55}ms`}>
+          <a class="gcard__link" href={s.href}>
+            <span class="gcard__node" aria-hidden="true"></span>
+            <span class="gcard__text">
+              <span class="gcard__name">{s.name}</span>
+              <span class="gcard__line">{s.line}</span>
+            </span>
+            <span class="gcard__jump" aria-hidden="true">↓</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- 3 · DETAILED SYSTEM SECTIONS -->
+  {d.systems.map((s) => {
+    const lay = layouts[s.id];
+    return (
+      <Section env={lay.env} id={s.id} width="wide" class={`sys sys--${lay.media} anchored`} labelledby={`${s.id}-h`}>
+        <div class="sys__grid u-reveal">
+          <div class="sys__body">
+            <p class="sys__chip" style={`--cc:${accentVar[s.accent]}`}><span class="sys__chip-dot" aria-hidden="true"></span>{s.name}</p>
+            <h2 id={`${s.id}-h`} class="sys__name">{s.name}</h2>
+            <dl class="sys__dl">
+              <dt class="sys__lbl">The problem</dt>
+              <dd class="sys__val">{s.problem}</dd>
+              <dt class="sys__lbl">What we do</dt>
+              <dd class="sys__val">{s.whatWeDo}</dd>
+              <dt class="sys__lbl">What you get</dt>
+              <dd class="sys__val sys__deliverables">{s.whatYouGet}</dd>
+              <dt class="sys__lbl">Connects with</dt>
+              <dd class="sys__val">{s.connectsWith}</dd>
+            </dl>
+            <p class="sys__result" style={`--cc:${accentVar[s.accent]}`}>
+              <span class="sys__result-lbl" style={`--cc:${accentVar[s.accent]}`}>The result</span>
+              {s.result}
+            </p>
+          </div>
+          <div class="sys__media" aria-hidden="true">
+            <div class="sys__thumb"><WorkThumb accent={accentVar[s.accent]} variant={lay.variant} /></div>
+            <span class="sys__linked"><InfinityMark size={16} /> connected</span>
+          </div>
+        </div>
+      </Section>
+    );
+  })}
+
+  <!-- 4 · WHAT A CONNECTED ENGAGEMENT LOOKS LIKE -->
+  <Section env="lavender" id="engagement" width="content" class="eng" labelledby="eng-h">
+    <div class="eng__head u-reveal">
+      <Eyebrow>{d.engagement.eyebrow}</Eyebrow>
+      <h2 id="eng-h" class="section-head">{d.engagement.h2}</h2>
+    </div>
+    <ol class="eng__flow u-reveal" aria-label="Build, then Connect, then Attract, then Retain">
+      {d.engagement.flow.map((n, i) => (
+        <li class="eng__node" style={`--cc:${accentVar[n.accent]}`}>
+          <span class="eng__dot" aria-hidden="true"></span>
+          <span class="eng__label">{n.name}</span>
+          {i < d.engagement.flow.length - 1 && <span class="eng__arrow" aria-hidden="true">→</span>}
+        </li>
+      ))}
+    </ol>
+    <p class="eng__body u-reveal">{d.engagement.body}</p>
+  </Section>
+
+  <!-- 5 · HOW PROJECTS WORK -->
+  <Section env="paper" id="process" width="wide" class="proc" labelledby="proc-h">
+    <div class="proc__head u-reveal">
+      <Eyebrow>{d.process.eyebrow}</Eyebrow>
+      <h2 id="proc-h" class="section-head">{d.process.h2}</h2>
+    </div>
+    <ol class="proc__track">
+      {d.process.steps.map((st, i) => (
+        <li class="pstep u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <span class="pstep__n" aria-hidden="true">{st.n}</span>
+          <div class="pstep__body">
+            <span class="pstep__name">{st.name}</span>
+            <p class="pstep__desc">{st.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- 6 · CTA -->
+  <Section env="grad" id="cta" width="content" pad="loose" class="cta" labelledby="cta-h">
+    <div class="cta__inner u-reveal">
+      <h2 id="cta-h" class="cta__head">{d.cta.h2}</h2>
+      <p class="cta__body">{d.cta.body}</p>
+      <div class="cta__actions">
+        <Button href={d.cta.primary.href} variant="primary" size="lg">{d.cta.primary.label}</Button>
+        <Button href={d.cta.secondary.href} variant="secondary" size="lg">{d.cta.secondary.label}</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .section-head { font-size: var(--fs-h2); max-width: 22ch; margin-top: 0.7rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1rem; }
+  /* anchored sections clear the sticky header on deep-link */
+  .anchored { scroll-margin-top: 5.5rem; }
+
+  /* 1 · Hero */
+  .wh__hero { max-width: 52rem; }
+  .wh__h1 { font-size: var(--fs-h1); margin-top: 1rem; }
+  .wh__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 50ch; margin-top: 1.4rem; }
+  .wh__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
+
+  /* 2 · Glance — a connected set of links, not six identical icon cards */
+  .glance__head { max-width: 46rem; }
+  .glance__list { list-style: none; padding: 0; margin: clamp(1.75rem, 1rem + 3vw, 2.75rem) 0 0; display: grid; gap: 0.75rem; }
+  .gcard { position: relative; }
+  .gcard__link {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.9rem;
+    padding: 1rem 1.15rem; border-radius: var(--r-3); text-decoration: none; color: var(--fg);
+    background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--cc);
+    transition: transform var(--dur-micro) var(--ease-out), border-color var(--dur-micro), box-shadow var(--dur-2);
+  }
+  .gcard__link:hover { transform: translateY(-2px); box-shadow: var(--shadow-1); border-color: color-mix(in oklab, var(--cc) 50%, var(--rule)); }
+  .gcard__node { width: 0.95rem; height: 0.95rem; border-radius: 50%; background: var(--cc); box-shadow: 0 0 0 0.28rem color-mix(in oklab, var(--cc) 18%, transparent); flex: none; }
+  .gcard__text { display: grid; gap: 0.1rem; min-width: 0; }
+  .gcard__name { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); letter-spacing: var(--tracking-tight); }
+  .gcard__line { color: var(--fg-muted); font-size: var(--fs-small); }
+  .gcard__jump { font-family: var(--font-mono); color: var(--cc); font-size: 1.1rem; }
+  @media (min-width: 800px) { .glance__list { grid-template-columns: 1fr 1fr; gap: 0.9rem 1.25rem; } }
+
+  /* 3 · System detail sections */
+  .sys__grid { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3rem); align-items: center; }
+  .sys__body { min-width: 0; }
+  .sys__chip { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.04em; text-transform: uppercase; color: color-mix(in oklab, var(--cc) 72%, var(--fg)); background: color-mix(in oklab, var(--cc) 12%, var(--bg)); padding: 0.3rem 0.7rem; border-radius: var(--r-pill); }
+  .sys__chip-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--cc); }
+  .sys__name { font-size: var(--fs-h2); margin-top: 0.8rem; }
+  .sys__dl { margin-top: 1.3rem; display: grid; gap: 0.25rem 1.25rem; }
+  .sys__lbl { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-faint); margin-top: 1rem; }
+  .sys__dl > .sys__lbl:first-child { margin-top: 0; }
+  .sys__val { color: var(--fg-muted); font-size: var(--fs-body); }
+  .sys__deliverables { color: var(--fg-faint); font-size: var(--fs-small); }
+  .sys__result {
+    position: relative; margin-top: 1.6rem; padding: 1.15rem 1.25rem 1.15rem 1.35rem;
+    background: color-mix(in oklab, var(--cc) 8%, var(--bg-raised)); border-radius: var(--r-3);
+    border-left: 4px solid var(--cc); font-size: var(--fs-lead); font-weight: 500; color: var(--fg);
+  }
+  .sys__result-lbl { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: color-mix(in oklab, var(--cc) 78%, var(--fg)); margin-bottom: 0.4rem; }
+
+  .sys__media { display: grid; gap: 0.7rem; justify-items: center; }
+  .sys__thumb { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--r-4); overflow: clip; background: var(--bg-raised); border: var(--bw) solid var(--rule); box-shadow: var(--shadow-1); }
+  .sys__linked { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); }
+
+  @media (min-width: 880px) {
+    .sys__grid { grid-template-columns: 1.15fr 0.85fr; }
+    .sys--left .sys__media { order: -1; }
+  }
+
+  /* 4 · Connected engagement — Build → Connect → Attract → Retain */
+  .eng__head { max-width: 44rem; }
+  .eng__flow { list-style: none; padding: 0; margin: clamp(1.75rem, 1rem + 3vw, 2.5rem) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.25rem; }
+  .eng__node { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .eng__dot { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--cc); box-shadow: 0 0 0 0.3rem color-mix(in oklab, var(--cc) 18%, transparent); }
+  .eng__label { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); }
+  .eng__arrow { color: var(--fg-faint); margin: 0 0.4rem; font-size: 1.2rem; }
+  .eng__body { margin-top: 1.6rem; font-size: var(--fs-lead); color: var(--fg-muted); max-width: 62ch; }
+
+  /* 5 · How projects work — numbered steps with a connector */
+  .proc__track { list-style: none; padding: 0; margin: clamp(1.75rem, 1rem + 3vw, 2.75rem) 0 0; display: grid; gap: 1rem; position: relative; }
+  .pstep { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+  .pstep__n { font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-small); color: #fff; background: var(--c-indigo); width: 2.4rem; height: 2.4rem; display: grid; place-items: center; border-radius: var(--r-2); flex: none; }
+  .pstep__name { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-h4); }
+  .pstep__desc { color: var(--fg-muted); margin-top: 0.2rem; max-width: 52ch; }
+  @media (min-width: 900px) {
+    .proc__track { grid-template-columns: repeat(5, 1fr); gap: 1.25rem; }
+    .proc__track::before { content: ''; position: absolute; top: 1.2rem; left: 10%; right: 10%; height: 3px; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--c-indigo), var(--c-violet), var(--c-coral), var(--c-green), var(--c-amber)); z-index: 0; }
+    .pstep { grid-template-columns: 1fr; gap: 0.9rem; }
+    .pstep__n { position: relative; z-index: 1; box-shadow: 0 0 0 6px var(--bg); }
+  }
+
+  /* 6 · CTA */
+  .cta { text-align: center; }
+  .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
+  .cta__head { font-size: var(--fs-h2); }
+  .cta__body { font-size: var(--fs-lead); color: var(--fg-muted); }
+  .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.5rem; }
+</style>

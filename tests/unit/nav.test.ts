@@ -11,6 +11,28 @@ describe('navigation (Brief §4)', () => {
     expect(mys.href).toBe('/map-your-stack');
   });
 
+  it('primary nav resolves the Phase 2 routes (What we do / Who we help)', () => {
+    const byLabel = Object.fromEntries(primaryNav.map((i) => [i.label, i.href]));
+    expect(byLabel['What we do']).toBe('/what-we-do');
+    expect(byLabel['Who we help']).toBe('/who-we-help');
+    expect(byLabel['How it connects']).toBe('/#growth-graph'); // unchanged, not broken
+  });
+
+  it('footer system + audience links deep-link to the new routes', () => {
+    const whatWeDo = footerGroups.find((g) => g.heading === 'What we do')!;
+    expect(whatWeDo.items.find((i) => i.label === 'Build')!.href).toBe('/what-we-do#build');
+    expect(whatWeDo.items.find((i) => i.label === 'Connect')!.href).toBe('/what-we-do#connect');
+    expect(whatWeDo.items.find((i) => i.label === 'Scale')!.href).toBe('/what-we-do#scale');
+    const whoWeHelp = footerGroups.find((g) => g.heading === 'Who we help')!;
+    expect(whoWeHelp.items.find((i) => i.label === 'Ecommerce brands')!.href).toBe('/who-we-help#ecommerce');
+    expect(whoWeHelp.items.find((i) => i.label === 'Established teams')!.href).toBe('/who-we-help#teams');
+    // no footer link still points at the retired homepage-anchor placeholders
+    for (const g of footerGroups) for (const i of g.items) {
+      expect(i.href).not.toBe('/#capabilities');
+      expect(i.href).not.toBe('/#three-doors');
+    }
+  });
+
   it('the primary CTA is Book a free call and resolves to /book-a-call', () => {
     expect(bookCta.label).toBe('Book a free call');
     expect(bookCta.emphasis).toBe('cta');

@@ -1,6 +1,6 @@
-// Navigation (Master Website Brief §4). Kept simple. Phase-2 pages are not
-// built yet, so primary-nav items anchor to the relevant homepage sections;
-// "Book a free call" leads to the final CTA band.
+// Navigation (Master Website Brief §4 + Phase 2). "What we do" and "Who we
+// help" now resolve to their dedicated routes; "How it connects" still anchors
+// to the homepage Growth Graph; "Book a free call" leads to /book-a-call.
 
 export interface NavItem {
   label: string;
@@ -9,10 +9,10 @@ export interface NavItem {
 }
 
 export const primaryNav: NavItem[] = [
-  { label: 'What we do', href: '/#capabilities' },
+  { label: 'What we do', href: '/what-we-do' },
   { label: 'How it connects', href: '/#growth-graph' },
   { label: 'Map your stack', href: '/map-your-stack' },
-  { label: 'Who we help', href: '/#three-doors' },
+  { label: 'Who we help', href: '/who-we-help' },
 ];
 
 export const bookCta: NavItem = { label: 'Book a free call', href: '/book-a-call', emphasis: 'cta' };
@@ -26,21 +26,21 @@ export const footerGroups: FooterGroup[] = [
   {
     heading: 'What we do',
     items: [
-      { label: 'Build', href: '/#capabilities' },
-      { label: 'Attract', href: '/#capabilities' },
-      { label: 'Convert', href: '/#capabilities' },
-      { label: 'Retain', href: '/#capabilities' },
-      { label: 'Connect', href: '/#capabilities' },
-      { label: 'Scale', href: '/#capabilities' },
+      { label: 'Build', href: '/what-we-do#build' },
+      { label: 'Attract', href: '/what-we-do#attract' },
+      { label: 'Convert', href: '/what-we-do#convert' },
+      { label: 'Retain', href: '/what-we-do#retain' },
+      { label: 'Connect', href: '/what-we-do#connect' },
+      { label: 'Scale', href: '/what-we-do#scale' },
     ],
   },
   {
     heading: 'Who we help',
     items: [
-      { label: 'Ecommerce brands', href: '/#three-doors' },
-      { label: 'Creators & experts', href: '/#three-doors' },
-      { label: 'Startups', href: '/#three-doors' },
-      { label: 'Established teams', href: '/#three-doors' },
+      { label: 'Ecommerce brands', href: '/who-we-help#ecommerce' },
+      { label: 'Creators & experts', href: '/who-we-help#creators' },
+      { label: 'Startups', href: '/who-we-help#startups' },
+      { label: 'Established teams', href: '/who-we-help#teams' },
     ],
   },
   {

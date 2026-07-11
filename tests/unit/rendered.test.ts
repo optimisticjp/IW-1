@@ -6,9 +6,13 @@ const root = resolve(__dirname, '../..');
 const distHome = resolve(root, 'dist/index.html');
 const distBook = resolve(root, 'dist/book-a-call/index.html');
 const distMys = resolve(root, 'dist/map-your-stack/index.html');
+const distWwd = resolve(root, 'dist/what-we-do/index.html');
+const distWwh = resolve(root, 'dist/who-we-help/index.html');
 const html = existsSync(distHome) ? readFileSync(distHome, 'utf8') : '';
 const book = existsSync(distBook) ? readFileSync(distBook, 'utf8') : '';
 const mys = existsSync(distMys) ? readFileSync(distMys, 'utf8') : '';
+const wwd = existsSync(distWwd) ? readFileSync(distWwd, 'utf8') : '';
+const wwh = existsSync(distWwh) ? readFileSync(distWwh, 'utf8') : '';
 const run = html ? describe : describe.skip;
 
 run('built homepage (dist/index.html)', () => {
@@ -105,7 +109,9 @@ run('built homepage (dist/index.html)', () => {
   });
 
   it('keeps the honest self-check framing and makes no false audit claim', () => {
-    expect(mys).toContain('This is a quick read based on what you use, not a technical audit. On a call we map your real setup in detail.');
+    // Task 0 Fix 2: sharper disclaimer that explains why a call adds something
+    expect(mys).toContain("This result is based on the tools you selected. On a call we'll review how they're actually configured and connected.");
+    expect(mys).not.toContain('This is a quick read based on what you use, not a technical audit.');
     for (const claim of ['free technical audit', 'AI-powered audit', 'automatic integration scanner', 'guaranteed growth score', 'we scanned', 'we detected']) {
       expect(mys.toLowerCase()).not.toContain(claim.toLowerCase());
     }
@@ -134,6 +140,75 @@ run('built homepage (dist/index.html)', () => {
     for (const id of ['bk-name', 'bk-email', 'bk-company', 'bk-help', 'bk-details', 'bk-privacy']) {
       expect(book).toContain(`id="${id}"`);
     }
+  });
+});
+
+(wwd ? describe : describe.skip)('built What We Do page (dist/what-we-do/index.html)', () => {
+  it('has one <h1> with the exact heading', () => {
+    expect((wwd.match(/<h1/g) || []).length).toBe(1);
+    expect(wwd).toContain('One partner.');
+    expect(wwd).toContain('Six connected systems.');
+  });
+  it('renders all six system sections with stable deep-link ids', () => {
+    for (const id of ['build', 'attract', 'convert', 'connect', 'retain', 'scale']) {
+      expect(wwd).toContain(`id="${id}"`);
+    }
+  });
+  it('the six-at-a-glance overview links down to each system', () => {
+    for (const id of ['build', 'attract', 'convert', 'connect', 'retain', 'scale']) {
+      expect(wwd).toMatch(new RegExp(`href="#${id}"`));
+    }
+  });
+  it('keeps the connected-engagement story and the five project steps', () => {
+    // apostrophes are entity-escaped in {expressions}; match an apostrophe-free slice
+    expect(wwd).toContain('what a connected engagement looks like.');
+    expect(wwd).toContain('building a growth engine.');
+    for (const step of ['Understand', 'Map', 'Grow']) expect(wwd).toContain(step);
+  });
+  it('CTA links resolve to the existing journeys', () => {
+    expect(wwd).toContain('href="/book-a-call"');
+    expect(wwd).toContain('href="/map-your-stack"');
+  });
+  it('shows no visible placeholder badge', () => {
+    expect(wwd.toLowerCase()).not.toContain('placeholder');
+    expect(wwd).not.toContain('TODO(content)');
+  });
+});
+
+(wwh ? describe : describe.skip)('built Who We Help page (dist/who-we-help/index.html)', () => {
+  it('has one <h1> with the exact heading', () => {
+    expect((wwh.match(/<h1/g) || []).length).toBe(1);
+    expect(wwh).toContain('we handle the digital side.');
+  });
+  it('renders all four audience sections with stable deep-link ids', () => {
+    for (const id of ['ecommerce', 'creators', 'startups', 'teams']) {
+      expect(wwh).toContain(`id="${id}"`);
+    }
+  });
+  it('keeps the unifying promise and capability chips', () => {
+    expect(wwh).toContain('Either way the promise is the same');
+    expect(wwh).toContain('Systems that matter most');
+  });
+  it('CTA links resolve to the existing journeys', () => {
+    expect(wwh).toContain('href="/book-a-call"');
+    expect(wwh).toContain('href="/map-your-stack"');
+  });
+});
+
+(mys ? describe : describe.skip)('skip link is hidden until focused (Task 0 Fix 1)', () => {
+  it('renders one skip link targeting #main on every page', () => {
+    for (const page of [html, book, mys, wwd, wwh].filter(Boolean)) {
+      expect(page).toMatch(/class="skip"[^>]*href="#main"/);
+    }
+  });
+  it('the shared component clips it until focus (no fragile translate / undefined token)', () => {
+    const src = readFileSync(resolve(root, 'src/components/layout/SkipLink.astro'), 'utf8');
+    // hidden-until-focus: clipped by default, restored on :focus/:focus-visible
+    expect(src).toMatch(/clip-path:\s*inset\(50%\)/);
+    expect(src).toMatch(/\.skip:focus/);
+    // no fragile off-screen translate, no reference to the undefined --dur-1 token
+    expect(src).not.toContain('translateY(-160%)');
+    expect(src).not.toContain('var(--dur-1)');
   });
 });
 

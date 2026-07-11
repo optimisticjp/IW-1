@@ -110,6 +110,14 @@ p {
   outline: none;
 }
 
+/* Skip-link target: focus is moved to the <main> landmark programmatically
+   (tabindex="-1"). The scroll to content is the indicator, so no outline box
+   is drawn around the whole region — this is the standard skip-target pattern
+   and keeps the bypass working across browsers (incl. WebKit/Safari). */
+#main:focus {
+  outline: none;
+}
+
 /* --- Prose ------------------------------------------------------------- */
 .prose {
   max-width: var(--w-prose);
