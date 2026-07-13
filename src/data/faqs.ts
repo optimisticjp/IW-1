@@ -33,6 +33,22 @@ export const faqs: Faq[] = [
   // Home / hub
   { id: 'home-what', scope: 'home', question: 'What does Infinite Weblinks actually do?', answer: 'We build, run and connect the digital side of your business, so the parts work together and you can focus on your work.' },
   { id: 'home-size', scope: 'home', question: 'Are you only for ecommerce?', answer: 'No. We work with solo experts, new brands, growing teams and established teams. Ecommerce just shows the connections most clearly.' },
+
+  // Service-specific (launch pages) — distinct per service
+  { id: 'svc-ecom-platform', scope: 'service', question: 'Shopify or WooCommerce?', answer: 'Whichever fits how you sell and what you need to connect. We help you choose rather than pushing one platform.' },
+  { id: 'svc-ecom-migrate', scope: 'service', question: 'Can you move our store without losing sales or rankings?', answer: 'Yes. We plan the move, preserve redirects and rankings, and test the cutover before it goes live.' },
+  { id: 'svc-web-time', scope: 'service', question: 'How long does a website take?', answer: 'It depends on scope, and we give you a realistic range before we start rather than a hopeful one.' },
+  { id: 'svc-web-platform', scope: 'service', question: 'Will we be able to edit it ourselves?', answer: 'Yes. We build so your team can update content, and we hand over clear guidance when you want to run it yourselves.' },
+  { id: 'svc-seo-time', scope: 'service', question: 'How long does SEO take to work?', answer: 'Longer than ads and worth it. It builds over months, so we set expectations up front and show progress along the way.' },
+  { id: 'svc-seo-ai', scope: 'service', question: 'Can you get us into AI answers?', answer: 'No one can guarantee that. We make the business easier for search and AI systems to discover, understand, trust and cite.' },
+  { id: 'svc-ads-budget', scope: 'service', question: 'How much should we spend to start?', answer: 'Enough to learn, not so much that a mistake hurts. We start smaller, measure, and scale what works.' },
+  { id: 'svc-ads-guarantee', scope: 'service', question: 'Can you guarantee a return on ad spend?', answer: 'No honest agency can. We can point spend at people who buy and show you what changed and why.' },
+  { id: 'svc-cro-testing', scope: 'service', question: 'Do you guess or test changes?', answer: 'We test where it matters. A change is only a real improvement when the numbers back it up.' },
+  { id: 'svc-cro-guarantee', scope: 'service', question: 'Can you guarantee more conversions?', answer: 'No. We make it easier for the right visitors to act and prove the result with testing.' },
+  { id: 'svc-email-annoy', scope: 'service', question: 'Will email annoy our customers?', answer: 'Not when it is useful. Email tied to what someone browsed or bought is welcome; generic blasts are not.' },
+  { id: 'svc-email-crm', scope: 'service', question: 'Do we need a CRM for email to work well?', answer: 'For the best timing, yes, because the message depends on knowing who did what. We can start simple and grow into it.' },
+  { id: 'svc-track-why', scope: 'service', question: 'Why do our numbers never agree?', answer: 'Usually because each tool measures differently with no shared source of truth. We fix the tracking so one number means one thing.' },
+  { id: 'svc-track-serverside', scope: 'service', question: 'Do we need server-side tracking?', answer: 'Often yes, because browsers now block a lot of the usual tracking. We add it where it improves accuracy, not by default.' },
 ];
 
 /** Look up a set of FAQs by id, preserving order. */

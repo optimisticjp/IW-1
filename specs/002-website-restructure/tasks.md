@@ -126,15 +126,15 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Independent Test**: Open each launch service page; confirm breadcrumb, parent up-link, deliverables, "what it connects with", specialist disclosure, related services and a matching CTA; confirm zero thin/duplicate pages.
 
-- [ ] T033 [US4] Create the service route template `src/pages/services/[service].astro` (filtered to `treatment === 'page'`) with breadcrumb, parent up-link, deliverables, "what it connects with", progressive specialist detail, related services and matching CTA.
+- [X] T033 [US4] Create the service route template `src/pages/services/[service].astro` (filtered to `treatment === 'page'`) with breadcrumb, parent up-link, deliverables, "what it connects with", progressive specialist detail, related services and matching CTA.
   - Refs FR-014, contracts/routes.md · Deps Gate C · Parallel none · Validate build (7 routes) + render test · Done when the seven launch routes generate with the full structure.
-- [ ] T034 [US4] Complete the launch-page detail in `services.ts` for the seven `launchSet: true` services (Ecommerce Development, Website Design & Development, SEO & Search Visibility, Paid Advertising, Conversion Optimisation, Email Marketing, Analytics & Tracking) on the catalogue enumerated in T006, and enforce canonical placement (Landing Pages under Convert; CRM under Connect; AI-search a section of SEO; testing canonical on CRO; Amazon under Paid Advertising).
+- [X] T034 [US4] Complete the launch-page detail in `services.ts` for the seven `launchSet: true` services (Ecommerce Development, Website Design & Development, SEO & Search Visibility, Paid Advertising, Conversion Optimisation, Email Marketing, Analytics & Tracking) on the catalogue enumerated in T006, and enforce canonical placement (Landing Pages under Convert; CRM under Connect; AI-search a section of SEO; testing canonical on CRO; Amazon under Paid Advertising).
   - Refs FR-015/016, SC-003, data-model.md Service catalogue · Deps T006, T033 · Parallel none · Validate placement + launch-set (=7) test · Done when the seven launch pages carry full detail on the complete catalogue and rules hold.
-- [ ] T035 [P] [US4] Author friendly, buyer-intent copy for each of the seven services (unique searchIntent, deliverables, connections, FAQs) in playbook voice.
+- [X] T035 [P] [US4] Author friendly, buyer-intent copy for each of the seven services (unique searchIntent, deliverables, connections, FAQs) in playbook voice.
   - Refs FR-035/036/037, content uniqueness · Deps T034 · Parallel T036 · Validate content-lint + uniqueness test · Done when each page has unique intent and clean copy.
-- [ ] T036 [P] [US4] Render remaining (non-launch) services as anchored capability sections (`treatment === 'section'`) with in-page anchors.
+- [X] T036 [P] [US4] Render remaining (non-launch) services as anchored capability sections (`treatment === 'section'`) with in-page anchors.
   - Refs FR-015, contracts/routes.md · Deps T034 · Parallel T035 · Validate render test · Done when thin-intent services appear as sections, not pages.
-- [ ] T037 [US4] Add tests: no thin/duplicate pages, canonical placement, breadcrumb + parent up-link present, related-service links resolve.
+- [X] T037 [US4] Add tests: no thin/duplicate pages, canonical placement, breadcrumb + parent up-link present, related-service links resolve.
   - Refs SC-003, plan Testing strategy · Deps T035/T036 · Parallel none · Validate `npm run test` · Done when tests pass.
 
 **Checkpoint (Gate D)**: Seven launch pages live with unique intent; placement rules verified; no thin/duplicate pages.
