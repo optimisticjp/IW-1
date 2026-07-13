@@ -32,7 +32,9 @@ const Tag = href ? 'a' : 'button';
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5em;
+    text-align: center;
     font-family: var(--font-body);
     font-weight: 600;
     line-height: 1;
@@ -42,6 +44,7 @@ const Tag = href ? 'a' : 'button';
     border: var(--bw) solid transparent;
     min-height: 46px;
     padding: 0.85em 1.4em;
+    max-width: 100%;
     transition: transform var(--dur-micro) var(--ease-out),
       box-shadow var(--dur-2) var(--ease-out), background-color var(--dur-micro), border-color var(--dur-micro);
   }

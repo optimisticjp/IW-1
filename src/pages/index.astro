@@ -374,5 +374,6 @@ const schemas = [webPageSchema(meta.title, meta.canonical, home.meta.description
   .cta__head { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); }
   .cta__body { color: #fff; font-size: var(--fs-lead); max-width: 40rem; }
   .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.6rem; }
+  @media (max-width: 459px) { .hero__actions, .cta__actions { width: 100%; } .hero__actions :global(.btn), .cta__actions :global(.btn) { width: 100%; } }
   .cta__promise { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; color: #fff; font-weight: 600; }
 </style>

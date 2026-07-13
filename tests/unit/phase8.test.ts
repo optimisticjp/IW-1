@@ -323,11 +323,12 @@ d('T071 — copy-honesty lint across rendered output', () => {
     }
   });
 
-  it('anonymized proof and owner/legal placeholders are clearly labelled', () => {
+  it('anonymized proof is labelled and owner placeholders stay out of public pages', () => {
     const work = indexable.find((p) => p.route === '/work');
     expect(work?.html.toLowerCase()).toContain('anonymized');
     const about = indexable.find((p) => p.route === '/about');
-    expect(about?.html).toContain('Owner to supply');
+    expect(about?.html).not.toContain('Owner to supply');
+    expect(about?.html).not.toContain('Photo to supply');
     for (const legal of ['/privacy', '/cookies', '/terms']) {
       const p = indexable.find((x) => x.route === legal);
       expect(p?.html, `${legal} review status`).toContain('Draft for review');
