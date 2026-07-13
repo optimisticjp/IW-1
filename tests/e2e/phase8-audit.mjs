@@ -56,7 +56,7 @@ const axeSummary = [];
 // mid-transition frame of a below-the-fold card (which axe would read as the
 // text blended toward the background).
 for (const route of AXE_ROUTES) {
-  const ctx = await browser.newContext({ viewport: { width: 1024, height: 900 }, reducedMotion: 'reduce' });
+  const ctx = await browser.newContext({ viewport: { width: 1024, height: 900 }, reducedMotion: 'reduce', bypassCSP: true });
   const page = await ctx.newPage();
   await page.goto(BASE + route, { waitUntil: 'networkidle' });
   await page.addScriptTag({ content: AXE });
