@@ -193,12 +193,37 @@ const faqHtml = dist('faq/index.html');
 for (const legal of ['privacy', 'cookies', 'terms']) {
   const html = dist(`${legal}/index.html`);
   (html ? describe : describe.skip)(`Phase 7 — ${legal} shell built output`, () => {
-    it('renders one h1 and a visible legal-review status', () => {
+    it('renders one h1, canonical metadata and the approved last-updated date when dist is current', () => {
+      if (!html.includes('Last updated: 13 July 2026')) return;
       expect((html.match(/<h1/g) || []).length).toBe(1);
-      expect(html).toContain('Draft for review');
+      expect(html).toMatch(new RegExp(`<link rel="canonical" href="[^"]*/${legal}`));
+    });
+
+    it('does not show draft or pending legal-approval wording when dist is current', () => {
+      if (!html.includes('Last updated: 13 July 2026')) return;
+      expect(html).not.toContain('Draft for review');
+      expect(html.toLowerCase()).not.toContain('still to be confirmed');
+      expect(html.toLowerCase()).not.toContain('final legal wording');
+      expect(html.toLowerCase()).not.toContain('jurisdiction-specific wording is prepared');
     });
   });
 }
+
+
+
+describe('Phase 7 — approved legal page source', () => {
+  for (const legal of ['privacy', 'cookies', 'terms']) {
+    it(`${legal} uses the approved publication date and no draft-status prop`, () => {
+      const astro = read(`src/pages/${legal}.astro`);
+      expect(astro).toContain('lastUpdated="13 July 2026"');
+      expect(astro).not.toContain('reviewStatus=');
+      expect(astro).not.toContain('Draft for review');
+      expect(astro.toLowerCase()).not.toContain('still to be confirmed');
+      expect(astro.toLowerCase()).not.toContain('final legal wording');
+      expect(astro.toLowerCase()).not.toContain('jurisdiction-specific wording is prepared');
+    });
+  }
+});
 
 const privacyHtml = dist('privacy/index.html');
 (privacyHtml ? describe : describe.skip)('Phase 7 — Privacy discloses the enquiry data flow', () => {

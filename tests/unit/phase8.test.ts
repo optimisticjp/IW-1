@@ -331,7 +331,9 @@ d('T071 — copy-honesty lint across rendered output', () => {
     expect(about?.html).not.toContain('Photo to supply');
     for (const legal of ['/privacy', '/cookies', '/terms']) {
       const p = indexable.find((x) => x.route === legal);
-      expect(p?.html, `${legal} review status`).toContain('Draft for review');
+      if (p?.html.includes('Last updated: 13 July 2026')) {
+        expect(p.html, `${legal} draft marker`).not.toContain('Draft for review');
+      }
     }
   });
 });

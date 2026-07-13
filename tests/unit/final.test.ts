@@ -121,18 +121,23 @@ describe('Blank-section safety (Task 1)', () => {
 (sitemap ? describe : describe.skip)('sitemap + robots', () => {
   it('sitemap lists the six public routes and excludes /404', () => {
     for (const r of ['/', '/book-a-call/', '/how-it-connects/', '/map-your-stack/', '/what-we-do/', '/who-we-help/']) {
-      expect(sitemap).toContain(`infiniteweblinks.example${r}</loc>`);
+      expect(sitemap).toMatch(new RegExp(`https://(?:www\.)?infiniteweblinks\.(?:example|com)${r}</loc>`));
     }
     expect(sitemap).not.toContain('/404');
   });
-  it('robots is env-aware: disallows on the placeholder origin, absolute sitemap, no localhost', () => {
-    // On the reserved `.example` placeholder origin (no real domain configured),
-    // the build must not be indexable (FR-041); the crawler allow/block list
-    // applies only on a real production origin.
+  it('robots is env-aware: placeholder builds block crawling and production builds allow discovery', () => {
     expect(robots).toMatch(/User-agent:\s*\*/);
-    expect(robots).toMatch(/Disallow:\s*\//);
     expect(robots).toMatch(/Sitemap:\s*https?:\/\/[^\s]+\/sitemap-index\.xml/);
     expect(robots).not.toContain('localhost');
+    if (robots.includes('infiniteweblinks.example')) {
+      expect(robots).toMatch(/Disallow:\s*\//);
+    } else {
+      expect(robots).toContain('Sitemap: https://infiniteweblinks.com/sitemap-index.xml');
+      expect(robots).toMatch(/User-agent:\s*\*\s*Allow:\s*\//);
+      for (const bot of ['GPTBot', 'CCBot', 'Google-Extended']) {
+        expect(robots).toContain(`User-agent: ${bot}`);
+      }
+    }
   });
 });
 
