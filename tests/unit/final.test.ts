@@ -68,8 +68,9 @@ describe('How It Connects content (verbatim)', () => {
 describe('Navigation points How it connects at the concept route', () => {
   it('header and footer resolve to /how-it-connects', () => {
     expect(primaryNav.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
-    const company = footerGroups.find((g) => g.heading === 'Company')!;
-    expect(company.items.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
+    // Restructure (FR-004): "How it connects" now sits under the Learn column.
+    const learn = footerGroups.find((g) => g.heading === 'Learn')!;
+    expect(learn.items.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
   });
 });
 
@@ -124,9 +125,12 @@ describe('Blank-section safety (Task 1)', () => {
     }
     expect(sitemap).not.toContain('/404');
   });
-  it('robots allows indexing and points to the absolute sitemap', () => {
+  it('robots is env-aware: disallows on the placeholder origin, absolute sitemap, no localhost', () => {
+    // On the reserved `.example` placeholder origin (no real domain configured),
+    // the build must not be indexable (FR-041); the crawler allow/block list
+    // applies only on a real production origin.
     expect(robots).toMatch(/User-agent:\s*\*/);
-    expect(robots).toMatch(/Allow:\s*\//);
+    expect(robots).toMatch(/Disallow:\s*\//);
     expect(robots).toMatch(/Sitemap:\s*https?:\/\/[^\s]+\/sitemap-index\.xml/);
     expect(robots).not.toContain('localhost');
   });

@@ -6,6 +6,12 @@ import Button from '../components/ui/Button.astro';
 import WorkThumb from '../components/brand/WorkThumb.astro';
 import InfinityMark from '../components/brand/InfinityMark.astro';
 import { whatWeDo as d } from '../data/whatWeDo';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(d.seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, d.seo.description)];
 
 const accentVar: Record<string, string> = {
   indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
@@ -24,7 +30,7 @@ const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint' | 'dark'; med
 };
 ---
 
-<BaseLayout seo={d.seo}>
+<BaseLayout seo={d.seo} schemas={schemas}>
   <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="wh" labelledby="wh-h">
     <div class="wh__hero">
@@ -177,7 +183,7 @@ const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint' | 'dark'; med
   /* 3 · System detail sections */
   .sys__grid { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3rem); align-items: center; }
   .sys__body { min-width: 0; }
-  .sys__chip { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.04em; text-transform: uppercase; color: color-mix(in oklab, var(--cc) 72%, var(--fg)); background: color-mix(in oklab, var(--cc) 12%, var(--bg)); padding: 0.3rem 0.7rem; border-radius: var(--r-pill); }
+  .sys__chip { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: 0.04em; text-transform: uppercase; color: color-mix(in oklab, var(--cc) 46%, var(--fg)); background: color-mix(in oklab, var(--cc) 12%, var(--bg)); padding: 0.3rem 0.7rem; border-radius: var(--r-pill); }
   .sys__chip-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--cc); }
   .sys__name { font-size: var(--fs-h2); margin-top: 0.8rem; }
   .sys__dl { margin-top: 1.3rem; display: grid; gap: 0.25rem 1.25rem; }
@@ -190,7 +196,7 @@ const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint' | 'dark'; med
     background: color-mix(in oklab, var(--cc) 8%, var(--bg-raised)); border-radius: var(--r-3);
     border-left: 4px solid var(--cc); font-size: var(--fs-lead); font-weight: 500; color: var(--fg);
   }
-  .sys__result-lbl { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: color-mix(in oklab, var(--cc) 78%, var(--fg)); margin-bottom: 0.4rem; }
+  .sys__result-lbl { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: color-mix(in oklab, var(--cc) 46%, var(--fg)); margin-bottom: 0.4rem; }
 
   .sys__media { display: grid; gap: 0.7rem; justify-items: center; }
   .sys__thumb { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: var(--r-4); overflow: clip; background: var(--bg-raised); border: var(--bw) solid var(--rule); box-shadow: var(--shadow-1); }

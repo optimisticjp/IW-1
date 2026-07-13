@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import Accordion from '../../components/ui/Accordion.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import ProofInterim from '../../components/page/ProofInterim.astro';
+import FaqSection from '../../components/page/FaqSection.astro';
+import CapabilityConnect from '../../components/brand/CapabilityConnect.astro';
+import { capabilities, getCapability } from '../../data/capabilities';
+import { servicesForCapability } from '../../data/services';
+import { audiencesForCapability } from '../../lib/links';
+import { getAudience } from '../../data/audiences';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+import type { CapabilityId } from '../../data/ids';
+
+export function getStaticPaths() {
+  return capabilities.map((cap) => ({ params: { capability: cap.id }, props: { cap } }));
+}
+
+const { cap } = Astro.props as { cap: (typeof capabilities)[number] };
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+const svcs = servicesForCapability(cap.id);
+const launch = svcs.filter((s) => s.launchSet);
+const phased = svcs.filter((s) => s.treatment === 'page' && !s.launchSet);
+const sections = svcs.filter((s) => s.treatment === 'section');
+const relatedAudiences = audiencesForCapability(cap.id).map((id) => getAudience(id)!).filter(Boolean);
+const related = cap.relatedCapabilityIds.map((id) => getCapability(id)!).filter(Boolean);
+
+const path = routes.capability(cap.id);
+const seo = {
+  title: `${cap.name}: ${cap.descriptor}`,
+  description: cap.outcomeHero,
+  path,
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'What we do', href: '/what-we-do' },
+  { label: cap.name },
+];
+const schemas = [
+  webPageSchema(`${cap.name} | Infinite Weblinks`, canonical, cap.outcomeHero),
+  breadcrumbSchema(crumbs, site),
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <div data-cap={cap.id}>
+    <!-- Breadcrumb -->
+    <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+    <!-- Hero -->
+    <Section env="paper" width="wide" class="chero" labelledby="chero-h">
+      <div class="chero__wrap">
+        <Eyebrow>What we do · {cap.name}</Eyebrow>
+        <h1 id="chero-h" class="chero__h1">{cap.outcomeHero}</h1>
+        <p class="chero__lead">{cap.descriptor}</p>
+        <div class="chero__cta">
+          <Button href="/book-a-call" variant="primary" size="lg">Book a free call</Button>
+          <Button href="/map-your-stack" variant="secondary" size="lg">Map your stack</Button>
+        </div>
+      </div>
+    </Section>
+
+    <!-- Sibling switcher -->
+    <Section env="paper" pad="tight" width="wide">
+      <nav class="sib" aria-label="Capabilities">
+        <ul class="sib__list">
+          {capabilities.map((c) => (
+            <li>
+              <a href={routes.capability(c.id)} data-cap={c.id} class:list={['sib__link', c.id === cap.id && 'is-current']} aria-current={c.id === cap.id ? 'page' : undefined}>
+                <span class="sib__dot" aria-hidden="true"></span>{c.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </Section>
+
+    <!-- Recognition -->
+    <Section env="lavender" width="content" class="blk" labelledby="rec-h">
+      <div class="u-reveal">
+        <Eyebrow>Does this sound familiar?</Eyebrow>
+        <h2 id="rec-h" class="blk__h">The problems {cap.name.toLowerCase()} is here to solve.</h2>
+        <ul class="rec__list">
+          {cap.problems.map((p) => <li class="rec__item">{p}</li>)}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- Useful principle -->
+    <Section env="paper" width="content" class="blk" labelledby="prin-h">
+      <div class="u-reveal prin">
+        <h2 id="prin-h" class="prin__h">{cap.principle}</h2>
+      </div>
+    </Section>
+
+    <!-- What we do (services) -->
+    <Section env="paper" width="wide" class="blk" labelledby="svc-h">
+      <div class="u-reveal">
+        <Eyebrow>What we do</Eyebrow>
+        <h2 id="svc-h" class="blk__h">The {cap.name.toLowerCase()} services we offer.</h2>
+      </div>
+      <ul class="svc__grid">
+        {launch.map((s) => (
+          <li class="svc__card u-reveal">
+            <h3 class="svc__name">{s.name}</h3>
+            <ul class="svc__deliv">{s.deliverables.map((d) => <li>{d}</li>)}</ul>
+            <a href={routes.service(s.id)} class="svc__link">Explore {s.name} <span aria-hidden="true">→</span></a>
+          </li>
+        ))}
+        {phased.map((s) => (
+          <li class="svc__card u-reveal" id={`svc-${s.id}`}>
+            <h3 class="svc__name">{s.name}</h3>
+            <ul class="svc__deliv">{s.deliverables.map((d) => <li>{d}</li>)}</ul>
+            <p class="svc__soon">Part of {cap.name}. A dedicated page is on the way; ask us about it on a call.</p>
+          </li>
+        ))}
+      </ul>
+      {sections.length > 0 && (
+        <p class="svc__also"><strong>Also included:</strong> {sections.map((s) => s.name).join(', ')}.</p>
+      )}
+    </Section>
+
+    <!-- What becomes possible -->
+    <Section env="mint" width="content" class="blk" labelledby="poss-h">
+      <div class="u-reveal">
+        <Eyebrow>What becomes possible</Eyebrow>
+        <h2 id="poss-h" class="blk__h">With {cap.name.toLowerCase()} in place.</h2>
+        <ul class="poss__list">
+          {cap.becomesPossible.map((b) => <li class="poss__item">{b}</li>)}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- The connection -->
+    <Section env="paper" width="wide" class="blk conn" labelledby="conn-h">
+      <div class="conn__grid">
+        <div class="u-reveal">
+          <Eyebrow>How it connects</Eyebrow>
+          <h2 id="conn-h" class="blk__h">{cap.name} works with the other five.</h2>
+          <p class="conn__body">{cap.connectionStory}</p>
+          <ul class="conn__links">
+            {related.map((c) => (
+              <li><a href={routes.capability(c.id)} data-cap={c.id} class="conn__link"><span class="conn__dot" aria-hidden="true"></span>{c.name}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="conn__vis u-reveal"><CapabilityConnect currentId={cap.id as CapabilityId} relatedIds={cap.relatedCapabilityIds} /></div>
+      </div>
+    </Section>
+
+    <!-- Specialist detail (progressive disclosure) -->
+    <Section env="lavender" width="content" class="blk" labelledby="spec-h">
+      <div class="u-reveal spec">
+        <Eyebrow>For the specialists</Eyebrow>
+        <h2 id="spec-h" class="blk__h">The detail, if you want it.</h2>
+        <p class="spec__note">Business outcome first. The specialist detail is here when you need it, not before.</p>
+        <Accordion name={`spec-${cap.id}`} items={cap.specialistList.map((s, i) => ({ q: `Specialist area ${i + 1}`, a: s }))} />
+      </div>
+    </Section>
+
+    <!-- Related audiences -->
+    {relatedAudiences.length > 0 && (
+      <Section env="paper" pad="tight" width="wide" class="blk" labelledby="aud-h">
+        <div class="u-reveal">
+          <Eyebrow>Who this helps</Eyebrow>
+          <h2 id="aud-h" class="blk__h">Teams and businesses {cap.name} tends to serve.</h2>
+          <ul class="aud__links">
+            {relatedAudiences.map((a) => (<li><a href={routes.audience(a.id)} class="aud__link">{a.name} <span aria-hidden="true">→</span></a></li>))}
+          </ul>
+        </div>
+      </Section>
+    )}
+
+    <!-- Proof -->
+    <ProofInterim env="mint" />
+
+    <!-- FAQ -->
+    <FaqSection ids={cap.faqIds} name={`faq-${cap.id}`} heading={`${cap.name} questions, answered`} />
+
+    <!-- CTA -->
+    <CtaBand
+      heading="Not sure where to start?"
+      body="Tell us what you are building or what feels difficult. We will point you to the right next step."
+      primary={{ label: cap.actionLabel, href: '/book-a-call' }}
+      secondary={{ label: 'Map your stack', href: '/map-your-stack' }}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .chero__wrap { display: grid; gap: 1rem; max-width: 46rem; }
+  .chero__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.3rem 0 0; }
+  .chero__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin: 0; }
+  .chero__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.4rem; }
+
+  .sib__list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; }
+  .sib__link { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.9rem; border-radius: var(--r-pill); border: var(--bw) solid var(--rule); background: var(--bg-raised); color: var(--fg); text-decoration: none; font-weight: 600; font-size: var(--fs-small); min-height: 44px; }
+  .sib__link:hover { border-color: var(--cap); }
+  .sib__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--cap); flex: none; }
+  .sib__link.is-current { background: var(--cap-soft); border-color: var(--cap); color: var(--cap-deep); }
+
+  .blk__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 22ch; }
+
+  .rec__list, .poss__list { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: 0.7rem; }
+  .rec__item, .poss__item { position: relative; padding-left: 1.6rem; color: var(--fg-muted); }
+  .rec__item::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--cap); }
+  .poss__item::before { content: '→'; position: absolute; left: 0; color: var(--cap-deep); font-weight: 700; }
+
+  .prin__h { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); line-height: var(--lh-snug); max-width: 30ch; border-left: 4px solid var(--cap); padding-left: 1.1rem; }
+
+  .svc__grid { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1.1rem; }
+  .svc__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-top: 4px solid var(--cap); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
+  .svc__name { font-size: var(--fs-h4); }
+  .svc__deliv { margin: 0.6rem 0 0; padding-left: 1.1rem; color: var(--fg-muted); display: grid; gap: 0.25rem; }
+  .svc__link { display: inline-block; margin-top: 0.9rem; font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .svc__link:hover { text-decoration: underline; }
+  .svc__soon { margin-top: 0.9rem; font-size: var(--fs-small); color: var(--fg-faint); }
+  .svc__also { margin-top: 1.4rem; color: var(--fg-muted); }
+  @media (min-width: 640px) { .svc__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .svc__grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .conn__grid { display: grid; gap: 2rem; align-items: center; }
+  .conn__body { color: var(--fg-muted); margin-top: 1rem; max-width: 44ch; }
+  .conn__links { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; }
+  .conn__link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--fg); text-decoration: none; font-weight: 600; font-size: var(--fs-small); }
+  .conn__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--cap); }
+  .conn__vis { display: flex; justify-content: center; }
+  @media (min-width: 880px) { .conn__grid { grid-template-columns: 1fr 1fr; } }
+
+  .spec__note { color: var(--fg-muted); margin: 0.6rem 0 1.2rem; }
+
+  .aud__links { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .aud__link { font-weight: 600; color: var(--accent); text-decoration: none; }
+  .aud__link:hover { text-decoration: underline; }
+</style>

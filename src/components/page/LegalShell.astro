@@ -1,0 +1,62 @@
+---
+// Shared shell for the utility/legal pages (spec 002, FR-047). Provides the
+// breadcrumb, heading, a visible legal-review status banner for
+// jurisdiction-dependent wording, and a consistent prose column. Interface copy
+// only; final legal wording is an explicit owner/solicitor dependency.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../layout/Section.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Breadcrumb from '../ui/Breadcrumb.astro';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  description: string;
+  path: string;
+  /** short label describing the review state of this document */
+  reviewStatus: string;
+}
+const { title, eyebrow, description, path, reviewStatus } = Astro.props;
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const seo = { title, description, path, robots: 'index,follow' };
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: title }];
+const schemas = [webPageSchema(`${title} | Infinite Weblinks`, canonical, description), breadcrumbSchema(crumbs, site)];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <Section env="paper" width="prose" class="lg" labelledby="lg-h">
+    <div class="lg__head u-reveal">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h1 id="lg-h" class="lg__h1">{title}</h1>
+    </div>
+
+    <p class="lg__status" role="note">
+      <span class="lg__status-tag">Draft for review</span>
+      {reviewStatus}
+    </p>
+
+    <div class="lg__prose u-reveal">
+      <slot />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .lg__head { max-width: 40rem; }
+  .lg__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .lg__status { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin: 1.4rem 0 2rem; padding: 0.9rem 1.1rem; background: var(--bg-inset); border: var(--bw) solid var(--rule); border-left: 4px solid var(--accent); border-radius: var(--r-2); font-size: var(--fs-small); color: var(--fg-muted); }
+  .lg__status-tag { font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--accent); }
+  .lg__prose { max-width: 40rem; }
+  .lg__prose :global(h2) { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); letter-spacing: var(--tracking-tight); margin: 2rem 0 0.6rem; }
+  .lg__prose :global(h3) { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 1.4rem 0 0.4rem; }
+  .lg__prose :global(p) { color: var(--fg-muted); margin: 0 0 1rem; }
+  .lg__prose :global(ul) { margin: 0 0 1rem; padding-left: 1.2rem; display: grid; gap: 0.45rem; color: var(--fg-muted); }
+  .lg__prose :global(a) { color: var(--link); }
+  .lg__prose :global(strong) { color: var(--fg); }
+</style>

@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import Accordion from '../../components/ui/Accordion.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import ProofInterim from '../../components/page/ProofInterim.astro';
+import FaqSection from '../../components/page/FaqSection.astro';
+import { launchServices, getService } from '../../data/services';
+import { getCapability } from '../../data/capabilities';
+import { getAudience } from '../../data/audiences';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema, serviceSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+
+export function getStaticPaths() {
+  // Only the seven launch services get dedicated routes; phased services stay
+  // as capability-page sections (no unfinished routes exposed).
+  return launchServices.map((svc) => ({ params: { service: svc.id }, props: { svc } }));
+}
+
+const { svc } = Astro.props as { svc: (typeof launchServices)[number] };
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const cap = getCapability(svc.capabilityId)!;
+
+// A connection or related link resolves to the dedicated route when the target
+// is a launch page, otherwise to the capability-page section (never a 404).
+const serviceLink = (id: string) => {
+  const s = getService(id);
+  if (!s) return routes.whatWeDo();
+  return s.launchSet ? routes.service(s.id) : `${routes.capability(s.capabilityId)}#svc-${s.id}`;
+};
+const connectLinks = (svc.connections || []).map((id) => ({ name: getService(id)?.name ?? id, href: serviceLink(id) }));
+const relatedLinks = (svc.relatedServiceIds || []).map((id) => ({ name: getService(id)?.name ?? id, href: serviceLink(id) }));
+const audiences = svc.primaryAudienceIds.map((id) => getAudience(id)!).filter(Boolean);
+
+const path = routes.service(svc.id);
+const seo = {
+  title: `${svc.name}: ${svc.searchIntent}`.slice(0, 62),
+  description: svc.problem ?? svc.searchIntent,
+  path,
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'What we do', href: '/what-we-do' },
+  { label: cap.name, href: routes.capability(cap.id) },
+  { label: svc.name },
+];
+const schemas = [
+  webPageSchema(`${svc.name} | Infinite Weblinks`, canonical, svc.problem),
+  serviceSchema(svc.name, svc.problem ?? svc.searchIntent, canonical),
+  breadcrumbSchema(crumbs, site),
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <div data-cap={svc.capabilityId}>
+    <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+    <!-- Hero + parent up-link -->
+    <Section env="paper" width="wide" class="shero" labelledby="shero-h">
+      <div class="shero__wrap">
+        <a class="shero__up" href={routes.capability(cap.id)}><span class="shero__updot" aria-hidden="true"></span>Part of {cap.name}</a>
+        <h1 id="shero-h" class="shero__h1">{svc.name}</h1>
+        {svc.whoFor && <p class="shero__who">For {svc.whoFor.charAt(0).toLowerCase() + svc.whoFor.slice(1)}</p>}
+        <div class="shero__cta">
+          <Button href="/book-a-call" variant="primary" size="lg">Book a free call</Button>
+          <Button href="/map-your-stack" variant="secondary" size="lg">Map your stack</Button>
+        </div>
+      </div>
+    </Section>
+
+    <!-- The problem (before method) -->
+    {svc.problem && (
+      <Section env="lavender" width="content" class="blk" labelledby="prob-h">
+        <div class="u-reveal">
+          <Eyebrow>The problem</Eyebrow>
+          <h2 id="prob-h" class="blk__h">{svc.problem}</h2>
+        </div>
+      </Section>
+    )}
+
+    <!-- What we do / deliverables + outcomes -->
+    <Section env="paper" width="wide" class="blk" labelledby="do-h">
+      <div class="do__grid">
+        <div class="u-reveal">
+          <Eyebrow>What you receive</Eyebrow>
+          <h2 id="do-h" class="blk__h">What we do, and what you get.</h2>
+          <ul class="tick">{svc.deliverables.map((d) => <li>{d}</li>)}</ul>
+        </div>
+        {svc.outcomes && (
+          <div class="u-reveal">
+            <h3 class="do__sub">What becomes possible</h3>
+            <ul class="arrow">{svc.outcomes.map((o) => <li>{o}</li>)}</ul>
+          </div>
+        )}
+      </div>
+    </Section>
+
+    <!-- How the work happens -->
+    {svc.process && (
+      <Section env="mint" width="wide" class="blk" labelledby="proc-h">
+        <div class="u-reveal"><Eyebrow>How the work happens</Eyebrow><h2 id="proc-h" class="blk__h">A clear, calm process.</h2></div>
+        <ol class="proc">
+          {svc.process.map((step, i) => (
+            <li class="proc__step u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+              <span class="proc__num" aria-hidden="true">{i + 1}</span>
+              <p class="proc__body">{step}</p>
+            </li>
+          ))}
+        </ol>
+      </Section>
+    )}
+
+    <!-- What it connects with (Growth Graph role) -->
+    <Section env="paper" width="content" class="blk" labelledby="conn-h">
+      <div class="u-reveal">
+        <Eyebrow>What it connects with</Eyebrow>
+        <h2 id="conn-h" class="blk__h">Where {svc.name.toLowerCase()} sits in the Growth Graph.</h2>
+        <p class="conn__body">On its own, {svc.name.toLowerCase()} helps. Connected to the rest of your setup, it compounds. It works most closely with:</p>
+        <ul class="conn__links">
+          {connectLinks.map((l) => (<li><a href={l.href} class="conn__link">{l.name} <span aria-hidden="true">→</span></a></li>))}
+          <li><a href={routes.capability(cap.id)} class="conn__link">All of {cap.name} <span aria-hidden="true">→</span></a></li>
+          <li><a href="/how-it-connects" class="conn__link">How it all connects <span aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+    </Section>
+
+    <!-- Useful educational module -->
+    {svc.educational && (
+      <Section env="lavender" width="content" class="blk" labelledby="edu-h">
+        <div class="u-reveal edu">
+          <Eyebrow>Worth knowing</Eyebrow>
+          <h2 id="edu-h" class="edu__h">{svc.educational.title}</h2>
+          <p class="edu__body">{svc.educational.body}</p>
+        </div>
+      </Section>
+    )}
+
+    <!-- Specialist detail (progressive) -->
+    {svc.specialistTools && (
+      <Section env="paper" width="content" class="blk" labelledby="spec-h">
+        <div class="u-reveal">
+          <Eyebrow>For the specialists</Eyebrow>
+          <h2 id="spec-h" class="blk__h">The detail, if you want it.</h2>
+          <Accordion name={`svcspec-${svc.id}`} items={svc.specialistTools.map((t, i) => ({ q: `Specialist area ${i + 1}`, a: t }))} />
+        </div>
+      </Section>
+    )}
+
+    <!-- Who it helps -->
+    {audiences.length > 0 && (
+      <Section env="paper" pad="tight" width="wide" class="blk" labelledby="aud-h">
+        <div class="u-reveal">
+          <Eyebrow>Who this helps</Eyebrow>
+          <h2 id="aud-h" class="blk__h">Best for these situations.</h2>
+          <ul class="aud">{audiences.map((a) => (<li><a href={routes.audience(a.id)} class="aud__link">{a.name} <span aria-hidden="true">→</span></a></li>))}</ul>
+        </div>
+      </Section>
+    )}
+
+    <!-- Related services -->
+    {relatedLinks.length > 0 && (
+      <Section env="mint" pad="tight" width="wide" class="blk" labelledby="rel-h">
+        <div class="u-reveal">
+          <Eyebrow>Related services</Eyebrow>
+          <h2 id="rel-h" class="blk__h">Often done alongside.</h2>
+          <ul class="aud">{relatedLinks.map((l) => (<li><a href={l.href} class="aud__link">{l.name} <span aria-hidden="true">→</span></a></li>))}</ul>
+        </div>
+      </Section>
+    )}
+
+    <ProofInterim env="lavender" />
+
+    {svc.faqIds && <FaqSection ids={svc.faqIds} name={`faq-${svc.id}`} heading={`${svc.name} questions, answered`} />}
+
+    <CtaBand
+      heading={`Ready to talk about ${svc.name.toLowerCase()}?`}
+      body="Tell us where you are and what feels difficult. We will explain the options and the right next step."
+      primary={{ label: svc.actionLabel, href: '/book-a-call' }}
+      secondary={{ label: 'Map your stack', href: '/map-your-stack' }}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .shero__wrap { display: grid; gap: 0.8rem; max-width: 46rem; }
+  /* Grid items default to min-width:auto; let them shrink so the CTA row wraps
+     cleanly at the 320px floor instead of forcing a few px of overflow. */
+  .shero__wrap > * { min-width: 0; }
+  .shero__up { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600; font-size: var(--fs-small); color: var(--cap-deep); text-decoration: none; }
+  .shero__up:hover { text-decoration: underline; }
+  .shero__updot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--cap); }
+  .shero__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0; overflow-wrap: break-word; }
+  .shero__who { font-size: var(--fs-lead); color: var(--fg-muted); margin: 0; }
+  .shero__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.4rem; }
+
+  .blk__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 24ch; overflow-wrap: break-word; }
+
+  .tick, .arrow { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: 0.6rem; }
+  .tick li, .arrow li { position: relative; padding-left: 1.7rem; color: var(--fg-muted); }
+  .tick li::before { content: ''; position: absolute; left: 0; top: 0.45em; width: 0.7rem; height: 0.7rem; border-radius: 3px; background: var(--cap); }
+  .arrow li::before { content: '→'; position: absolute; left: 0; color: var(--cap-deep); font-weight: 700; }
+  .do__grid { display: grid; gap: 2rem; }
+  .do__sub { font-size: var(--fs-h4); }
+  @media (min-width: 820px) { .do__grid { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+
+  .proc { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1rem; counter-reset: p; }
+  .proc__step { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.1rem 1.3rem; }
+  .proc__num { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: var(--r-2); background: var(--cap); color: var(--cap-on); font-family: var(--font-display); font-weight: 800; }
+  .proc__body { color: var(--fg-muted); }
+  @media (min-width: 900px) { .proc { grid-template-columns: repeat(2, 1fr); } }
+
+  .conn__body { color: var(--fg-muted); margin-top: 1rem; max-width: 52ch; }
+  .conn__links { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .conn__link { font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .conn__link:hover { text-decoration: underline; }
+
+  .edu__h { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); border-left: 4px solid var(--cap); padding-left: 1.1rem; margin-top: 0.5rem; }
+  .edu__body { color: var(--fg-muted); margin-top: 0.8rem; max-width: 48ch; padding-left: 1.1rem; }
+
+  .aud { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .aud__link { font-weight: 600; color: var(--accent-text); text-decoration: none; }
+  .aud__link:hover { text-decoration: underline; }
+</style>

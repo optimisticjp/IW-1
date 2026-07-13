@@ -1,0 +1,54 @@
+---
+// Lighter capability Growth Graph variant (spec 002, FR-020, T030). A static
+// hub-and-siblings diagram: the current capability at the centre, the other
+// five around it, links to genuinely-related capabilities drawn solid. No JS,
+// no second graph engine. The SVG is decorative (aria-hidden); the meaning is
+// carried by the adjacent connection-story text (FR-048).
+import { capabilities } from '../../data/capabilities';
+import type { CapabilityId } from '../../data/ids';
+
+interface Props {
+  currentId: CapabilityId;
+  relatedIds: CapabilityId[];
+}
+const { currentId, relatedIds } = Astro.props;
+
+const current = capabilities.find((c) => c.id === currentId)!;
+const others = capabilities.filter((c) => c.id !== currentId);
+const cx = 170;
+const cy = 130;
+const r = 96;
+// Five ring nodes evenly spaced, starting from the top.
+const ring = others.map((c, i) => {
+  const a = -Math.PI / 2 + (i * 2 * Math.PI) / others.length;
+  return { c, x: Math.round(cx + r * Math.cos(a)), y: Math.round(cy + r * Math.sin(a)), related: relatedIds.includes(c.id) };
+});
+---
+
+<div class="ccx" data-cap={currentId}>
+  <svg viewBox="0 0 340 260" class="ccx__svg" role="presentation" aria-hidden="true">
+    {ring.map((n) => (
+      <line class:list={['ccx__link', n.related && 'is-on']} x1={cx} y1={cy} x2={n.x} y2={n.y} style={`--lc:var(--cap-${n.c.id})`} />
+    ))}
+    {ring.map((n) => (
+      <g class="ccx__node" style={`--nc:var(--cap-${n.c.id})`}>
+        <circle cx={n.x} cy={n.y} r="9" />
+        <text x={n.x} y={n.y + (n.y < cy ? -14 : 22)} text-anchor="middle">{n.c.name}</text>
+      </g>
+    ))}
+    <circle class="ccx__hubhalo" cx={cx} cy={cy} r="30" />
+    <circle class="ccx__hub" cx={cx} cy={cy} r="20" />
+    <text class="ccx__hublabel" x={cx} y={cy + 5} text-anchor="middle">{current.name}</text>
+  </svg>
+</div>
+
+<style>
+  .ccx__svg { width: 100%; max-width: 30rem; height: auto; overflow: visible; }
+  .ccx__link { stroke: var(--lc); stroke-width: 2; opacity: 0.16; }
+  .ccx__link.is-on { opacity: 0.85; stroke-width: 3; }
+  .ccx__node circle { fill: var(--nc); opacity: 0.55; }
+  .ccx__node text { font-family: var(--font-body); font-weight: 600; font-size: 13px; fill: var(--fg-muted); }
+  .ccx__hubhalo { fill: var(--cap); opacity: 0.16; }
+  .ccx__hub { fill: var(--cap); }
+  .ccx__hublabel { font-family: var(--font-display); font-weight: 700; font-size: 13px; fill: var(--cap-on); }
+</style>

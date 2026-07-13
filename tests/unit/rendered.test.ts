@@ -44,8 +44,10 @@ run('built homepage (dist/index.html)', () => {
     expect(html).not.toContain('>Analytics<');
   });
 
-  it('renders four Growth Graph goal tabs + a live caption region', () => {
-    expect((html.match(/class="ggtab"/g) || []).length).toBe(4);
+  it('renders five Growth Graph goal tabs + a live caption region', () => {
+    // Restructure: five goals including the confirmed "Save team time" (FR-021).
+    expect((html.match(/class="ggtab"/g) || []).length).toBe(5);
+    expect(html).toContain('Save team time');
     expect(html).toMatch(/role="status"[^>]*aria-live="polite"/);
   });
 

@@ -29,17 +29,17 @@ import { helpOptions, timingOptions } from '../../lib/booking';
       <p class="fld__err" id="bk-url-err" role="alert"></p>
     </div>
     <div class="fld fld--wide">
-      <label for="bk-help">What do you need help with?</label>
-      <select id="bk-help" name="help" required aria-describedby="bk-help-err">
-        <option value="" disabled selected>Choose one…</option>
+      <label for="bk-help">What do you need help with? <span class="fld__opt">(optional)</span></label>
+      <select id="bk-help" name="help" aria-describedby="bk-help-err">
+        <option value="" selected>No need to choose. Tell us below or on the call</option>
         {helpOptions.map((o) => <option value={o}>{o}</option>)}
       </select>
       <p class="fld__err" id="bk-help-err" role="alert"></p>
     </div>
     <div class="fld fld--wide">
-      <label for="bk-details">Tell us a little about your project</label>
-      <textarea id="bk-details" name="details" rows="4" required aria-describedby="bk-details-err"
-        placeholder="Where you are now, and what you're trying to reach."></textarea>
+      <label for="bk-details">Tell us a little about your project <span class="fld__opt">(optional)</span></label>
+      <textarea id="bk-details" name="details" rows="4" aria-describedby="bk-details-err"
+        placeholder="Where you are now, and what you're trying to reach. A sentence is plenty."></textarea>
       <p class="fld__err" id="bk-details-err" role="alert"></p>
     </div>
     <div class="fld fld--wide">
@@ -73,8 +73,8 @@ import { helpOptions, timingOptions } from '../../lib/booking';
 
 <div class="bk__success" id="bk-success" hidden tabindex="-1">
   <p class="bk__success-mark" aria-hidden="true">✓</p>
-  <h2 class="bk__success-h">Thanks. Your details are on their way.</h2>
-  <p class="bk__success-b">We’ll read them properly and get back to you within two business days with a clear, no-pressure next step. No jargon, no obligation.</p>
+  <h2 class="bk__success-h">Thank you. We have your enquiry.</h2>
+  <p class="bk__success-b">You do not need to send it again. A real person will read it and reply with one of three things: a clear next step, a couple of questions to understand it better, or an honest "this is not the right fit, and here is who might be." No pressure, no jargon.</p>
   <a class="bk__success-link" href="/">Back to the homepage</a>
 </div>
 
@@ -92,7 +92,9 @@ import { helpOptions, timingOptions } from '../../lib/booking';
   .fld textarea { min-height: 120px; resize: vertical; }
   .fld input:focus, .fld select:focus, .fld textarea:focus { border-color: var(--accent); }
   .fld[data-invalid] input, .fld[data-invalid] select, .fld[data-invalid] textarea { border-color: var(--c-magenta); }
+  /* Errors carry an icon plus text, never colour alone (FR-027). */
   .fld__err { color: var(--c-magenta); font-size: var(--fs-caption); min-height: 0; }
+  .fld__err:not(:empty)::before { content: '⚠'; margin-right: 0.35em; font-weight: 700; }
   .fld__err:empty { display: none; }
   .fld--check { grid-template-columns: auto 1fr; align-items: start; gap: 0.4rem 0.7rem; }
   .fld--check input { width: 1.3rem; height: 1.3rem; min-height: 0; margin-top: 0.15rem; }
@@ -198,19 +200,21 @@ import { helpOptions, timingOptions } from '../../lib/booking';
       }
       const hash = JSON.stringify(values);
       if (hash === lastOkHash) {
-        setStatus('You’ve already sent this — we’ve got it.');
+        setStatus('You’ve already sent this, we’ve got it.');
         return;
       }
 
       submitting = true;
       submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-busy', 'true');
       if (submitLabel) submitLabel.textContent = 'Sending…';
-      setStatus('Sending your details…');
+      setStatus('Sending your enquiry…');
 
       const result = await submitBooking(values);
 
       submitting = false;
       submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
       if (submitLabel) submitLabel.textContent = 'Book a free call';
 
       if (result.ok) {

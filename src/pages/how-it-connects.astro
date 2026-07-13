@@ -4,6 +4,12 @@ import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Button from '../components/ui/Button.astro';
 import { howItConnects as d } from '../data/howItConnects';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(d.seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, d.seo.description)];
 
 const accentVar: Record<string, string> = {
   indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
@@ -36,9 +42,29 @@ const toolColor: Record<string, string> = {
   'Repeat purchase': 'var(--c-magenta)', 'One dashboard': 'var(--c-violet)',
 };
 const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentVar[accent];
+
+// The five links every business should understand (the connected-growth spine).
+const fiveLinks = [
+  { n: 1, title: 'Attention to the right page', body: 'An ad, search result or post that sends the right person to a page that matches what they were looking for, not a generic homepage.' },
+  { n: 2, title: 'Page to action', body: 'A buying journey clear enough that interested visitors can actually take the next step without getting lost or giving up.' },
+  { n: 3, title: 'Action to record', body: 'The sale or enquiry landing in one place, so every customer sits in a single record instead of scattered across apps.' },
+  { n: 4, title: 'Record to follow-up', body: 'The right next message based on what the customer actually did, instead of the same blast sent to everyone.' },
+  { n: 5, title: 'Result to learning', body: 'The outcome feeding back into measurement and marketing, so the next decision rests on real customers, not guesses.' },
+];
+
+// The anatomy of a disconnected sale, where value leaks when links are missing.
+const anatomy = {
+  intro: 'Here is the same sale, twice. The difference is not the tools. It is whether the links between them exist.',
+  steps: [
+    { label: 'A visitor clicks an ad', connected: 'The click is tracked, so the platform learns who buys.', broken: 'The click is not tracked, so the platform keeps guessing.' },
+    { label: 'They browse but do not buy', connected: 'A relevant reminder can bring them back.', broken: 'They are gone, with no way to reach them.' },
+    { label: 'They return and buy', connected: 'The sale updates one customer record.', broken: 'The sale sits in the store, unknown to email or ads.' },
+    { label: 'What happens next', connected: 'The right follow-up goes out, and the result improves the next campaign.', broken: 'They get a "finish your purchase" email they already completed.' },
+  ],
+};
 ---
 
-<BaseLayout seo={d.seo}>
+<BaseLayout seo={d.seo} schemas={schemas}>
   <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="hc" labelledby="hc-h">
     <div class="hc__hero">
@@ -62,7 +88,7 @@ const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentV
       </div>
       <div class="dis__viz">
         <svg viewBox={`0 0 ${W} ${H}`} class="diag" role="img"
-          aria-label="Six separate tools — Ads, Website, Store, Customer list, Email, and Analytics — sitting apart with no connections between them.">
+          aria-label="Six separate tools: Ads, Website, Store, Customer list, Email, and Analytics, sitting apart with no connections between them.">
           {d.disconnected.nodes.map((n, i) => {
             const p = ring[i];
             return (
@@ -152,7 +178,7 @@ const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentV
           aria-label="After: the same tools joined into one connected system.">
           <defs>
             <linearGradient id="ba-link" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+              <stop offset="0%" stop-color="#533afd" /><stop offset="50%" stop-color="#9b6bf2" /><stop offset="100%" stop-color="#ff4d8b" />
             </linearGradient>
           </defs>
           {ringEdges.map(([a, b]) => (
@@ -171,7 +197,77 @@ const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentV
     </div>
   </Section>
 
-  <!-- 5 · CTA -->
+  <!-- 5 · THE FIVE LINKS -->
+  <Section env="paper" id="five-links" width="wide" class="fl" labelledby="fl-h">
+    <div class="fl__head u-reveal">
+      <Eyebrow>The idea in five links</Eyebrow>
+      <h2 id="fl-h" class="section-head">The five connections every business should understand.</h2>
+      <p class="lead">You do not need to be technical to follow these. Each link passes something useful to the next.</p>
+    </div>
+    <ol class="fl__list">
+      {fiveLinks.map((l, i) => (
+        <li class="fl__item u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <span class="fl__num" aria-hidden="true">{l.n}</span>
+          <div>
+            <h3 class="fl__title">{l.title}</h3>
+            <p class="fl__body">{l.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- 6 · ANATOMY OF A DISCONNECTED SALE -->
+  <Section env="lavender" id="anatomy" width="wide" class="an" labelledby="an-h">
+    <div class="an__head u-reveal">
+      <Eyebrow>Anatomy of a disconnected sale</Eyebrow>
+      <h2 id="an-h" class="section-head">The same sale, connected and disconnected.</h2>
+      <p class="lead">{anatomy.intro}</p>
+    </div>
+    <ol class="an__list">
+      {anatomy.steps.map((s, i) => (
+        <li class="an__row u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <p class="an__label"><span class="an__step" aria-hidden="true">{i + 1}</span>{s.label}</p>
+          <p class="an__cell an__cell--ok"><span class="an__tag">Connected</span>{s.connected}</p>
+          <p class="an__cell an__cell--no"><span class="an__tag">Disconnected</span>{s.broken}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- 7 · SELF-CHECK -->
+  <Section env="paper" id="self-check" width="content" class="sc" labelledby="sc-h">
+    <div class="sc__inner u-reveal">
+      <Eyebrow>A 30-second self-check</Eyebrow>
+      <h2 id="sc-h" class="section-head">Want to see where your own links are?</h2>
+      <p class="lead">Tap the tools you use and we will show, in plain language, which connections are in place and where growth is leaking. It is a quick read, not a technical audit.</p>
+      <div class="sc__actions">
+        <Button href="/map-your-stack" variant="primary" size="lg">Map your stack</Button>
+        <Button href="/book-a-call" variant="secondary" size="lg">Book a free call</Button>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 8 · GROWTH GRAPH REVIEW -->
+  <Section env="mint" id="review" width="wide" class="rv" labelledby="rv-h">
+    <div class="rv__grid u-reveal">
+      <div>
+        <Eyebrow>Growth Graph Review</Eyebrow>
+        <h2 id="rv-h" class="section-head">A real diagnostic conversation, not a sales call.</h2>
+        <p class="lead">On a free call we map your actual setup, show you the clearest gaps, prioritise the next steps, and suggest a sensible starting scope. You leave with a simple picture you can act on, whether or not you work with us.</p>
+        <div class="rv__cta"><Button href="/book-a-call" variant="primary" size="lg">Request a Growth Graph Review</Button></div>
+      </div>
+      <ul class="rv__list">
+        <li><strong>A simple map</strong> of how your parts connect today.</li>
+        <li><strong>The clearest gaps</strong>, in plain language.</li>
+        <li><strong>Prioritised next steps</strong>, most useful first.</li>
+        <li><strong>A recommended starting scope</strong>, no pressure to take it.</li>
+      </ul>
+    </div>
+    <p class="rv__honest">We will not give you an instant revenue estimate. Good connections give a clearer picture and a better next decision, not a promise of a specific number.</p>
+  </Section>
+
+  <!-- 9 · CTA -->
   <Section env="grad" id="cta" width="content" pad="loose" class="cta" labelledby="cta-h">
     <div class="cta__inner u-reveal">
       <h2 id="cta-h" class="cta__head">{d.cta.h2}</h2>
@@ -236,7 +332,7 @@ const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentV
   .flow__label { font-weight: 600; font-size: var(--fs-small); }
   .flow__arrow { color: var(--fg-faint); margin: 0 0.4rem; }
 
-  /* fan-in flow — wraps gracefully on narrow screens */
+  /* fan-in flow, wraps gracefully on narrow screens */
   .fanin { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 0.9rem; }
   .fanin__sources { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; min-width: 0; }
   .fanin__src { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: var(--fs-small); }
@@ -255,7 +351,42 @@ const nodeColor = (label: string, accent: string) => toolColor[label] ?? accentV
   .ba__copy { color: var(--fg-muted); margin-top: 0.6rem; }
   @media (min-width: 820px) { .ba__grid { grid-template-columns: 1fr 1fr; align-items: start; } }
 
-  /* 5 · CTA */
+  /* 5 · Five links */
+  .fl__head { max-width: 46rem; }
+  .fl__list { list-style: none; padding: 0; margin: clamp(1.75rem, 1rem + 3vw, 2.75rem) 0 0; display: grid; gap: 1rem; }
+  .fl__item { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.3rem; }
+  .fl__num { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: var(--r-2); background: var(--grad-decorative); color: #fff; font-family: var(--font-display); font-weight: 800; }
+  .fl__title { font-size: var(--fs-h4); }
+  .fl__body { color: var(--fg-muted); margin-top: 0.3rem; }
+  @media (min-width: 760px) { .fl__list { grid-template-columns: 1fr 1fr; } }
+
+  /* 6 · Anatomy */
+  .an__head { max-width: 46rem; }
+  .an__list { list-style: none; padding: 0; margin: clamp(1.75rem, 1rem + 3vw, 2.75rem) 0 0; display: grid; gap: 0.9rem; }
+  .an__row { display: grid; gap: 0.6rem; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.2rem; }
+  .an__label { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; }
+  .an__step { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--bg-inset); border: var(--bw) solid var(--rule-strong); font-family: var(--font-mono); font-size: var(--fs-caption); flex: none; }
+  .an__cell { color: var(--fg-muted); font-size: var(--fs-small); padding-left: 0.2rem; }
+  .an__tag { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; margin-right: 0.5rem; }
+  .an__cell--ok .an__tag { color: var(--cap-retain-deep); }
+  .an__cell--no .an__tag { color: var(--cap-attract-deep); }
+  @media (min-width: 820px) { .an__row { grid-template-columns: 1.1fr 1fr 1fr; align-items: center; gap: 1.2rem; } .an__cell { padding-left: 0; border-left: var(--bw) solid var(--rule); padding-left: 1rem; } }
+
+  /* 7 · Self-check */
+  .sc__inner { max-width: 44rem; display: grid; justify-items: start; gap: 0.4rem; }
+  .sc__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.2rem; }
+
+  /* 8 · Growth Graph Review */
+  .rv__grid { display: grid; gap: 2rem; align-items: start; }
+  .rv__list { list-style: none; padding: 1.4rem; margin: 0; display: grid; gap: 0.7rem; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); }
+  .rv__list li { color: var(--fg-muted); padding-left: 1.4rem; position: relative; }
+  .rv__list li::before { content: '→'; position: absolute; left: 0; color: var(--cap-retain-deep); font-weight: 700; }
+  .rv__list strong { color: var(--fg); }
+  .rv__cta { margin-top: 1.2rem; }
+  .rv__honest { margin-top: 1.6rem; color: var(--fg-faint); font-size: var(--fs-small); max-width: 60ch; }
+  @media (min-width: 880px) { .rv__grid { grid-template-columns: 1.3fr 1fr; } }
+
+  /* 9 · CTA */
   .cta { text-align: center; }
   .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.3rem; justify-items: center; }
   .cta__head { font-size: var(--fs-h2); }

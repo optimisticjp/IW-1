@@ -16,18 +16,27 @@ const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
 const loopPath = (loop: string[]) =>
   'M ' + loop.map((k) => `${pos[k].x} ${pos[k].y}`).join(' L ') + ' Z';
 
-const active0 = graphGoals[0];
+interface Props {
+  /** goal id to open on (audience pages start on their relevant outcome) */
+  initialGoal?: string;
+}
+const { initialGoal } = Astro.props;
+// Server-render the initial goal as the active, static state so the graph is a
+// readable connected state WITHOUT JavaScript (SC-012, FR-021). JS re-applies
+// on selection; reduced motion collapses draws to final states.
+const active0 = graphGoals.find((g) => g.id === initialGoal) ?? graphGoals[0];
+const active0Set = new Set(active0.loop);
 ---
 
 <div class="ggraph" data-active={active0.id} style={`--goal-accent:${active0.accent}`}>
   <!-- Goal tabs -->
   <div class="ggtabs" role="group" aria-label="Pick a growth goal">
-    {graphGoals.map((g, i) => (
+    {graphGoals.map((g) => (
       <button
         type="button"
         class="ggtab"
         data-goal={g.id}
-        aria-pressed={i === 0 ? 'true' : 'false'}
+        aria-pressed={g.id === active0.id ? 'true' : 'false'}
         style={`--tc:${g.accent}`}
       >{g.label}</button>
     ))}
@@ -42,16 +51,16 @@ const active0 = graphGoals[0];
     <svg viewBox="0 0 780 640" class="ggsvg" role="presentation" aria-hidden="true">
       <defs>
         <linearGradient id="gghub" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+          <stop offset="0%" stop-color="#533afd" /><stop offset="50%" stop-color="#9b6bf2" /><stop offset="100%" stop-color="#ff4d8b" />
         </linearGradient>
       </defs>
       <!-- faint spokes hub -> every node -->
       {graphNodes.map((n) => (
         <line class="ggspoke" x1={R.cx} y1={R.cy} x2={pos[n.key].x} y2={pos[n.key].y} />
       ))}
-      <!-- loop paths (one per goal; active one shown) -->
+      <!-- loop paths (one per goal; the first is server-active for no-JS) -->
       {graphGoals.map((g) => (
-        <g class="ggloop" data-goal={g.id}>
+        <g class:list={['ggloop', g.id === active0.id && 'on']} data-goal={g.id}>
           <path class="ggloop__base" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
           <path class="ggloop__draw" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
           <path class="ggloop__dots" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
@@ -66,7 +75,7 @@ const active0 = graphGoals[0];
         const lx = p.x + lp.dx;
         const ly = p.y + lp.dy;
         return (
-          <g class="ggnode" data-node={n.key} style={`--nc:${n.color}`}>
+          <g class:list={['ggnode', active0Set.has(n.key) ? 'on' : 'off']} data-node={n.key} style={`--nc:${n.color}`}>
             <circle class="ggnode__halo" cx={p.x} cy={p.y} r="26" />
             <circle class="ggnode__disc" cx={p.x} cy={p.y} r="13" />
             <text class="ggnode__label" x={lx} y={ly} text-anchor={anchor}>{label(n.key)}</text>
@@ -87,10 +96,10 @@ const active0 = graphGoals[0];
     </svg>
   </div>
 
-  <!-- Mobile vertical loop (one block per goal; active shown) -->
+  <!-- Mobile vertical loop (one block per goal; first server-active for no-JS) -->
   <div class="ggraph__mobile">
     {graphGoals.map((g) => (
-      <ol class="ggm" data-goal={g.id}>
+      <ol class:list={['ggm', g.id === active0.id && 'on']} data-goal={g.id}>
         {g.loop.map((k) => (
           <li class="ggm__step" style={`--nc:${color(k)}`}>
             <span class="ggm__disc" aria-hidden="true"></span>
@@ -108,7 +117,7 @@ const active0 = graphGoals[0];
 </div>
 
 <style>
-  .ggraph { --goal-accent: var(--c-magenta); }
+  .ggraph { --goal-accent: var(--cap-attract); }
 
   /* Tabs */
   .ggtabs { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
@@ -119,7 +128,9 @@ const active0 = graphGoals[0];
     transition: transform var(--dur-micro) var(--ease-out), border-color var(--dur-micro), background-color var(--dur-micro);
   }
   .ggtab:hover { transform: translateY(-1px); border-color: var(--tc); }
-  .ggtab[aria-pressed='true'] { background: var(--tc); color: #fff; border-color: transparent; }
+  /* Darken the accent under white text so every goal colour clears contrast
+     (FR-044 — no white text on a bright non-Build fill). */
+  .ggtab[aria-pressed='true'] { background: color-mix(in oklab, var(--tc) 66%, var(--c-ink)); color: #fff; border-color: transparent; }
 
   .gglabel { display: inline-flex; align-items: center; gap: 0.5rem; justify-self: center; margin: 1.6rem auto 0.5rem; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-small); letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .ggraph > .gglabel { display: flex; justify-content: center; }
@@ -151,7 +162,7 @@ const active0 = graphGoals[0];
   .ggnode.off .ggnode__disc { opacity: 0.2; }
   .ggnode.off .ggnode__label { fill: var(--fg-faint); opacity: 0.6; }
 
-  .gghub__halo { fill: var(--c-indigo); opacity: 0.18; }
+  .gghub__halo { fill: var(--cap-build); opacity: 0.18; }
   .gghub__pill { fill: var(--bg); }
   .gghub__label { font-family: var(--font-body); font-weight: 700; font-size: 15px; fill: var(--fg-muted); }
 

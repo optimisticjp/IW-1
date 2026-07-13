@@ -18,18 +18,21 @@ describe('navigation (Brief §4)', () => {
     expect(byLabel['How it connects']).toBe('/how-it-connects'); // concept page
   });
 
-  it('footer system + audience links deep-link to the new routes', () => {
+  it('footer capability + audience links deep-link to the restructured routes', () => {
+    // Restructure (FR-002/017): capabilities and audiences now have dedicated
+    // routes, replacing the retired homepage/anchor placeholders.
     const whatWeDo = footerGroups.find((g) => g.heading === 'What we do')!;
-    expect(whatWeDo.items.find((i) => i.label === 'Build')!.href).toBe('/what-we-do#build');
-    expect(whatWeDo.items.find((i) => i.label === 'Connect')!.href).toBe('/what-we-do#connect');
-    expect(whatWeDo.items.find((i) => i.label === 'Scale')!.href).toBe('/what-we-do#scale');
+    expect(whatWeDo.items.find((i) => i.label === 'Build')!.href).toBe('/what-we-do/build');
+    expect(whatWeDo.items.find((i) => i.label === 'Connect')!.href).toBe('/what-we-do/connect');
+    expect(whatWeDo.items.find((i) => i.label === 'Scale')!.href).toBe('/what-we-do/scale');
     const whoWeHelp = footerGroups.find((g) => g.heading === 'Who we help')!;
-    expect(whoWeHelp.items.find((i) => i.label === 'Ecommerce brands')!.href).toBe('/who-we-help#ecommerce');
-    expect(whoWeHelp.items.find((i) => i.label === 'Established teams')!.href).toBe('/who-we-help#teams');
+    expect(whoWeHelp.items.find((i) => i.label === 'Ecommerce brands')!.href).toBe('/who-we-help/ecommerce-brands');
+    expect(whoWeHelp.items.find((i) => i.label === 'Established teams')!.href).toBe('/who-we-help/established-teams');
     // no footer link still points at the retired homepage-anchor placeholders
     for (const g of footerGroups) for (const i of g.items) {
       expect(i.href).not.toBe('/#capabilities');
       expect(i.href).not.toBe('/#three-doors');
+      expect(i.href.includes('#')).toBe(false);
     }
   });
 
@@ -39,11 +42,11 @@ describe('navigation (Brief §4)', () => {
     expect(bookCta.href).toBe('/book-a-call');
   });
 
-  it('footer groups match the brief columns', () => {
-    expect(footerGroups.map((g) => g.heading)).toEqual(['What we do', 'Who we help', 'Company']);
+  it('footer columns match the restructured model (FR-004)', () => {
+    expect(footerGroups.map((g) => g.heading)).toEqual(['What we do', 'Who we help', 'Learn', 'Company']);
     const whatWeDo = footerGroups[0].items.map((i) => i.label);
     expect(whatWeDo).toEqual(['Build', 'Attract', 'Convert', 'Retain', 'Connect', 'Scale']);
-    const whoWeHelp = footerGroups[1].items.map((i) => i.label);
-    expect(whoWeHelp).toEqual(['Ecommerce brands', 'Creators & experts', 'Startups', 'Established teams']);
+    const company = footerGroups.find((g) => g.heading === 'Company')!;
+    expect(company.items.some((i) => i.href === '/contact')).toBe(true);
   });
 });

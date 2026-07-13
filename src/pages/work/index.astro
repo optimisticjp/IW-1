@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import WorkThumb from '../../components/brand/WorkThumb.astro';
+import { capabilities } from '../../data/capabilities';
+import { audiences } from '../../data/audiences';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const entries = (await getCollection('work')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const capColour: Record<string, string> = Object.fromEntries(capabilities.map((c) => [c.id, `var(--cap-${c.id})`]));
+const permLabel: Record<string, string> = { named: 'Named case study', anonymized: 'Real work, anonymized', interim: 'Interim example' };
+
+const seo = {
+  title: 'Our work',
+  description: 'Real projects, shown honestly. We explain what changed, not only what we made, and never invent clients or results.',
+  path: '/work',
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Work' }];
+const schemas = [webPageSchema('Our work | Infinite Weblinks', canonical, seo.description), breadcrumbSchema(crumbs, site)];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <Section env="paper" width="wide" class="wk" labelledby="wk-h">
+    <div class="wk__head">
+      <Eyebrow>Our work</Eyebrow>
+      <h1 id="wk-h" class="wk__h1">See what changed, not only what we made.</h1>
+      <p class="wk__lead">A finished website or campaign is only part of the story. Each case study explains the situation, the obstacle, what we changed, what improved and one useful lesson. We never invent clients, figures or testimonials.</p>
+    </div>
+
+    <!-- Honest interim state -->
+    <p class="wk__interim">Named case studies are being prepared with client permission. Until then, these are real projects shown with client details removed, using our own connection-map art rather than fabricated screenshots.</p>
+
+    <!-- Filters -->
+    <div class="wk__filters" data-work-filters>
+      <fieldset class="wk__fs">
+        <legend>Filter by capability</legend>
+        <div class="wk__chips">
+          <button type="button" class="wk__chip is-on" data-filter="cap" data-value="all" aria-pressed="true">All</button>
+          {capabilities.map((c) => (<button type="button" class="wk__chip" data-filter="cap" data-value={c.id} aria-pressed="false">{c.name}</button>))}
+        </div>
+      </fieldset>
+      <fieldset class="wk__fs">
+        <legend>Filter by audience</legend>
+        <div class="wk__chips">
+          <button type="button" class="wk__chip is-on" data-filter="aud" data-value="all" aria-pressed="true">All</button>
+          {audiences.map((a) => (<button type="button" class="wk__chip" data-filter="aud" data-value={a.id} aria-pressed="false">{a.name}</button>))}
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="wk__empty" id="wk-empty" role="status" aria-live="polite" hidden>No projects match those filters yet. Remove a filter, or <a href="/work">browse all work</a>.</p>
+
+    <ul class="wk__grid" id="wk-grid">
+      {entries.map((e, i) => (
+        <li class="wk__card" data-caps={e.data.capabilityTags.join(' ')} data-auds={e.data.audienceTags.join(' ')}>
+          <a class="wk__link" href={routes.caseStudy(e.id)}>
+            <span class="wk__thumb"><WorkThumb accent={capColour[e.data.capabilityTags[0]] ?? 'var(--cap-build)'} variant={i} /></span>
+            <span class="wk__perm">{permLabel[e.data.permissionState]}</span>
+            <span class="wk__title">{e.data.title}</span>
+            <span class="wk__tags">{e.data.capabilityTags.map((t) => capabilities.find((c) => c.id === t)?.name).join(' · ')}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .wk__head { max-width: 46rem; }
+  .wk__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .wk__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
+  .wk__interim { margin-top: 1.4rem; padding: 1rem 1.2rem; background: var(--bg-inset); border: var(--bw) solid var(--rule); border-radius: var(--r-2); color: var(--fg-muted); font-size: var(--fs-small); max-width: 60ch; }
+  .wk__filters { display: grid; gap: 1rem; margin-top: 2rem; }
+  .wk__fs { border: 0; padding: 0; margin: 0; }
+  .wk__fs legend { font-family: var(--font-body); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.5rem; }
+  .wk__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .wk__chip { appearance: none; background: var(--bg-raised); border: var(--bw) solid var(--rule-strong); color: var(--fg); border-radius: var(--r-pill); padding: 0.45rem 0.9rem; font: inherit; font-size: var(--fs-small); font-weight: 600; cursor: pointer; min-height: 44px; }
+  .wk__chip.is-on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .wk__chip:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 2px; }
+  .wk__empty { margin-top: 1.6rem; color: var(--fg-muted); }
+  .wk__empty[hidden] { display: none; }
+  .wk__empty a { color: var(--link); font-weight: 600; }
+  .wk__grid { list-style: none; padding: 0; margin: 1.6rem 0 0; display: grid; gap: 1.25rem; }
+  .wk__card[hidden] { display: none; }
+  .wk__link { display: grid; gap: 0.5rem; text-decoration: none; color: var(--fg); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); overflow: clip; box-shadow: var(--shadow-1); padding-bottom: 1.1rem; }
+  .wk__link:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); transition: transform var(--dur-micro), box-shadow var(--dur-2); }
+  .wk__thumb { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--bg-inset); }
+  .wk__perm { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); padding: 0 1.1rem; margin-top: 0.6rem; }
+  .wk__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); padding: 0 1.1rem; }
+  .wk__tags { color: var(--fg-muted); font-size: var(--fs-caption); padding: 0 1.1rem; }
+  @media (min-width: 640px) { .wk__grid { grid-template-columns: repeat(2, 1fr); } .wk__filters { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .wk__grid { grid-template-columns: repeat(3, 1fr); } }
+</style>
+
+<script>
+  const root = document.querySelector('[data-work-filters]');
+  const grid = document.getElementById('wk-grid');
+  const empty = document.getElementById('wk-empty');
+  if (root && grid) {
+    const state = { cap: 'all', aud: 'all' };
+    const apply = () => {
+      const cards = Array.from(grid.querySelectorAll<HTMLElement>('.wk__card'));
+      let shown = 0;
+      cards.forEach((card) => {
+        const caps = (card.dataset.caps || '').split(' ');
+        const auds = (card.dataset.auds || '').split(' ');
+        const ok = (state.cap === 'all' || caps.includes(state.cap)) && (state.aud === 'all' || auds.includes(state.aud));
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      if (empty) empty.hidden = shown !== 0;
+    };
+    root.querySelectorAll<HTMLButtonElement>('.wk__chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.filter as 'cap' | 'aud';
+        const value = chip.dataset.value || 'all';
+        state[filter] = value;
+        root.querySelectorAll<HTMLButtonElement>(`.wk__chip[data-filter="${filter}"]`).forEach((c) => {
+          const on = c === chip;
+          c.classList.toggle('is-on', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        apply();
+      });
+    });
+  }
+</script>

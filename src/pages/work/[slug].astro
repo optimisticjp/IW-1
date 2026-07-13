@@ -1,0 +1,188 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import CapabilityConnect from '../../components/brand/CapabilityConnect.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import { getCapability } from '../../data/capabilities';
+import { getAudience } from '../../data/audiences';
+import { servicesForCapability } from '../../data/services';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+import type { CapabilityId } from '../../data/ids';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<'work'> };
+const { Content } = await render(entry);
+const d = entry.data;
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+const permLabel: Record<string, string> = {
+  named: 'Named case study, published with permission',
+  anonymized: 'Real work, shown with client details removed',
+  interim: 'Interim example, not a specific client',
+};
+
+// Scoped graph: the capabilities this work actually touched. The first tag is
+// the hub; any others are drawn as solid, related links.
+const primaryCap = (d.capabilityTags[0] ?? 'connect') as CapabilityId;
+const relatedCaps = d.capabilityTags.slice(1) as CapabilityId[];
+const touched = d.capabilityTags.map((id) => getCapability(id as CapabilityId)!).filter(Boolean);
+const audiencesTouched = d.audienceTags.map((id) => getAudience(id)!).filter(Boolean);
+
+// Related services under the capabilities this work touched. Only launch
+// services have their own page; phased (page-treatment, not-yet-built) services
+// link to their capability section anchor, mirroring the mega-menu, so every
+// link resolves (no dead ends — FR-006).
+const serviceHref = (s: { id: string; capabilityId: CapabilityId; launchSet: boolean }) =>
+  s.launchSet ? routes.service(s.id) : `${routes.capability(s.capabilityId)}#svc-${s.id}`;
+const relatedServices = [
+  ...new Map(
+    d.capabilityTags
+      .flatMap((cid) => servicesForCapability(cid as CapabilityId))
+      .filter((s) => s.treatment === 'page')
+      .map((s) => [s.id, s]),
+  ).values(),
+].slice(0, 6);
+
+// The six-part narrative, in order.
+const parts = [
+  { key: 'situation', label: 'The situation', body: d.situation },
+  { key: 'obstacle', label: 'The obstacle', body: d.obstacle },
+  { key: 'customerExperience', label: 'What the customer felt', body: d.customerExperience },
+  { key: 'change', label: 'What we changed', body: d.change },
+  { key: 'improvement', label: 'What improved', body: d.improvement },
+  { key: 'lesson', label: 'The useful lesson', body: d.lesson },
+];
+
+const path = routes.caseStudy(entry.id);
+const seo = {
+  title: d.title,
+  description: `${d.situation} ${d.change}`.slice(0, 155),
+  path,
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: d.title },
+];
+const schemas = [
+  webPageSchema(`${d.title} | Infinite Weblinks`, canonical, seo.description),
+  breadcrumbSchema(crumbs, site),
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <div data-cap={primaryCap}>
+    <!-- Breadcrumb -->
+    <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+    <!-- Hero -->
+    <Section env="paper" width="content" class="cs" labelledby="cs-h">
+      <div class="cs__head u-reveal">
+        <Eyebrow>Case study</Eyebrow>
+        <h1 id="cs-h" class="cs__h1">{d.title}</h1>
+        <p class="cs__perm"><span class="cs__pdot" aria-hidden="true"></span>{permLabel[d.permissionState]}</p>
+        <ul class="cs__tags">
+          {touched.map((c) => (<li class="cs__tag" data-cap={c.id}><span class="cs__tdot" aria-hidden="true"></span>{c.name}</li>))}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- Six-part narrative -->
+    <Section env="paper" width="content" class="cs">
+      <ol class="cs__parts">
+        {parts.map((p, i) => (
+          <li class="cs__part u-reveal">
+            <span class="cs__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h2 class="cs__plabel">{p.label}</h2>
+              <p class="cs__pbody">{p.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Section>
+
+    <!-- Optional editorial body -->
+    <Section env="paper" width="content" class="cs">
+      <div class="cs__prose u-reveal"><Content /></div>
+    </Section>
+
+    <!-- Scoped connection graph -->
+    <Section env="lavender" width="wide" class="cs" labelledby="cs-conn-h">
+      <div class="cs__conn">
+        <div class="u-reveal">
+          <Eyebrow>How it connected</Eyebrow>
+          <h2 id="cs-conn-h" class="cs__conn-h">The parts this work touched.</h2>
+          <p class="cs__conn-body">This map shows only the capabilities involved in this project. The stronger links are the ones that carried the result; the rest of the model stayed as it was.</p>
+          {audiencesTouched.length > 0 && (
+            <p class="cs__aud">Relevant to: {audiencesTouched.map((a) => a.name).join(', ')}.</p>
+          )}
+        </div>
+        <div class="cs__vis u-reveal"><CapabilityConnect currentId={primaryCap} relatedIds={relatedCaps} /></div>
+      </div>
+    </Section>
+
+    <!-- Related services -->
+    {relatedServices.length > 0 && (
+      <Section env="paper" width="wide" class="cs" labelledby="cs-svc-h">
+        <div class="u-reveal">
+          <Eyebrow>Related services</Eyebrow>
+          <h2 id="cs-svc-h" class="cs__conn-h">The work behind a result like this.</h2>
+        </div>
+        <ul class="cs__svc">
+          {relatedServices.map((s) => (
+            <li><a href={serviceHref(s)} class="cs__svc-link" data-cap={s.capabilityId}>{s.name} <span aria-hidden="true">→</span></a></li>
+          ))}
+        </ul>
+      </Section>
+    )}
+
+    <!-- CTA -->
+    <CtaBand
+      heading="Want work like this for your business?"
+      body="Tell us where you are and what feels difficult. We will talk through relevant, anonymised examples and a sensible first step."
+      primary={{ label: 'Book a free call', href: '/book-a-call' }}
+      secondary={{ label: 'See more work', href: '/work' }}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .cs__head { max-width: 46rem; }
+  .cs__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .cs__perm { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-muted); }
+  .cs__pdot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--cap); flex: none; }
+  .cs__tags { list-style: none; padding: 0; margin: 1rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cs__tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.8rem; border-radius: var(--r-pill); border: var(--bw) solid var(--rule); background: var(--bg-raised); font-size: var(--fs-small); font-weight: 600; }
+  .cs__tdot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--cap); flex: none; }
+
+  .cs__parts { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.6rem; max-width: 46rem; }
+  .cs__part { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+  .cs__num { font-family: var(--font-mono); font-size: var(--fs-h4); font-weight: 600; color: var(--cap-deep); line-height: 1.1; }
+  .cs__plabel { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0; }
+  .cs__pbody { color: var(--fg-muted); margin: 0.4rem 0 0; }
+
+  .cs__prose { max-width: 42rem; color: var(--fg-muted); }
+  .cs__prose :global(p) { margin: 0 0 1rem; }
+
+  .cs__conn { display: grid; gap: 2rem; align-items: center; }
+  .cs__conn-h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 22ch; }
+  .cs__conn-body { color: var(--fg-muted); margin-top: 1rem; max-width: 44ch; }
+  .cs__aud { margin-top: 1rem; font-size: var(--fs-small); color: var(--fg-faint); }
+  .cs__vis { display: flex; justify-content: center; }
+  @media (min-width: 880px) { .cs__conn { grid-template-columns: 1fr 1fr; } }
+
+  .cs__svc { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .cs__svc-link { font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .cs__svc-link:hover { text-decoration: underline; }
+</style>

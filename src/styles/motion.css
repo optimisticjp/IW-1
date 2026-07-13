@@ -1,0 +1,52 @@
+/* =========================================================================
+   Motion — Connect & Reveal families only (FR-045). Every animation explains
+   a relationship (Connect: links drawing between nodes) or a changing state
+   (Reveal: content easing into place). CSS-first; JS lives only in the two
+   islands. The hidden-first Reveal state is armed ONLY under `html.js-ready`
+   (set by the BaseLayout controller once it runs), so content is visible by
+   default without JS. `prefers-reduced-motion` collapses everything to final
+   states. The only permitted loop is the subtle node pulse (in the graph).
+   This file is additive to base.css (which owns .u-reveal and .line).
+   ========================================================================= */
+
+/* Reveal helper for new page-section systems (distinct from base .u-reveal). */
+.u-fade-up {
+  --reveal-shift: 14px;
+}
+html.js-ready .u-fade-up {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+  transition: opacity var(--dur-entrance) var(--ease-out),
+    transform var(--dur-entrance) var(--ease-out);
+  will-change: opacity, transform;
+}
+html.js-ready .u-fade-up.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Connect helper: a hairline that draws in when its section is revealed. */
+.u-connect {
+  transform-origin: left center;
+}
+html.js-ready .u-connect {
+  transform: scaleX(0);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+html.js-ready .u-connect.is-in {
+  transform: scaleX(1);
+}
+
+/* Reduced motion: no draw, no shift, no loop — show final states immediately,
+   with identical meaning. Applies whether or not js-ready was armed. */
+@media (prefers-reduced-motion: reduce) {
+  .u-fade-up,
+  html.js-ready .u-fade-up,
+  .u-connect,
+  html.js-ready .u-connect {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

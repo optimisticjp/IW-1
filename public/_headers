@@ -1,14 +1,18 @@
 # Cloudflare Pages headers (served from the build output root).
-# Static-first site: long-cache the fingerprinted assets, short-cache images,
-# and apply a few safe, standard security headers. No CSP is set here because
-# the site uses Astro's inline module scripts and inline styles; a strict CSP
-# would need per-build hashes/nonces and is intentionally left for a later pass.
+# Static-first site with baseline security headers + a Content Security Policy
+# scoped to self plus the form-endpoint origin (spec 002, FR-049,
+# contracts/security-headers.md). Astro bundles component <script> to external
+# /_astro modules (script-src 'self'); scoped/inlined styles need 'unsafe-inline'.
+# connect-src / form-action include the consultation+contact endpoint origin
+# (Formspree); add a newsletter provider origin here when one is configured.
 
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  X-Frame-Options: SAMEORIGIN
-  Permissions-Policy: browsing-topics=()
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=(), browsing-topics=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; upgrade-insecure-requests
 
 # Fingerprinted build assets — safe to cache forever.
 /_astro/*

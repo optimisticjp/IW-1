@@ -1,0 +1,224 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Button from '../../components/ui/Button.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import GrowthGraph from '../../components/brand/GrowthGraph.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import ProofInterim from '../../components/page/ProofInterim.astro';
+import { audiences } from '../../data/audiences';
+import { capabilities, getCapability } from '../../data/capabilities';
+import { getService } from '../../data/services';
+import { capabilitiesForAudience } from '../../lib/links';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+import type { GoalId } from '../../data/ids';
+
+export function getStaticPaths() {
+  return audiences.map((aud) => ({ params: { audience: aud.id }, props: { aud } }));
+}
+
+const { aud } = Astro.props as { aud: (typeof audiences)[number] };
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+// Distinct capability colour per audience (visual treatment via data-cap).
+const AUD_CAP: Record<string, string> = {
+  'ecommerce-brands': 'convert',
+  'creators-and-experts': 'build',
+  'startups-and-new-brands': 'attract',
+  'growing-teams': 'connect',
+  'established-teams': 'scale',
+  'agency-partners': 'retain',
+};
+const capId = AUD_CAP[aud.id] ?? 'build';
+
+// Audience GoalId → homepage Growth Graph goal id.
+const GOAL_MAP: Record<GoalId, string> = {
+  'more-sales': 'sales',
+  'lower-ad-waste': 'adwaste',
+  'more-repeat-customers': 'repeat',
+  'know-whats-working': 'working',
+  'save-team-time': 'teamtime',
+};
+const initialGoal = GOAL_MAP[aud.graphVariant];
+
+const STARTING = {
+  launch: { name: 'Launch', body: 'build the foundation and get the essentials running.' },
+  connect: { name: 'Connect', body: 'make a scattered setup work together.' },
+  scale: { name: 'Scale', body: 'make a working business work better.' },
+}[aud.startingPoint];
+
+const recommendedCaps = capabilitiesForAudience(aud.id).map((id) => getCapability(id)!).filter(Boolean);
+const serviceLink = (id: string) => {
+  const s = getService(id);
+  if (!s) return routes.whatWeDo();
+  return s.launchSet ? routes.service(s.id) : `${routes.capability(s.capabilityId)}#svc-${s.id}`;
+};
+const relevantServices = aud.relevantServiceIds.map((id) => ({ name: getService(id)?.name ?? id, href: serviceLink(id) }));
+
+const path = routes.audience(aud.id);
+const seo = {
+  title: `${aud.name}: ${aud.situation}`.slice(0, 62),
+  description: aud.situation,
+  path,
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Who we help', href: '/who-we-help' },
+  { label: aud.name },
+];
+const schemas = [webPageSchema(`${aud.name} | Infinite Weblinks`, canonical, aud.situation), breadcrumbSchema(crumbs, site)];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <div data-cap={capId}>
+    <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+    <!-- Hero: recognise the situation -->
+    <Section env="paper" width="wide" class="ahero" labelledby="ahero-h">
+      <div class="ahero__wrap">
+        <Eyebrow>Who we help · {aud.name}</Eyebrow>
+        <h1 id="ahero-h" class="ahero__h1">{aud.situation}</h1>
+        <ul class="ahero__lang" aria-label="Words we use with you">
+          {aud.language.map((w) => <li class="ahero__chip">{w}</li>)}
+        </ul>
+        <div class="ahero__cta">
+          <Button href="/book-a-call" variant="primary" size="lg">{aud.actionLabel}</Button>
+          <Button href="/map-your-stack" variant="secondary" size="lg">Map your stack</Button>
+        </div>
+      </div>
+    </Section>
+
+    <!-- Common challenges + priorities -->
+    <Section env="lavender" width="wide" class="blk" labelledby="cp-h">
+      <h2 id="cp-h" class="a11y-hidden">Challenges and priorities</h2>
+      <div class="cp__grid">
+        <div class="u-reveal">
+          <Eyebrow>What we hear</Eyebrow>
+          <h3 class="blk__h">The challenges that bring you here.</h3>
+          <ul class="dot">{aud.concerns.map((c) => <li>{c}</li>)}</ul>
+        </div>
+        <div class="u-reveal">
+          <Eyebrow>What you want</Eyebrow>
+          <h3 class="blk__h">Where you want to get to.</h3>
+          <ul class="arrow">{aud.desiredOutcomes.map((o) => <li>{o}</li>)}</ul>
+        </div>
+      </div>
+    </Section>
+
+    <!-- Suitable starting point -->
+    <Section env="paper" width="content" class="blk" labelledby="sp-h">
+      <div class="u-reveal sp">
+        <Eyebrow>A good place to start</Eyebrow>
+        <h2 id="sp-h" class="blk__h">Most {aud.name.toLowerCase()} start with {STARTING.name}.</h2>
+        <p class="sp__body">That means we {STARTING.body} You do not need a technical brief; tell us where you are and we will point to the right first step.</p>
+        <a href="/#three-doors" class="sp__link">See the three ways in <span aria-hidden="true">→</span></a>
+      </div>
+    </Section>
+
+    <!-- Recommended capabilities -->
+    <Section env="mint" width="wide" class="blk" labelledby="cap-h">
+      <div class="u-reveal"><Eyebrow>Where we usually help</Eyebrow><h2 id="cap-h" class="blk__h">The capabilities that fit you.</h2></div>
+      <ul class="cap__grid">
+        {recommendedCaps.map((c) => (
+          <li class="cap__card u-reveal" data-cap={c.id}>
+            <span class="cap__dot" aria-hidden="true"></span>
+            <h3 class="cap__name">{c.name}</h3>
+            <p class="cap__desc">{c.descriptor}</p>
+            <a href={routes.capability(c.id)} class="cap__link">Explore {c.name} <span aria-hidden="true">→</span></a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+
+    <!-- Relevant launch services -->
+    {relevantServices.length > 0 && (
+      <Section env="paper" pad="tight" width="wide" class="blk" labelledby="svc-h">
+        <div class="u-reveal"><Eyebrow>Services you tend to buy</Eyebrow><h2 id="svc-h" class="blk__h">The work that helps most.</h2></div>
+        <ul class="svc__links">
+          {relevantServices.map((s) => (<li><a href={s.href} class="svc__link">{s.name} <span aria-hidden="true">→</span></a></li>))}
+        </ul>
+      </Section>
+    )}
+
+    <!-- Connected-growth journey: audience Growth Graph variant -->
+    <Section env="dark" id="growth-graph" width="wide" pad="loose" class="gg" labelledby="gg-h">
+      <div class="gg__head u-reveal">
+        <Eyebrow>Your connected-growth journey</Eyebrow>
+        <h2 id="gg-h" class="blk__h">For {aud.name.toLowerCase()}, it often starts with one outcome.</h2>
+        <p class="gg__lead">Pick an outcome and follow how the parts work together. We have opened it on the one {aud.name.toLowerCase()} ask for most.</p>
+      </div>
+      <div class="gg__stage u-reveal"><GrowthGraph initialGoal={initialGoal} /></div>
+    </Section>
+
+    <!-- Objections, answered honestly -->
+    {aud.objections.length > 0 && (
+      <Section env="paper" width="content" class="blk" labelledby="obj-h">
+        <div class="u-reveal"><Eyebrow>You might be wondering</Eyebrow><h2 id="obj-h" class="blk__h">Fair questions, honest answers.</h2>
+          <ul class="obj">{aud.objections.map((o) => <li class="obj__item">{o}</li>)}</ul>
+          <p class="obj__note">We would rather talk it through than pretend there are no trade-offs. Bring these to a call.</p>
+        </div>
+      </Section>
+    )}
+
+    <ProofInterim env="lavender" />
+
+    <CtaBand
+      heading={`Let us talk about your ${aud.name.toLowerCase()} setup.`}
+      body="Tell us where you are and what feels difficult. We will explain the options and the right next step, in plain language."
+      primary={{ label: aud.actionLabel, href: '/book-a-call' }}
+      secondary={{ label: 'Map your stack', href: '/map-your-stack' }}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .a11y-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .ahero__wrap { display: grid; gap: 1rem; max-width: 48rem; }
+  .ahero__wrap > * { min-width: 0; }
+  .ahero__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.3rem 0 0; overflow-wrap: break-word; }
+  .ahero__lang { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0 0; padding: 0; }
+  .ahero__chip { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--cap-deep); background: var(--cap-soft); border-radius: var(--r-pill); padding: 0.3rem 0.8rem; }
+  .ahero__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.4rem; }
+
+  .blk__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 24ch; overflow-wrap: break-word; }
+
+  .cp__grid { display: grid; gap: 2rem; }
+  @media (min-width: 820px) { .cp__grid { grid-template-columns: 1fr 1fr; } }
+  .dot, .arrow { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: 0.6rem; }
+  .dot li, .arrow li { position: relative; padding-left: 1.7rem; color: var(--fg-muted); }
+  .dot li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--cap); }
+  .arrow li::before { content: '→'; position: absolute; left: 0; color: var(--cap-deep); font-weight: 700; }
+
+  .sp__body { color: var(--fg-muted); margin-top: 0.8rem; max-width: 52ch; }
+  .sp__link { display: inline-block; margin-top: 0.9rem; font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .sp__link:hover { text-decoration: underline; }
+
+  .cap__grid { list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0; display: grid; gap: 1.1rem; }
+  .cap__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-top: 4px solid var(--cap); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
+  .cap__dot { display: inline-block; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--cap); box-shadow: 0 0 0 0.3rem var(--cap-soft); }
+  .cap__name { font-size: var(--fs-h4); margin-top: 0.6rem; }
+  .cap__desc { color: var(--fg-muted); margin-top: 0.3rem; }
+  .cap__link { display: inline-block; margin-top: 0.8rem; font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .cap__link:hover { text-decoration: underline; }
+  @media (min-width: 640px) { .cap__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .cap__grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .svc__links { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; }
+  .svc__link { font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .svc__link:hover { text-decoration: underline; }
+
+  .gg__head { text-align: center; margin-inline: auto; max-width: 48rem; }
+  .gg__head .blk__h, .gg__head .gg__lead { margin-inline: auto; }
+  .gg__head .eyebrow { justify-content: center; }
+  .gg__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 46ch; }
+  .gg__stage { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+
+  .obj { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: 0.6rem; }
+  .obj__item { position: relative; padding-left: 1.5rem; color: var(--fg-muted); font-style: italic; }
+  .obj__item::before { content: '“'; position: absolute; left: 0; color: var(--cap-deep); font-weight: 700; font-size: 1.2rem; line-height: 1; }
+  .obj__note { margin-top: 1rem; }
+</style>

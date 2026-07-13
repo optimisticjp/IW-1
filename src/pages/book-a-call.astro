@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import BookingForm from '../components/forms/BookingForm.astro';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
 
 // Surface the single required production config value at build time, so a
 // misconfigured deploy is caught in the build log rather than silently
@@ -20,6 +22,10 @@ const seo = {
   path: '/book-a-call',
 };
 
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, seo.description)];
+
 const steps = [
   { n: '01', t: 'You tell us a bit', d: 'A few details about your business and what you’re trying to reach. Two minutes, tops.' },
   { n: '02', t: 'We map your Growth Graph', d: 'We look at how your tools connect today and find where value leaks out between them.' },
@@ -27,7 +33,7 @@ const steps = [
 ];
 ---
 
-<BaseLayout seo={seo}>
+<BaseLayout seo={seo} schemas={schemas}>
   <Section env="paper" id="top" width="wide" pad="loose" class="book" labelledby="book-h">
     <div class="book__grid">
       <div class="book__intro">
