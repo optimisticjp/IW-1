@@ -185,7 +185,7 @@ export const home = {
     h2: 'Let us make the digital side work better.',
     body: 'Tell us what you are building, what feels difficult or what you want to improve. We will help you understand the options, identify the right starting point and explain what we would do next. No pressure. No unnecessary technical language. No expectation that you already know the answer.',
     primary: { label: 'Book a free call', href: '/book-a-call' },
-    secondary: { label: 'Tell us about your project', href: '/book-a-call' },
+    secondary: { label: 'Send a written enquiry', href: '/contact' },
   },
 
   // Footer

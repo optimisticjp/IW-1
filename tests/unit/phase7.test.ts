@@ -212,11 +212,12 @@ const privacyHtml = dist('privacy/index.html');
 
 const aboutHtml = dist('about/index.html');
 (aboutHtml ? describe : describe.skip)('Phase 7 — About built output', () => {
-  it('has one h1, the two-audience story, a five-step process and owner placeholders', () => {
+  it('has one h1, the two-audience story, a five-step process and owner profile handling', () => {
     expect((aboutHtml.match(/<h1/g) || []).length).toBe(1);
     expect(aboutHtml).toContain('For entrepreneurs and experts');
     expect(aboutHtml).toContain('For growing and established teams');
-    expect(aboutHtml).toContain('Owner to supply');
+    expect(aboutHtml).not.toContain('Owner to supply');
+    expect(aboutHtml).not.toContain('Photo to supply');
     // no invented awards / superlatives
     for (const m of TESTIMONIAL_MARKERS) expect(aboutHtml.toLowerCase()).not.toContain(m);
     // no em dash in visible copy (FR-036)

@@ -6,6 +6,7 @@ import Breadcrumb from '../components/ui/Breadcrumb.astro';
 import CtaBand from '../components/page/CtaBand.astro';
 import { breadcrumbSchema, webPageSchema } from '../lib/schema';
 import { buildSeo } from '../lib/seo';
+import { hasFounderProfile, ownerProfile } from '../data/owner';
 
 const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
 
@@ -17,6 +18,8 @@ const seo = {
 const canonical = buildSeo(seo, site).canonical;
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'About' }];
 const schemas = [webPageSchema('About | Infinite Weblinks', canonical, seo.description), breadcrumbSchema(crumbs, site)];
+const showFounder = hasFounderProfile(ownerProfile);
+const credentials = ownerProfile.verifiedCredentials ?? [];
 
 // Operating philosophy — the principles the rest of the site already lives by.
 const philosophy = [
@@ -101,28 +104,31 @@ const process = [
     </ol>
   </Section>
 
-  <!-- People & credentials (honest, with structured owner placeholders) -->
-  <Section env="paper" width="wide" class="ab" labelledby="ab-people-h">
+  <!-- Trust today, plus optional founder profile when owner content is ready -->
+  <Section env="paper" width="wide" class="ab" labelledby="ab-trust-h">
     <div class="u-reveal">
-      <Eyebrow>The people</Eyebrow>
-      <h2 id="ab-people-h" class="ab__sec-h">Real people, shown once we can show them properly.</h2>
-      <p class="ab__note">We would rather leave this honest and unfinished than fill it with stock photos and invented awards. The blocks below are placeholders for the owner to supply real photography, biography and credentials before launch.</p>
+      <Eyebrow>Trust</Eyebrow>
+      <h2 id="ab-trust-h" class="ab__sec-h">What you can rely on today.</h2>
+      <p class="ab__note">We only publish credentials and proof that can be verified. What matters most is how we work: clear explanations, honest scope and responsible handling of your information.</p>
     </div>
-    <div class="ab__people">
-      <figure class="ab__person u-reveal">
-        <div class="ab__photo" role="img" aria-label="Placeholder for owner-supplied portrait photograph">
-          <span class="ab__photo-tag">Photo to supply</span>
-        </div>
-        <figcaption class="ab__person-body">
-          <h3 class="ab__person-h">Founder</h3>
-          <p class="ab__ph" data-owner="bio">Owner to supply: a short, honest biography covering your background, why Infinite Weblinks exists, and the kind of work you most enjoy. No superlatives, no invented titles.</p>
-          <ul class="ab__cred">
-            <li class="ab__ph" data-owner="credentials">Owner to supply: genuine credentials, certifications or partner statuses (for example platform certifications). List only what can be verified.</li>
-          </ul>
-        </figcaption>
-      </figure>
+    <div class:list={["ab__people", !showFounder && "ab__people--single"]}>
+      {showFounder && (
+        <figure class="ab__person u-reveal">
+          <img class="ab__portrait" src={ownerProfile.portraitPath} alt={ownerProfile.portraitAlt} loading="lazy" decoding="async" />
+          <figcaption class="ab__person-body">
+            <h3 class="ab__person-h">{ownerProfile.name}</h3>
+            <p class="ab__role">{ownerProfile.role}</p>
+            <p>{ownerProfile.shortBiography}</p>
+            {credentials.length > 0 && (
+              <ul class="ab__cred" aria-label="Verified credentials">
+                {credentials.map((credential) => <li>{credential}</li>)}
+              </ul>
+            )}
+          </figcaption>
+        </figure>
+      )}
       <div class="ab__values u-reveal">
-        <h3 class="ab__person-h">What you can rely on today</h3>
+        <h3 class="ab__person-h">Working standards</h3>
         <ul class="ab__val">
           <li>Plain-English explanations, not jargon.</li>
           <li>Honest scope and timelines before we start.</li>
@@ -169,13 +175,13 @@ const process = [
 
   .ab__people { display: grid; gap: 1.4rem; margin-top: 1.6rem; }
   .ab__person { margin: 0; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
-  .ab__photo { aspect-ratio: 4 / 3; border-radius: var(--r-2); background: var(--bg-inset); border: var(--bw) dashed var(--rule-strong); display: grid; place-items: center; }
-  .ab__photo-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+  .ab__portrait { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-2); background: var(--bg-inset); }
   .ab__person-body { margin-top: 1rem; }
   .ab__person-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0 0 0.5rem; }
+  .ab__role { color: var(--accent-text); font-weight: 600; margin-bottom: 0.6rem; }
   .ab__cred { margin: 0.8rem 0 0; padding-left: 1.1rem; color: var(--fg-muted); display: grid; gap: 0.4rem; }
-  .ab__ph { color: var(--fg-faint); font-style: italic; }
   .ab__values { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
   .ab__val { margin: 0.6rem 0 0; padding-left: 1.1rem; color: var(--fg-muted); display: grid; gap: 0.45rem; }
-  @media (min-width: 760px) { .ab__people { grid-template-columns: 3fr 2fr; align-items: start; } }
+  .ab__people--single { max-width: 32rem; }
+  @media (min-width: 760px) { .ab__people { grid-template-columns: 3fr 2fr; align-items: start; } .ab__people--single { grid-template-columns: 1fr; } }
 </style>
