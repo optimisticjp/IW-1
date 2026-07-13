@@ -29,7 +29,7 @@ const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
     <svg viewBox={`0 0 ${R.viewW} ${R.viewH}`} class="sgsvg" aria-hidden="true">
       <defs>
         <linearGradient id="sghub" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#4b3fea" /><stop offset="52%" stop-color="#7b3fe4" /><stop offset="100%" stop-color="#e8409a" />
+          <stop offset="0%" stop-color="#533afd" /><stop offset="50%" stop-color="#9b6bf2" /><stop offset="100%" stop-color="#ff4d8b" />
         </linearGradient>
       </defs>
 
@@ -119,7 +119,7 @@ const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
   .sgnode.off .sgnode__disc { opacity: 0.2; }
   .sgnode.off .sgnode__label { fill: var(--fg-faint); opacity: 0.55; }
 
-  .sghub__halo { fill: var(--c-indigo); opacity: 0.2; }
+  .sghub__halo { fill: var(--cap-build); opacity: 0.2; }
   .sghub__pill { fill: var(--bg); }
   .sghub__label { font-family: var(--font-body); font-weight: 700; font-size: 15px; fill: var(--fg-muted); }
 

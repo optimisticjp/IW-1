@@ -1,0 +1,157 @@
+---
+// Lighter /contact general-enquiry form (spec 002, FR-029). Name, work email,
+// message + privacy. Shares the provider-neutral, never-false-success
+// submission path with the consultation form; carries no qualification fields
+// or Map Your Stack handoff. Progressive enhancement over a real <form>.
+---
+
+<form class="bk" id="contact-form" novalidate>
+  <div class="bk__grid">
+    <div class="fld">
+      <label for="ct-name">Your name</label>
+      <input id="ct-name" name="name" type="text" autocomplete="name" required aria-describedby="ct-name-err" />
+      <p class="fld__err" id="ct-name-err" role="alert"></p>
+    </div>
+    <div class="fld">
+      <label for="ct-email">Work email</label>
+      <input id="ct-email" name="email" type="email" autocomplete="email" required aria-describedby="ct-email-err" />
+      <p class="fld__err" id="ct-email-err" role="alert"></p>
+    </div>
+    <div class="fld fld--wide">
+      <label for="ct-message">Your message</label>
+      <textarea id="ct-message" name="message" rows="5" required aria-describedby="ct-message-err"
+        placeholder="A question, a partnership idea, press, or anything else."></textarea>
+      <p class="fld__err" id="ct-message-err" role="alert"></p>
+    </div>
+
+    <div class="bk__hp" aria-hidden="true">
+      <label for="ct-hp">Do not fill this in</label>
+      <input id="ct-hp" name="_hp" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="fld fld--wide fld--check">
+      <input id="ct-privacy" name="privacy" type="checkbox" required aria-describedby="ct-privacy-err" />
+      <label for="ct-privacy">I understand Infinite Weblinks will use these details to reply to me. Nothing else.</label>
+      <p class="fld__err" id="ct-privacy-err" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="bk__actions">
+    <button type="submit" class="bk__submit" id="ct-submit"><span class="bk__submit-label">Send message</span></button>
+    <p class="bk__status" id="ct-status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<div class="bk__success" id="ct-success" hidden tabindex="-1">
+  <p class="bk__success-mark" aria-hidden="true">✓</p>
+  <h2 class="bk__success-h">Thank you. We have your message.</h2>
+  <p class="bk__success-b">You do not need to send it again. A real person will read it and reply. No pressure, no jargon.</p>
+  <a class="bk__success-link" href="/">Back to the homepage</a>
+</div>
+
+<style>
+  .bk__grid { display: grid; gap: 1.1rem 1.25rem; }
+  .fld { display: grid; gap: 0.4rem; }
+  .fld label { font-weight: 600; font-size: var(--fs-small); }
+  .fld input, .fld textarea { width: 100%; min-height: 48px; padding: 0.7rem 0.85rem; background: var(--bg-raised); color: var(--fg); border: var(--bw) solid var(--rule-strong); border-radius: var(--r-2); font: inherit; }
+  .fld textarea { min-height: 140px; resize: vertical; }
+  .fld input:focus, .fld textarea:focus { border-color: var(--accent); }
+  .fld[data-invalid] input, .fld[data-invalid] textarea { border-color: var(--c-magenta); }
+  .fld__err { color: var(--c-magenta); font-size: var(--fs-caption); }
+  .fld__err:not(:empty)::before { content: '⚠'; margin-right: 0.35em; font-weight: 700; }
+  .fld__err:empty { display: none; }
+  .fld--check { grid-template-columns: auto 1fr; align-items: start; gap: 0.4rem 0.7rem; }
+  .fld--check input { width: 1.3rem; height: 1.3rem; min-height: 0; margin-top: 0.15rem; }
+  .fld--check label { order: 2; font-weight: 400; font-size: var(--fs-body); }
+  .fld--check .fld__err { grid-column: 1 / -1; }
+  .bk__hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .bk__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .bk__submit { display: inline-flex; align-items: center; gap: 0.5em; background-image: var(--grad-brand); color: #fff; font-weight: 700; font: inherit; font-weight: 700; border: none; border-radius: var(--r-2); min-height: 52px; padding: 0.9em 1.7em; box-shadow: var(--shadow-1); cursor: pointer; }
+  .bk__submit:hover:not(:disabled) { transform: translateY(-2px); }
+  .bk__submit:disabled { opacity: 0.7; cursor: progress; }
+  .bk__status { font-size: var(--fs-small); color: var(--fg-muted); }
+  .bk__status:empty { display: none; }
+  .bk__status[data-tone='error'] { color: var(--c-magenta); }
+  .bk__success { display: grid; gap: 0.8rem; justify-items: start; padding: clamp(1.5rem, 1rem + 2vw, 2.5rem); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-1); }
+  .bk__success[hidden] { display: none; }
+  .bk__success-mark { width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: 50%; background: var(--c-green); color: #fff; font-weight: 800; font-size: 1.4rem; }
+  .bk__success-h { font-size: var(--fs-h3); }
+  .bk__success-b { color: var(--fg-muted); max-width: 46ch; }
+  .bk__success-link { font-weight: 600; color: var(--link); }
+  @media (min-width: 640px) { .bk__grid { grid-template-columns: 1fr 1fr; } .fld--wide { grid-column: 1 / -1; } }
+</style>
+
+<script>
+  import { validateContact, submitBooking, type ContactValues } from '../../lib/booking';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const success = document.getElementById('ct-success');
+  const submitBtn = document.getElementById('ct-submit') as HTMLButtonElement | null;
+  const submitLabel = form?.querySelector('.bk__submit-label');
+  const status = document.getElementById('ct-status');
+  if (form && submitBtn && status) {
+    const fields = ['name', 'email', 'message', 'privacy'];
+    let submitting = false;
+    let lastOkHash = '';
+    const setStatus = (msg: string, tone: '' | 'error' = '') => {
+      status.textContent = msg;
+      if (tone) status.setAttribute('data-tone', tone); else status.removeAttribute('data-tone');
+    };
+    const read = (): ContactValues => {
+      const fd = new FormData(form);
+      return {
+        name: String(fd.get('name') || ''), email: String(fd.get('email') || ''),
+        message: String(fd.get('message') || ''), privacy: fd.get('privacy') === 'on',
+        _hp: String(fd.get('_hp') || ''),
+      };
+    };
+    const showErrors = (errors: Record<string, string>) => {
+      let first: HTMLElement | null = null;
+      for (const name of fields) {
+        const input = form.querySelector<HTMLElement>(`[name="${name}"]`);
+        const wrap = input?.closest('.fld');
+        const err = document.getElementById(`ct-${name}-err`);
+        const msg = errors[name] || '';
+        if (err) err.textContent = msg;
+        if (wrap) wrap.toggleAttribute('data-invalid', !!msg);
+        if (input) input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        if (msg && !first) first = input;
+      }
+      if (first) first.focus();
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (submitting) return;
+      const values = read();
+      const errors = validateContact(values);
+      showErrors(errors);
+      if (Object.keys(errors).length) { setStatus('Please fix the highlighted fields.', 'error'); return; }
+      const hash = JSON.stringify(values);
+      if (hash === lastOkHash) { setStatus('You’ve already sent this, we’ve got it.'); return; }
+      submitting = true; submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true');
+      if (submitLabel) submitLabel.textContent = 'Sending…';
+      setStatus('Sending your message…');
+      // Shared submission path; map the message onto the enquiry payload.
+      const result = await submitBooking({
+        name: values.name, email: values.email, company: '', help: 'General enquiry (contact)',
+        details: values.message, privacy: values.privacy, _hp: values._hp,
+      });
+      submitting = false; submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy');
+      if (submitLabel) submitLabel.textContent = 'Send message';
+      if (result.ok) {
+        lastOkHash = hash;
+        form.hidden = true;
+        if (success) { success.hidden = false; (success as HTMLElement).focus(); }
+      } else {
+        setStatus(result.retryable ? 'Something went wrong sending that. Please try again, or email us directly.' : 'We couldn’t send that. Please check your details and try again.', 'error');
+      }
+    });
+    form.addEventListener('input', (e) => {
+      const el = e.target as HTMLElement;
+      const name = el.getAttribute('name'); if (!name) return;
+      const err = document.getElementById(`ct-${name}-err`); const wrap = el.closest('.fld');
+      if (err && err.textContent) err.textContent = '';
+      if (wrap) wrap.removeAttribute('data-invalid');
+    });
+  }
+</script>

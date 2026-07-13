@@ -1,4 +1,4 @@
-// Booking/contact logic — pure validation + a provider-neutral submission
+// Booking/contact logic: pure validation + a provider-neutral submission
 // adapter. Production posts to a single configurable endpoint
 // (PUBLIC_BOOKING_ENDPOINT, e.g. a Formspree form URL). With no endpoint set,
 // a dev-safe mock simulates success so the experience is fully previewable.
@@ -23,7 +23,7 @@ export const helpOptions = [
   'Turn more visitors into orders',
   'Keep customers coming back',
   'Connect my tools and data',
-  'Not sure yet — let’s talk',
+  'Not sure yet, let’s talk',
 ];
 
 export const timingOptions = ['As soon as possible', 'This quarter', 'Just exploring for now'];
@@ -43,16 +43,38 @@ export function isUrl(v: string): boolean {
   }
 }
 
-/** Returns a map of field → error message. Empty object means valid. */
+/**
+ * Returns a map of field → error message. Empty object means valid.
+ * Required fields (spec 002, FR-026): name, work email, business name, privacy.
+ * Everything else (help/closest-description, details/goal, url, timing) is
+ * OPTIONAL and qualifies lightly without gatekeeping.
+ */
 export function validateBooking(v: Partial<BookingValues>): Record<string, string> {
   const e: Record<string, string> = {};
   if (!v.name || !v.name.trim()) e.name = 'Please enter your name.';
-  if (!v.email || !v.email.trim()) e.email = 'Please enter your email.';
+  if (!v.email || !v.email.trim()) e.email = 'Please enter your work email.';
   else if (!isEmail(v.email)) e.email = 'Please enter a valid email address.';
-  if (!v.company || !v.company.trim()) e.company = 'Please enter your company or brand.';
+  if (!v.company || !v.company.trim()) e.company = 'Please enter your business name.';
   if (v.url && v.url.trim() && !isUrl(v.url)) e.url = 'Please enter a valid URL, or leave it blank.';
-  if (!v.help) e.help = 'Please choose what you need help with.';
-  if (!v.details || !v.details.trim()) e.details = 'Please tell us a little about your project.';
+  if (!v.privacy) e.privacy = 'Please acknowledge how we’ll use your details.';
+  return e;
+}
+
+export interface ContactValues {
+  name: string;
+  email: string;
+  message: string;
+  privacy: boolean;
+  _hp?: string;
+}
+
+/** Lighter /contact validation: name, work email, message, privacy required. */
+export function validateContact(v: Partial<ContactValues>): Record<string, string> {
+  const e: Record<string, string> = {};
+  if (!v.name || !v.name.trim()) e.name = 'Please enter your name.';
+  if (!v.email || !v.email.trim()) e.email = 'Please enter your work email.';
+  else if (!isEmail(v.email)) e.email = 'Please enter a valid email address.';
+  if (!v.message || !v.message.trim()) e.message = 'Please enter a short message.';
   if (!v.privacy) e.privacy = 'Please acknowledge how we’ll use your details.';
   return e;
 }
@@ -89,6 +111,40 @@ export function isDevEnv(): boolean {
   }
 }
 
+export function newsletterEndpoint(): string {
+  try {
+    return (import.meta as any).env?.PUBLIC_NEWSLETTER_ENDPOINT || '';
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Newsletter subscribe (spec 002, FR-050). Provider-neutral, never-false-
+ * success, confirmed (double) opt-in. Only runs when an endpoint is configured;
+ * the footer omits the opt-in entirely until then.
+ */
+export async function submitNewsletter(
+  email: string,
+  opts: { endpoint?: string; fetchImpl?: typeof fetch } = {}
+): Promise<SubmitResult> {
+  if (!isEmail(email)) return { ok: false, retryable: false };
+  const endpoint = opts.endpoint ?? newsletterEndpoint();
+  if (!endpoint) return { ok: false, retryable: true, unconfigured: true };
+  const f = opts.fetchImpl ?? fetch;
+  try {
+    const res = await f(endpoint, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (res.ok) return { ok: true };
+    return { ok: false, retryable: res.status >= 500 };
+  } catch {
+    return { ok: false, retryable: true };
+  }
+}
+
 export async function submitBooking(
   payload: BookingValues,
   opts: SubmitOpts = {}
@@ -100,12 +156,12 @@ export async function submitBooking(
 
   if (!endpoint) {
     if (dev) {
-      // Dev-only mock — no network, no persistence. NOT a real submission,
+      // Dev-only mock, no network, no persistence. NOT a real submission,
       // and it never runs in a production build.
       await new Promise((r) => setTimeout(r, 650));
       return { ok: true, mock: true };
     }
-    // Production with no endpoint configured: never show a false success —
+    // Production with no endpoint configured: never show a false success,
     // report a safe, recoverable error so no lead is silently dropped.
     return { ok: false, retryable: true, unconfigured: true };
   }

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+import { breadcrumbSchema, webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const seo = {
+  title: 'Contact us',
+  description: 'A general enquiry, question, partnership or press message. To start a project, book a free consultation instead.',
+  path: '/contact',
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Contact' }];
+const schemas = [webPageSchema('Contact | Infinite Weblinks', canonical, seo.description), breadcrumbSchema(crumbs, site)];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <Section env="paper" width="content" class="ct" labelledby="ct-h">
+    <div class="ct__grid">
+      <div class="ct__intro">
+        <Eyebrow>Contact</Eyebrow>
+        <h1 id="ct-h" class="ct__h1">Send us a message.</h1>
+        <p class="ct__lead">A question, a partnership idea, press, or an existing-project note. We read everything and reply personally.</p>
+        <div class="ct__aside">
+          <p class="ct__aside-h">Starting a project?</p>
+          <p class="ct__aside-b">A free consultation is the better route. Tell us what you are building and we will map the next step.</p>
+          <a class="ct__aside-link" href="/book-a-call">Book a free call <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="ct__privacy">We only use your details to reply. Your message is sent securely to us by email through our form provider and is not stored on this website. See our <a href="/privacy">privacy note</a>.</p>
+      </div>
+      <div class="ct__form u-reveal"><ContactForm /></div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .ct__grid { display: grid; gap: 2.5rem; align-items: start; }
+  .ct__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .ct__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 44ch; }
+  .ct__aside { margin-top: 1.6rem; background: var(--bg-inset); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.2rem 1.3rem; }
+  .ct__aside-h { font-weight: 700; }
+  .ct__aside-b { color: var(--fg-muted); margin-top: 0.3rem; font-size: var(--fs-small); }
+  .ct__aside-link { display: inline-block; margin-top: 0.6rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+  .ct__privacy { margin-top: 1.4rem; color: var(--fg-faint); font-size: var(--fs-caption); max-width: 46ch; }
+  .ct__privacy a { color: var(--link); }
+  @media (min-width: 900px) { .ct__grid { grid-template-columns: 0.85fr 1.15fr; gap: 3rem; } }
+</style>
