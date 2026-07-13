@@ -87,6 +87,7 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
     backdrop-filter: saturate(1.3) blur(12px);
     border-bottom: var(--bw) solid var(--rule);
   }
+  .hdr--mnav-open { backdrop-filter: none; }
   .hdr__bar {
     position: relative;
     max-width: var(--w-wide); margin-inline: auto;
@@ -110,7 +111,7 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
   .mega__summary:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 3px; border-radius: var(--r-1); }
   .mega__chev { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform var(--dur-micro) var(--ease-out); }
   .mega[open] .mega__chev { transform: rotate(-135deg) translateY(-1px); }
-  .mega__panel { position: absolute; left: var(--gutter); right: var(--gutter); top: calc(100% + 10px); max-width: calc(var(--w-wide) - (2 * var(--gutter))); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-pop); padding: 1.4rem; z-index: var(--z-overlay); overflow: clip; }
+  .mega__panel { position: absolute; left: var(--gutter); right: var(--gutter); top: calc(100% + 10px); max-width: calc(var(--w-wide) - (2 * var(--gutter))); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-pop); padding: 1.4rem; z-index: var(--z-overlay); }
   .mega__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem 1.6rem; }
   .mega__cap { font-weight: 700; color: var(--cap-deep); text-decoration: none; font-size: var(--fs-small); }
   .mega__desc { color: var(--fg-muted); font-size: var(--fs-caption); margin: 0.15rem 0 0.4rem; }
@@ -152,6 +153,7 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
   (() => {
     const toggle = document.getElementById('nav-toggle');
     const panel = document.getElementById('mobile-nav');
+    const header = toggle?.closest('.hdr');
     if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
     if (toggle.dataset.navInit === 'true') return;
     toggle.dataset.navInit = 'true';
@@ -159,12 +161,14 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
     const desktopQuery = window.matchMedia('(min-width: 900px)');
     let previousBodyOverflow = '';
 
-    const focusables = () => Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), summary'))
+    const visiblePanelFocusables = () => Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), summary'))
       .filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true' && el.offsetParent !== null);
+    const focusables = () => [toggle, ...visiblePanelFocusables()];
     const isOpen = () => toggle.getAttribute('aria-expanded') === 'true' && !panel.hidden;
 
     const setClosedState = () => {
       panel.hidden = true;
+      header?.classList.remove('hdr--mnav-open');
       toggle.setAttribute('aria-expanded', 'false');
       toggle.setAttribute('aria-label', 'Open menu');
       panel.querySelectorAll<HTMLDetailsElement>('details[open]').forEach((details) => { details.open = false; });
@@ -174,10 +178,11 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
       if (desktopQuery.matches || isOpen()) return;
       previousBodyOverflow = document.body.style.overflow;
       panel.hidden = false;
+      header?.classList.add('hdr--mnav-open');
       toggle.setAttribute('aria-expanded', 'true');
       toggle.setAttribute('aria-label', 'Close menu');
       document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => focusables()[0]?.focus());
+      requestAnimationFrame(() => visiblePanelFocusables()[0]?.focus());
     };
 
     const close = (restoreFocus = true) => {
@@ -195,9 +200,12 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
       if (e.key === 'Escape') { e.preventDefault(); close(); return; }
       if (e.key !== 'Tab') return;
       const f = focusables(); if (!f.length) return;
-      const first = f[0], last = f[f.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      const first = f[0], firstMenu = f[1] || first, last = f[f.length - 1];
+      if (!f.includes(document.activeElement as HTMLElement)) { e.preventDefault(); firstMenu.focus(); }
+      else if (e.shiftKey && document.activeElement === firstMenu) { e.preventDefault(); first.focus(); }
+      else if (!e.shiftKey && document.activeElement === first) { e.preventDefault(); firstMenu.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     });
     desktopQuery.addEventListener('change', (ev) => { if (ev.matches) close(false); else setClosedState(); });
   })();
