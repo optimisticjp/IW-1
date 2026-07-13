@@ -3,20 +3,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Button from '../components/ui/Button.astro';
+import Accordion from '../components/ui/Accordion.astro';
 import Constellation from '../components/brand/Constellation.astro';
 import GrowthGraph from '../components/brand/GrowthGraph.astro';
 import InfinityMark from '../components/brand/InfinityMark.astro';
-import WorkThumb from '../components/brand/WorkThumb.astro';
 import { home } from '../data/home';
-
-const accentVar: Record<string, string> = {
-  indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
-  coral: 'var(--c-coral)', green: 'var(--c-green)', amber: 'var(--c-amber)',
-};
 ---
 
 <BaseLayout seo={home.meta} siteSchema>
-  <!-- 1 · HERO -------------------------------------------------------- -->
+  <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="hero" labelledby="hero-h">
     <div class="hero__grid">
       <div class="hero__copy">
@@ -35,44 +30,86 @@ const accentVar: Record<string, string> = {
     </div>
   </Section>
 
-  <!-- 2 · THE IDEA ---------------------------------------------------- -->
-  <Section env="lavender" width="content" class="idea" labelledby="idea-h">
-    <div class="idea__inner u-reveal">
-      <Eyebrow>{home.idea.eyebrow}</Eyebrow>
-      <h2 id="idea-h" class="idea__head">{home.idea.h2}</h2>
-      <p class="idea__body">{home.idea.body}</p>
+  <!-- 2 · IMMEDIATE VALUE -->
+  <Section env="lavender" width="wide" class="iv" labelledby="iv-h">
+    <div class="iv__head u-reveal">
+      <Eyebrow>{home.immediateValue.eyebrow}</Eyebrow>
+      <h2 id="iv-h" class="section-head">{home.immediateValue.h2}</h2>
+      <p class="lead">{home.immediateValue.intro}</p>
+    </div>
+    <ul class="iv__grid">
+      {home.immediateValue.cards.map((c, i) => (
+        <li class="iv__card u-reveal" style={`--reveal-delay:${i * 50}ms`}>
+          <h3 class="iv__title">{c.title}</h3>
+          <p class="iv__body">{c.body}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="iv__closing u-reveal">{home.immediateValue.closing}</p>
+  </Section>
+
+  <!-- 3 · THE PROBLEM -->
+  <Section env="paper" width="content" class="prob" labelledby="prob-h">
+    <div class="prob__inner u-reveal">
+      <Eyebrow>{home.problem.eyebrow}</Eyebrow>
+      <h2 id="prob-h" class="section-head">{home.problem.h2}</h2>
+      {home.problem.body.map((p) => <p class="prob__p">{p}</p>)}
+      <blockquote class="prob__quote">{home.problem.pullQuote}</blockquote>
+      <p class="prob__closing">{home.problem.closing}</p>
     </div>
   </Section>
 
-  <!-- 3 · THREE DOORS ------------------------------------------------- -->
+  <!-- 4 · THREE STARTING POINTS -->
   <Section env="paper" id="three-doors" width="wide" class="doors" labelledby="doors-h">
     <div class="doors__head u-reveal">
-      <Eyebrow>{home.doors.eyebrow}</Eyebrow>
-      <h2 id="doors-h" class="section-head">{home.doors.h2}</h2>
-      <p class="lead">{home.doors.sub}</p>
+      <Eyebrow>{home.startingPoints.eyebrow}</Eyebrow>
+      <h2 id="doors-h" class="section-head">{home.startingPoints.h2}</h2>
+      <p class="lead">{home.startingPoints.intro}</p>
     </div>
     <ol class="doors__track">
-      {home.doors.items.map((d, i) => (
-        <li class:list={['door', 'u-reveal']} style={`--dc:${accentVar[d.accent]}; --reveal-delay:${i * 100}ms`}>
-          <div class="door__marker" aria-hidden="true">
-            <span class="door__step">{i + 1}</span>
-          </div>
+      {home.startingPoints.items.map((d, i) => (
+        <li class="door u-reveal" data-cap={d.cap} style={`--reveal-delay:${i * 100}ms`}>
+          <div class="door__marker" aria-hidden="true"><span class="door__step">{i + 1}</span></div>
           <div class="door__card">
             <h3 class="door__name">{d.name}</h3>
-            <p class="door__body">{d.body}</p>
-            <span class="door__tag">{d.tag}</span>
+            <p class="door__headline">{d.headline}</p>
+            <p class="door__body">{d.copy}</p>
+            <p class="door__best"><strong>Best for:</strong> {d.bestFor}</p>
+            <a href={d.link.href} class="door__link">{d.link.label} <span aria-hidden="true">→</span></a>
           </div>
         </li>
       ))}
     </ol>
   </Section>
 
-  <!-- 4 · THE GROWTH GRAPH (dark, interactive centrepiece) ------------ -->
+  <!-- 5 · ANATOMY OF ONE CUSTOMER JOURNEY -->
+  <Section env="mint" width="wide" class="anat" labelledby="anat-h">
+    <div class="anat__head u-reveal">
+      <Eyebrow>{home.anatomy.eyebrow}</Eyebrow>
+      <h2 id="anat-h" class="section-head">{home.anatomy.h2}</h2>
+      <p class="lead">{home.anatomy.intro}</p>
+    </div>
+    <ol class="anat__track">
+      {home.anatomy.steps.map((s, i) => (
+        <li class="anat__step u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <span class="anat__num" aria-hidden="true">{s.n}</span>
+          <div class="anat__body">
+            <h3 class="anat__name">{s.name}</h3>
+            <p class="anat__desc">{s.body}</p>
+            <p class="anat__learn">{s.learn}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="anat__closing u-reveal">{home.anatomy.closing}</p>
+  </Section>
+
+  <!-- 6 · THE GROWTH GRAPH (dark centrepiece) -->
   <Section env="dark" id="growth-graph" width="wide" pad="loose" class="gg" labelledby="gg-h">
     <div class="gg__head u-reveal">
       <Eyebrow>{home.graph.eyebrow}</Eyebrow>
       <h2 id="gg-h" class="section-head">{home.graph.h2}</h2>
-      <p class="lead">{home.graph.sub}</p>
+      <p class="lead">{home.graph.intro}</p>
     </div>
     <div class="gg__stage u-reveal"><GrowthGraph /></div>
     <p class="gg__footerline u-reveal">{home.graph.footerLine}</p>
@@ -81,49 +118,112 @@ const accentVar: Record<string, string> = {
     </div>
   </Section>
 
-  <!-- 5 · CAPABILITIES ------------------------------------------------ -->
+  <!-- 7 · SIX CAPABILITIES -->
   <Section env="paper" id="capabilities" width="wide" class="cap" labelledby="cap-h">
     <div class="cap__head u-reveal">
       <Eyebrow>{home.capabilities.eyebrow}</Eyebrow>
       <h2 id="cap-h" class="section-head">{home.capabilities.h2}</h2>
-      <p class="lead">{home.capabilities.sub}</p>
+      <p class="lead">{home.capabilities.intro}</p>
     </div>
-    <ul class="cap__list">
+    <ul class="cap__grid">
       {home.capabilities.items.map((c, i) => (
-        <li class="cab u-reveal" style={`--cc:${accentVar[c.accent]}; --reveal-delay:${i * 60}ms`}>
-          <span class="cab__node" aria-hidden="true"></span>
-          <div class="cab__body">
-            <div class="cab__top">
-              <h3 class="cab__name">{c.name}</h3>
-              <span class="cab__linked"><InfinityMark size={16} /> linked</span>
-            </div>
-            <p class="cab__desc">{c.desc}</p>
-          </div>
+        <li class="capb u-reveal" data-cap={c.cap} style={`--reveal-delay:${i * 50}ms`}>
+          <span class="capb__node" aria-hidden="true"></span>
+          <h3 class="capb__name">{c.name}</h3>
+          <p class="capb__headline">{c.headline}</p>
+          <p class="capb__copy">{c.copy}</p>
+          <p class="capb__outcome">{c.outcome}</p>
+          <a href={c.href} class="capb__link">Explore {c.name} <span aria-hidden="true">→</span></a>
         </li>
       ))}
     </ul>
   </Section>
 
-  <!-- 6 · PROOF ------------------------------------------------------- -->
-  <Section env="mint" id="proof" width="wide" class="prf" labelledby="prf-h">
-    <div class="prf__head u-reveal">
-      <h2 id="prf-h" class="section-head">{home.proof.h2}</h2>
-      <p class="lead">{home.proof.sub}</p>
+  <!-- 8 · START WITH THE PROBLEM -->
+  <Section env="lavender" width="wide" class="swp" labelledby="swp-h">
+    <div class="swp__head u-reveal">
+      <Eyebrow>{home.startWithProblem.eyebrow}</Eyebrow>
+      <h2 id="swp-h" class="section-head">{home.startWithProblem.h2}</h2>
     </div>
-    <ul class="prf__strip">
-      {home.proof.items.map((w, i) => (
-        <li class="work u-reveal" style={`--wc:${accentVar[w.accent]}; --reveal-delay:${i * 70}ms`}>
-          <div class="work__thumb"><WorkThumb accent={accentVar[w.accent]} variant={i} /></div>
-          <div class="work__meta">
-            <span class="work__kind">{w.kind}</span>
-            <h3 class="work__title">{w.title}</h3>
-          </div>
+    <ul class="swp__list">
+      {home.startWithProblem.items.map((p, i) => (
+        <li class="swp__item u-reveal" style={`--reveal-delay:${i * 40}ms`}>
+          <h3 class="swp__q">{p.problem}</h3>
+          <p class="swp__copy">{p.copy}</p>
+          <a href={p.link.href} class="swp__link">{p.link.label} <span aria-hidden="true">→</span></a>
         </li>
       ))}
     </ul>
   </Section>
 
-  <!-- 7 · FINAL CTA (gradient band) ----------------------------------- -->
+  <!-- 9 · MODERN SEARCH AND AI -->
+  <Section env="paper" width="wide" class="ms" labelledby="ms-h">
+    <div class="ms__head u-reveal">
+      <Eyebrow>{home.modernSearch.eyebrow}</Eyebrow>
+      <h2 id="ms-h" class="section-head">{home.modernSearch.h2}</h2>
+    </div>
+    <div class="ms__cols">
+      {home.modernSearch.columns.map((col, i) => (
+        <div class:list={['ms__col', 'u-reveal']} data-kind={i === 0 ? 'public' : 'private'}>
+          <h3 class="ms__title">{col.title}</h3>
+          <p class="ms__body">{col.body}</p>
+        </div>
+      ))}
+    </div>
+    <blockquote class="ms__quote u-reveal">{home.modernSearch.pullQuote}</blockquote>
+    <a href={home.modernSearch.link.href} class="ms__link u-reveal">{home.modernSearch.link.label} <span aria-hidden="true">→</span></a>
+  </Section>
+
+  <!-- 10 · HOW WE WORK -->
+  <Section env="mint" width="wide" class="hww" labelledby="hww-h">
+    <div class="hww__head u-reveal">
+      <Eyebrow>{home.howWeWork.eyebrow}</Eyebrow>
+      <h2 id="hww-h" class="section-head">{home.howWeWork.h2}</h2>
+    </div>
+    <ol class="hww__track">
+      {home.howWeWork.steps.map((s, i) => (
+        <li class="hww__step u-reveal" style={`--reveal-delay:${i * 60}ms`}>
+          <span class="hww__num" aria-hidden="true">{s.n}</span>
+          <h3 class="hww__name">{s.name}</h3>
+          <p class="hww__body">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="hww__closing u-reveal">{home.howWeWork.closing}</p>
+  </Section>
+
+  <!-- 11 · WORK AND PROOF (honest interim) -->
+  <Section env="paper" id="proof" width="content" class="wp" labelledby="wp-h">
+    <div class="wp__inner u-reveal">
+      <Eyebrow>{home.workProof.eyebrow}</Eyebrow>
+      <h2 id="wp-h" class="section-head">{home.workProof.h2}</h2>
+      <p class="lead">{home.workProof.body}</p>
+      <p class="wp__interim">{home.workProof.interim}</p>
+      <Button href={home.workProof.button.href} variant="secondary" size="md">{home.workProof.button.label}</Button>
+    </div>
+  </Section>
+
+  <!-- 12 · WHY INFINITE WEBLINKS -->
+  <Section env="lavender" width="content" class="why" labelledby="why-h">
+    <div class="why__inner u-reveal">
+      <Eyebrow>{home.why.eyebrow}</Eyebrow>
+      <h2 id="why-h" class="section-head">{home.why.h2}</h2>
+      {home.why.body.map((p) => <p class="why__p">{p}</p>)}
+      <p class="why__closing">{home.why.closing}</p>
+      <a href={home.why.link.href} class="why__link">{home.why.link.label} <span aria-hidden="true">→</span></a>
+    </div>
+  </Section>
+
+  <!-- 13 · HOMEPAGE FAQ -->
+  <Section env="paper" width="content" class="faq" labelledby="faq-h">
+    <div class="faq__inner u-reveal">
+      <Eyebrow>{home.faq.eyebrow}</Eyebrow>
+      <h2 id="faq-h" class="section-head">{home.faq.h2}</h2>
+      <Accordion items={home.faq.items.map((f) => ({ q: f.q, a: f.a }))} name="home-faq" />
+    </div>
+  </Section>
+
+  <!-- 14 · FINAL CTA -->
   <Section env="grad" id="book" width="content" pad="loose" class="cta" labelledby="cta-h">
     <div class="cta__inner u-reveal">
       <h2 id="cta-h" class="cta__head">{home.finalCta.h2}</h2>
@@ -132,82 +232,141 @@ const accentVar: Record<string, string> = {
         <Button href={home.finalCta.primary.href} variant="primary" size="lg">{home.finalCta.primary.label}</Button>
         <Button href={home.finalCta.secondary.href} variant="secondary" size="lg">{home.finalCta.secondary.label}</Button>
       </div>
+      <p class="cta__promise"><InfinityMark size={16} /> We build it, run it and connect every part.</p>
     </div>
   </Section>
 </BaseLayout>
 
 <style>
-  .section-head { font-size: var(--fs-h2); max-width: 20ch; margin-top: 0.7rem; }
-  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 48ch; margin-top: 1rem; }
+  .section-head { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); max-width: 22ch; margin-top: 0.7rem; }
+  .lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1rem; }
 
   /* 1 · Hero */
   .hero__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
   .hero__copy { min-width: 0; }
-  .hero__head { font-size: var(--fs-h1); margin: 1.2rem 0 0; }
-  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 52ch; margin-top: 1.5rem; }
+  .hero__head { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 1.2rem 0 0; }
+  .hero__sub { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 54ch; margin-top: 1.5rem; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 2rem; }
   .hero__trust { margin-top: 1.5rem; color: var(--fg-faint); font-size: var(--fs-small); }
   .hero__vis { min-width: 0; }
   @media (min-width: 940px) { .hero__grid { grid-template-columns: 1fr 1.05fr; } }
 
-  /* 2 · Idea */
-  .idea__inner { max-width: 40rem; }
-  .idea__head { font-size: var(--fs-h2); margin-top: 0.7rem; }
-  .idea__body { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1.1rem; }
+  /* 2 · Immediate value */
+  .iv__head { max-width: 46rem; }
+  .iv__grid { list-style: none; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; padding: 0; display: grid; gap: 1.1rem; }
+  .iv__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
+  .iv__title { font-size: var(--fs-h4); }
+  .iv__body { color: var(--fg-muted); margin-top: 0.5rem; }
+  .iv__closing { max-width: 46rem; margin-top: 2rem; font-size: var(--fs-lead); }
+  @media (min-width: 640px) { .iv__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .iv__grid { grid-template-columns: repeat(3, 1fr); } }
 
-  /* 3 · Three doors — progression with a connector line */
-  .doors__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 1.25rem; position: relative; counter-reset: door; }
-  .door { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
-  .door__marker { position: relative; display: grid; place-items: start center; }
-  .door__step { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: var(--r-2); background: var(--dc); color: #fff; font-family: var(--font-display); font-weight: 800; }
-  .door__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--dc); border-radius: var(--r-3); padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); box-shadow: var(--shadow-1); }
+  /* 3 · The problem */
+  .prob__inner { max-width: 42rem; }
+  .prob__p { color: var(--fg-muted); margin-top: 1rem; }
+  .prob__quote { margin: 1.6rem 0 0; padding-left: 1.2rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); font-style: normal; }
+  .prob__closing { margin-top: 1.4rem; font-weight: 600; }
+
+  /* 4 · Three starting points */
+  .doors__head { max-width: 46rem; }
+  .doors__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3.5rem) 0 0; display: grid; gap: 1.25rem; }
+  .door { display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
+  .door__step { width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: var(--r-2); background: var(--cap); color: var(--cap-on); font-family: var(--font-display); font-weight: 800; }
+  .door__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--cap); border-radius: var(--r-3); padding: clamp(1.3rem, 1rem + 1.5vw, 1.8rem); box-shadow: var(--shadow-1); }
   .door__name { font-size: var(--fs-h3); }
+  .door__headline { font-weight: 600; margin-top: 0.4rem; }
   .door__body { color: var(--fg-muted); margin-top: 0.5rem; }
-  .door__tag { display: inline-block; margin-top: 0.9rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--dc) 72%, var(--fg)); background: color-mix(in oklab, var(--dc) 12%, var(--bg)); padding: 0.28rem 0.7rem; border-radius: var(--r-pill); }
-  @media (min-width: 860px) {
-    .doors__track { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-    /* connector line runs through the three step markers */
-    .doors__track::before { content: ''; position: absolute; top: 1.3rem; left: 16%; right: 16%; height: 3px; border-radius: var(--r-pill); background: linear-gradient(90deg, var(--c-indigo), var(--c-violet), var(--c-magenta)); z-index: 0; }
-    .door { grid-template-columns: 1fr; gap: 1rem; text-align: left; }
-    .door__marker { justify-items: start; }
-    .door__step { position: relative; z-index: 1; box-shadow: 0 0 0 6px var(--bg); }
-  }
+  .door__best { color: var(--fg-faint); font-size: var(--fs-small); margin-top: 0.8rem; }
+  .door__link { display: inline-block; margin-top: 0.9rem; font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .door__link:hover { text-decoration: underline; }
+  @media (min-width: 860px) { .doors__track { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } .door { grid-template-columns: 1fr; } }
 
-  /* 4 · Growth Graph section */
-  .gg__head { text-align: center; margin-inline: auto; }
+  /* 5 · Anatomy */
+  .anat__head { max-width: 46rem; }
+  .anat__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.1rem; }
+  .anat__step { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+  .anat__num { width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--bg-raised); border: var(--bw) solid var(--rule-strong); font-family: var(--font-mono); font-weight: 600; flex: none; }
+  .anat__name { font-size: var(--fs-h4); }
+  .anat__desc { color: var(--fg-muted); margin-top: 0.3rem; }
+  .anat__learn { margin-top: 0.4rem; font-size: var(--fs-small); color: color-mix(in oklab, var(--cap-connect) 72%, var(--fg)); }
+  .anat__closing { max-width: 46rem; margin-top: 2rem; font-weight: 600; }
+  @media (min-width: 760px) { .anat__track { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1080px) { .anat__track { grid-template-columns: repeat(3, 1fr); } }
+
+  /* 6 · Growth Graph */
+  .gg__head { text-align: center; margin-inline: auto; max-width: 46rem; }
   .gg__head .section-head, .gg__head .lead { margin-inline: auto; }
   .gg__head .eyebrow { justify-content: center; }
   .gg__stage { margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
   .gg__footerline { max-width: 44rem; margin: clamp(2rem, 1rem + 3vw, 3rem) auto 0; text-align: center; color: var(--fg-muted); font-size: var(--fs-lead); }
   .gg__cta { display: flex; justify-content: center; margin-top: clamp(1.25rem, 0.8rem + 1.5vw, 2rem); }
 
-  /* 5 · Capabilities — a connected list, not six identical cards */
-  .cap__list { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 0; }
-  .cab { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; padding: 1.3rem 0; border-top: var(--bw) solid var(--rule); }
-  .cab:last-child { border-bottom: var(--bw) solid var(--rule); }
-  .cab__node { width: 1.1rem; height: 1.1rem; margin-top: 0.35rem; border-radius: 50%; background: var(--cc); box-shadow: 0 0 0 0.32rem color-mix(in oklab, var(--cc) 18%, transparent); flex: none; }
-  .cab__top { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
-  .cab__name { font-size: var(--fs-h3); }
-  .cab__linked { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); }
-  .cab__desc { color: var(--fg-muted); margin-top: 0.3rem; max-width: 60ch; }
-  @media (min-width: 820px) {
-    .cap__list { grid-template-columns: 1fr 1fr; column-gap: 3rem; }
-    .cab:nth-child(2) { border-top: var(--bw) solid var(--rule); }
-  }
+  /* 7 · Capabilities */
+  .cap__head { max-width: 46rem; }
+  .cap__grid { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.1rem; }
+  .capb { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-top: 4px solid var(--cap); border-radius: var(--r-3); padding: 1.5rem; box-shadow: var(--shadow-1); }
+  .capb__node { display: inline-block; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--cap); box-shadow: 0 0 0 0.3rem var(--cap-soft); }
+  .capb__name { font-size: var(--fs-h3); margin-top: 0.7rem; }
+  .capb__headline { font-weight: 600; margin-top: 0.3rem; }
+  .capb__copy { color: var(--fg-muted); margin-top: 0.5rem; }
+  .capb__outcome { margin-top: 0.6rem; font-size: var(--fs-small); color: var(--cap-deep); }
+  .capb__link { display: inline-block; margin-top: 0.9rem; font-weight: 600; color: var(--cap-deep); text-decoration: none; }
+  .capb__link:hover { text-decoration: underline; }
+  @media (min-width: 640px) { .cap__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .cap__grid { grid-template-columns: repeat(3, 1fr); } }
 
-  /* 6 · Proof — recent-work strip (no invented data) */
-  .prf__strip { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.25rem; }
-  .work { display: grid; gap: 0.9rem; }
-  .work__thumb { position: relative; aspect-ratio: 4 / 3; border-radius: var(--r-3); background: var(--bg-raised); border: var(--bw) solid var(--rule); overflow: clip; box-shadow: var(--shadow-1); }
-  .work__kind { font-family: var(--font-mono); font-size: var(--fs-caption); color: color-mix(in oklab, var(--wc) 70%, var(--fg)); }
-  .work__title { font-size: var(--fs-h4); margin-top: 0.2rem; }
-  @media (min-width: 620px) { .prf__strip { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1000px) { .prf__strip { grid-template-columns: repeat(4, 1fr); } }
+  /* 8 · Start with the problem */
+  .swp__head { max-width: 44rem; }
+  .swp__list { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1rem; }
+  .swp__item { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-2); padding: 1.2rem 1.3rem; }
+  .swp__q { font-size: var(--fs-h4); }
+  .swp__copy { color: var(--fg-muted); margin-top: 0.4rem; }
+  .swp__link { display: inline-block; margin-top: 0.6rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+  .swp__link:hover { text-decoration: underline; }
+  @media (min-width: 760px) { .swp__list { grid-template-columns: repeat(2, 1fr); } }
 
-  /* 7 · Final CTA */
+  /* 9 · Modern search and AI */
+  .ms__head { max-width: 48rem; }
+  .ms__cols { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 1rem + 3vw, 3rem); }
+  .ms__col { border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.6rem; background: var(--bg-raised); }
+  .ms__col[data-kind='public'] { border-top: 4px solid var(--cap-attract); }
+  .ms__col[data-kind='private'] { border-top: 4px solid var(--cap-scale); }
+  .ms__title { font-size: var(--fs-h4); }
+  .ms__body { color: var(--fg-muted); margin-top: 0.6rem; }
+  .ms__quote { margin: 1.8rem 0 0; padding-left: 1.2rem; border-left: 3px solid var(--accent); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); }
+  .ms__link { display: inline-block; margin-top: 1rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+  @media (min-width: 820px) { .ms__cols { grid-template-columns: 1fr 1fr; } }
+
+  /* 10 · How we work */
+  .hww__head { max-width: 44rem; }
+  .hww__track { list-style: none; padding: 0; margin: clamp(2rem, 1rem + 3vw, 3rem) 0 0; display: grid; gap: 1.1rem; counter-reset: step; }
+  .hww__step { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; }
+  .hww__num { display: inline-grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: var(--r-2); background: var(--grad-decorative); color: #fff; font-family: var(--font-display); font-weight: 800; }
+  .hww__name { font-size: var(--fs-h4); margin-top: 0.7rem; }
+  .hww__body { color: var(--fg-muted); margin-top: 0.4rem; }
+  .hww__closing { margin-top: 2rem; font-weight: 600; }
+  @media (min-width: 720px) { .hww__track { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1080px) { .hww__track { grid-template-columns: repeat(5, 1fr); } }
+
+  /* 11 · Work and proof */
+  .wp__inner { max-width: 42rem; display: grid; justify-items: start; gap: 0.4rem; }
+  .wp__interim { color: var(--fg-muted); margin-top: 0.6rem; }
+  .wp__inner :global(.btn) { margin-top: 1rem; }
+
+  /* 12 · Why */
+  .why__inner { max-width: 42rem; }
+  .why__p { color: var(--fg-muted); margin-top: 1rem; }
+  .why__closing { margin-top: 1.2rem; font-weight: 600; }
+  .why__link { display: inline-block; margin-top: 1rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+
+  /* 13 · FAQ */
+  .faq__inner { max-width: 46rem; display: grid; gap: 1.4rem; }
+
+  /* 14 · Final CTA */
   .cta { text-align: center; }
   .cta__inner { max-width: 42rem; margin-inline: auto; display: grid; gap: 1.1rem; justify-items: center; }
-  .cta__head { font-size: var(--fs-h1); }
-  .cta__body { color: #fff; font-size: var(--fs-lead); max-width: 36rem; }
+  .cta__head { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); }
+  .cta__body { color: #fff; font-size: var(--fs-lead); max-width: 40rem; }
   .cta__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.6rem; }
+  .cta__promise { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; color: #fff; font-weight: 600; }
 </style>

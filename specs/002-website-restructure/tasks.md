@@ -76,21 +76,21 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Independent Test**: Load the homepage cold; first screen states who/what-changes/next-action with dual CTA and no motion dependence; each of the five goals updates and announces the graph.
 
-- [ ] T019 [US1] Extend the existing `src/pages/index.astro` (migrated in T017) to the full homepage section sequence from `src/data/home.ts` (Hero → Immediate value → Problem → Three starting points → Anatomy → Growth Graph → Six capabilities → Start with the problem → Modern search and AI → How we work → Work and proof → Why → FAQ → Final CTA) using approved playbook copy, preserving current hero and messaging.
+- [X] T019 [US1] Extend the existing `src/pages/index.astro` (migrated in T017) to the full homepage section sequence from `src/data/home.ts` (Hero → Immediate value → Problem → Three starting points → Anatomy → Growth Graph → Six capabilities → Start with the problem → Modern search and AI → How we work → Work and proof → Why → FAQ → Final CTA) using approved playbook copy, preserving current hero and messaging.
   - Refs FR-007/035/038, research.md D10 · Deps Gate A (incl. T017/T018) · Parallel none · Validate render test + copy-lint; regression-guarded by T018 · Done when all sections render in order with brand promises intact and the T018 regression suite stays green.
-- [ ] T020 [US1] Build the first-screen hero (who it is for, what changes, next action; primary "Book a free call" + secondary "Explore what is possible"), rendering meaning without motion.
+- [X] T020 [US1] Build the first-screen hero (who it is for, what changes, next action; primary "Book a free call" + secondary "Explore what is possible"), rendering meaning without motion.
   - Refs FR-008, SC-001 · Deps T019 · Parallel none · Validate e2e first-screen assertion · Done when the hero conveys the promise with JS disabled.
-- [ ] T021 [P] [US1] Wire the three starting points to the matching audiences and the six capability blocks to their capability pages via `src/data/links.ts`.
+- [X] T021 [P] [US1] Wire the three starting points to the matching audiences and the six capability blocks to their capability pages via `src/data/links.ts`.
   - Refs FR-010, SC-013 · Deps T019 · Parallel T025 · Validate link-integrity test · Done when every block routes correctly.
-- [ ] T022 [US3] Extend the existing Growth Graph centrepiece (dark environment) in `src/components/brand/GrowthGraph.astro` + `src/data/growthGraph.ts`, preserving the current visual language, to the five goals including "Save team time".
+- [X] T022 [US3] Extend the existing Growth Graph centrepiece (dark environment) in `src/components/brand/GrowthGraph.astro` + `src/data/growthGraph.ts`, preserving the current visual language, to the five goals including "Save team time".
   - Refs FR-009/020/021, research.md D10 · Deps Gate A (incl. T017/T018) · Parallel none · Validate `tests/unit/growthgraph.test.ts`; regression-guarded by T018 · Done when five goals render with real relationships only and the existing homepage graph regresses clean.
-- [ ] T023 [US3] Implement goal selection: real controls with selected states, caption available as text and announced on change, radial ≥720px / vertical <720px, keyboard operable.
+- [X] T023 [US3] Implement goal selection: real controls with selected states, caption available as text and announced on change, radial ≥720px / vertical <720px, keyboard operable.
   - Refs FR-021, contracts/map-your-stack.md (shared layout) · Deps T022 · Parallel none · Validate keyboard + live-region e2e · Done when goal change updates flow + caption and announces.
-- [ ] T024 [US3] Provide reduced-motion and no-JS paths: final connected state with caption as text, plus the graph text equivalent (accessible name; decorative SVG parts hidden).
+- [X] T024 [US3] Provide reduced-motion and no-JS paths: final connected state with caption as text, plus the graph text equivalent (accessible name; decorative SVG parts hidden).
   - Refs FR-045/048, SC-012 · Deps T022/T023 · Parallel none · Validate reduced-motion + no-JS e2e · Done when meaning is equivalent in both conditions.
-- [ ] T025 [P] [US1] Add the homepage FAQ, the honest proof interim state, and the "Start with the problem" problem-first entry.
+- [X] T025 [P] [US1] Add the homepage FAQ, the honest proof interim state, and the "Start with the problem" problem-first entry.
   - Refs FR-007/031/037 · Deps T019 · Parallel T021 · Validate render + no-invented-figures lint · Done when interim proof is honest and problem-first routes correctly.
-- [ ] T026 [P] [US3] Add/extend unit tests for goals/captions/layout in `tests/unit/growthgraph.test.ts` and an e2e first-screen + graph accessibility check in `tests/e2e/`.
+- [X] T026 [P] [US3] Add/extend unit tests for goals/captions/layout in `tests/unit/growthgraph.test.ts` and an e2e first-screen + graph accessibility check in `tests/e2e/`.
   - Refs plan Testing strategy · Deps T023/T024 · Parallel T025 · Validate `npm run test` · Done when tests pass.
 
 **Checkpoint (Gate B)**: First-screen message test passes; graph is keyboard/reduced-motion/no-JS safe; homepage regresses clean.

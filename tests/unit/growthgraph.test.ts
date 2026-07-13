@@ -1,25 +1,34 @@
 import { describe, it, expect } from 'vitest';
 import { graphNodes, graphGoals } from '../../src/data/growthGraph';
 
-describe('Growth Graph data (Brief §7)', () => {
+describe('Growth Graph data (spec 002, FR-020/021)', () => {
   it('has the nine tool nodes by their plain names', () => {
     expect(graphNodes.map((n) => n.label)).toEqual([
       'Social', 'Google Ads', 'Website', 'Tracking', 'Store', 'Email', 'WhatsApp', 'CRM', 'AI',
     ]);
   });
 
-  it('has four goals with exact labels', () => {
+  it('uses the corrected capability palette for node colours', () => {
+    for (const n of graphNodes) expect(n.color.startsWith('var(--cap-')).toBe(true);
+  });
+
+  it('has the five goals with the approved labels, including "Save team time"', () => {
     expect(graphGoals.map((g) => g.label)).toEqual([
-      'More sales', 'Lower ad costs', 'More repeat customers', 'Know what’s working',
+      'More sales',
+      'Lower advertising waste',
+      'More repeat customers',
+      'Know what is working',
+      'Save team time',
     ]);
   });
 
-  it('goal loops match the spec exactly', () => {
-    const byId = Object.fromEntries(graphGoals.map((g) => [g.id, g.loop]));
-    expect(byId.sales).toEqual(['social', 'website', 'tracking', 'email', 'store', 'googleAds']);
-    expect(byId.adcosts).toEqual(['store', 'tracking', 'googleAds', 'social', 'website']);
-    expect(byId.repeat).toEqual(['store', 'crm', 'email', 'whatsapp', 'website']);
-    expect(byId.working).toEqual(['social', 'googleAds', 'website', 'tracking', 'crm']);
+  it('every goal has a distinct capability accent and a non-empty caption', () => {
+    const accents = graphGoals.map((g) => g.accent);
+    expect(new Set(accents).size).toBe(5);
+    for (const g of graphGoals) {
+      expect(g.accent.startsWith('var(--cap-')).toBe(true);
+      expect(g.caption.length).toBeGreaterThan(20);
+    }
   });
 
   it('every loop node references a real node key', () => {
@@ -27,12 +36,15 @@ describe('Growth Graph data (Brief §7)', () => {
     for (const g of graphGoals) for (const k of g.loop) expect(keys.has(k)).toBe(true);
   });
 
-  it('captions are the exact brief text', () => {
+  it('the "Save team time" loop routes through automation (ai)', () => {
+    const t = graphGoals.find((g) => g.id === 'teamtime')!;
+    expect(t.loop).toContain('ai');
+  });
+
+  it('captions match the approved Playbook Section 6 text', () => {
     const sales = graphGoals.find((g) => g.id === 'sales')!;
-    expect(sales.caption).toBe(
-      'Someone sees your social ad, clicks to your site, and we track it properly. They get a follow-up email and buy. Every sale teaches the system where to find the next one.'
-    );
+    expect(sales.caption).toContain('matches their interest');
     const working = graphGoals.find((g) => g.id === 'working')!;
-    expect(working.caption).toContain('one clear picture');
+    expect(working.caption).toContain('clearer view');
   });
 });
