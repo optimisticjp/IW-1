@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "test:a11y": "node tests/e2e/phase8-audit.mjs"
+    "test:a11y": "node tests/e2e/phase8-audit.mjs",
+    "verify:launch": "node scripts/verify-launch.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",
