@@ -1,0 +1,42 @@
+---
+// Single-open accordion (spec 002, FR-034). Uses native <details name> for
+// exclusive open behaviour and full keyboard/AT support with no JavaScript;
+// content is present and readable even if scripting is unavailable.
+export interface AccordionItem {
+  q: string;
+  a: string;
+}
+interface Props {
+  items: AccordionItem[];
+  /** shared name groups the items so only one stays open at a time */
+  name?: string;
+}
+const { items, name = 'faq' } = Astro.props;
+---
+
+<div class="acc">
+  {items.map((item) => (
+    <details class="acc__item" name={name}>
+      <summary class="acc__q">
+        <span>{item.q}</span>
+        <span class="acc__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="acc__a"><p>{item.a}</p></div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .acc { display: grid; gap: 0.5rem; }
+  .acc__item { border: var(--bw) solid var(--rule); border-radius: var(--r-2); background: var(--bg-raised); }
+  .acc__q { display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; padding: 1rem 1.1rem; font-weight: 600; list-style: none; }
+  .acc__q::-webkit-details-marker { display: none; }
+  .acc__q:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 2px; border-radius: var(--r-2); }
+  .acc__icon { position: relative; width: 14px; height: 14px; flex: none; }
+  .acc__icon::before, .acc__icon::after { content: ''; position: absolute; inset: 0; margin: auto; background: var(--fg-muted); }
+  .acc__icon::before { width: 14px; height: 2px; }
+  .acc__icon::after { width: 2px; height: 14px; transition: transform var(--dur-micro) var(--ease-out); }
+  .acc__item[open] .acc__icon::after { transform: scaleY(0); }
+  .acc__a { padding: 0 1.1rem 1.1rem; color: var(--fg-muted); }
+  @media (prefers-reduced-motion: reduce) { .acc__icon::after { transition: none; } }
+</style>

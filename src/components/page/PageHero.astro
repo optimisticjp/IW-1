@@ -1,0 +1,41 @@
+---
+// Reusable page hero (spec 002). Eyebrow + single H1 carrying the promise +
+// lead + optional primary/secondary CTA. Renders its meaning without motion.
+// Scope a capability colour by passing `cap` (data-cap).
+import Section from '../layout/Section.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  eyebrow?: string;
+  h1: string;
+  lead?: string;
+  primary?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  cap?: string; // capability id for data-cap colour scoping
+  env?: 'paper' | 'lavender' | 'mint';
+  id?: string;
+}
+const { eyebrow, h1, lead, primary, secondary, cap, env = 'paper', id } = Astro.props;
+---
+
+<Section env={env} id={id} labelledby="page-hero-h1">
+  <div class="hero" data-cap={cap}>
+    {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+    <h1 id="page-hero-h1" class="hero__h1">{h1}</h1>
+    {lead && <p class="hero__lead">{lead}</p>}
+    {(primary || secondary) && (
+      <div class="hero__cta">
+        {primary && <Button href={primary.href} variant="primary" size="lg">{primary.label}</Button>}
+        {secondary && <Button href={secondary.href} variant="secondary" size="lg">{secondary.label}</Button>}
+      </div>
+    )}
+  </div>
+</Section>
+
+<style>
+  .hero { display: grid; gap: 1.1rem; max-width: 52rem; }
+  .hero__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.3rem 0 0; }
+  .hero__lead { font-size: var(--fs-lead); color: var(--fg-muted); max-width: 42rem; margin: 0; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.6rem; }
+</style>

@@ -1,0 +1,33 @@
+---
+// Closing CTA band (spec 002, FR-042 — label matches destination). The primary
+// action stays reachable at the end of every commercial page.
+import Section from '../layout/Section.astro';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  heading: string;
+  body?: string;
+  primary: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  env?: 'grad' | 'dark';
+}
+const { heading, body, primary, secondary, env = 'grad' } = Astro.props;
+---
+
+<Section env={env} labelledby="cta-band-h" pad="tight">
+  <div class="cta">
+    <h2 id="cta-band-h" class="cta__h">{heading}</h2>
+    {body && <p class="cta__body">{body}</p>}
+    <div class="cta__row">
+      <Button href={primary.href} variant="primary" size="lg">{primary.label}</Button>
+      {secondary && <Button href={secondary.href} variant="secondary" size="lg">{secondary.label}</Button>}
+    </div>
+  </div>
+</Section>
+
+<style>
+  .cta { display: grid; gap: 1rem; justify-items: start; max-width: 42rem; }
+  .cta__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin: 0; }
+  .cta__body { font-size: var(--fs-lead); margin: 0; opacity: 0.92; }
+  .cta__row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.4rem; }
+</style>

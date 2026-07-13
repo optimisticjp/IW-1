@@ -68,8 +68,9 @@ describe('How It Connects content (verbatim)', () => {
 describe('Navigation points How it connects at the concept route', () => {
   it('header and footer resolve to /how-it-connects', () => {
     expect(primaryNav.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
-    const company = footerGroups.find((g) => g.heading === 'Company')!;
-    expect(company.items.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
+    // Restructure (FR-004): "How it connects" now sits under the Learn column.
+    const learn = footerGroups.find((g) => g.heading === 'Learn')!;
+    expect(learn.items.find((i) => i.label === 'How it connects')!.href).toBe('/how-it-connects');
   });
 });
 

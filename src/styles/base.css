@@ -152,6 +152,9 @@ p {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* Never let a long gradient word push past the 320px floor (FR-046). */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Scroll-reveal (object assembly). Content is visible by DEFAULT; the reveal is

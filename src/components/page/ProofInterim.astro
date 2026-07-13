@@ -1,0 +1,32 @@
+---
+// Honest interim proof state (spec 002, FR-031/037, SC-007). Used while
+// approved, permissioned case studies are limited. Never simulates a fuller
+// portfolio than exists and carries no invented client or result.
+import Section from '../layout/Section.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  env?: 'paper' | 'lavender' | 'mint';
+}
+const { env = 'lavender' } = Astro.props;
+---
+
+<Section env={env} labelledby="proof-h">
+  <div class="proof">
+    <Eyebrow>Proof</Eyebrow>
+    <h2 id="proof-h" class="proof__h">Named case studies are being prepared with client permission.</h2>
+    <p class="proof__body">
+      We would rather show real results with a defensible baseline than invent numbers. Until named
+      studies are published, the clearest proof is this site itself and the connected systems we build.
+      We are happy to walk through relevant, anonymised examples on a call.
+    </p>
+    <Button href="/book-a-call" variant="secondary" size="md">Book a free call</Button>
+  </div>
+</Section>
+
+<style>
+  .proof { display: grid; gap: 1rem; justify-items: start; max-width: 44rem; }
+  .proof__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h3); letter-spacing: var(--tracking-tight); margin: 0; }
+  .proof__body { color: var(--fg-muted); margin: 0; }
+</style>

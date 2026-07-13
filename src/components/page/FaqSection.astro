@@ -1,0 +1,30 @@
+---
+// FAQ section (spec 002, FR-034). Renders a single-open accordion from a set of
+// FAQ ids resolved against the shared FAQ data.
+import Section from '../layout/Section.astro';
+import Accordion from '../ui/Accordion.astro';
+import { getFaqs } from '../../data/faqs';
+
+interface Props {
+  heading?: string;
+  ids: string[];
+  name?: string;
+  env?: 'paper' | 'lavender' | 'mint';
+}
+const { heading = 'Questions, answered', ids, name = 'faq', env = 'paper' } = Astro.props;
+const items = getFaqs(ids).map((f) => ({ q: f.question, a: f.answer }));
+---
+
+{items.length > 0 && (
+  <Section env={env} labelledby="faq-h">
+    <div class="faq">
+      <h2 id="faq-h" class="faq__h">{heading}</h2>
+      <Accordion items={items} name={name} />
+    </div>
+  </Section>
+)}
+
+<style>
+  .faq { display: grid; gap: 1.4rem; max-width: 48rem; }
+  .faq__h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); letter-spacing: var(--tracking-display); margin: 0; }
+</style>

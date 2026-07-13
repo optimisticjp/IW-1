@@ -115,3 +115,92 @@
   --z-overlay: 90;
   --z-nav: 100;
 }
+
+/* =========================================================================
+   Restructure foundation (spec 002) — DESIGN.md capability system + Geist.
+   ADDITIVE layer: legacy palette tokens above are preserved so existing
+   components keep rendering; capability pages and new systems use the
+   corrected `--cap-*` mapping below (FR-043/044, spec Assumptions).
+   Corrected capability→colour mapping: Build indigo, Attract pink,
+   Convert amber, Retain green, Connect purple, Scale coral.
+   Each capability exposes: base (-solid), -soft (tint surface), -deep
+   (readable as text on light), -on (text on the solid fill), -on-dark
+   (readable on the dark environment). Only Build takes white on its fill;
+   every other bright fill uses ink text (contrast matrix, FR-044).
+   ========================================================================= */
+:root {
+  /* Build — indigo */
+  --cap-build: #533afd;
+  --cap-build-solid: #533afd;
+  --cap-build-soft: color-mix(in oklab, #533afd 12%, var(--c-paper));
+  --cap-build-deep: color-mix(in oklab, #533afd 78%, var(--c-ink));
+  --cap-build-on: #ffffff;              /* indigo is dark enough for white */
+  --cap-build-on-dark: color-mix(in oklab, #533afd 42%, #ffffff);
+
+  /* Attract — pink */
+  --cap-attract: #ff4d8b;
+  --cap-attract-solid: #ff4d8b;
+  --cap-attract-soft: color-mix(in oklab, #ff4d8b 12%, var(--c-paper));
+  --cap-attract-deep: color-mix(in oklab, #ff4d8b 66%, var(--c-ink));
+  --cap-attract-on: var(--c-ink);       /* white fails on bright pink */
+  --cap-attract-on-dark: color-mix(in oklab, #ff4d8b 44%, #ffffff);
+
+  /* Convert — amber */
+  --cap-convert: #f5a623;
+  --cap-convert-solid: #f5a623;
+  --cap-convert-soft: color-mix(in oklab, #f5a623 14%, var(--c-paper));
+  --cap-convert-deep: color-mix(in oklab, #f5a623 62%, var(--c-ink));
+  --cap-convert-on: var(--c-ink);       /* amber always takes ink text */
+  --cap-convert-on-dark: color-mix(in oklab, #f5a623 60%, #ffffff);
+
+  /* Retain — green */
+  --cap-retain: #12b886;
+  --cap-retain-solid: #12b886;
+  --cap-retain-soft: color-mix(in oklab, #12b886 12%, var(--c-paper));
+  --cap-retain-deep: color-mix(in oklab, #12b886 70%, var(--c-ink));
+  --cap-retain-on: var(--c-ink);
+  --cap-retain-on-dark: color-mix(in oklab, #12b886 50%, #ffffff);
+
+  /* Connect — purple */
+  --cap-connect: #9b6bf2;
+  --cap-connect-solid: #9b6bf2;
+  --cap-connect-soft: color-mix(in oklab, #9b6bf2 12%, var(--c-paper));
+  --cap-connect-deep: color-mix(in oklab, #9b6bf2 72%, var(--c-ink));
+  --cap-connect-on: var(--c-ink);
+  --cap-connect-on-dark: color-mix(in oklab, #9b6bf2 46%, #ffffff);
+
+  /* Scale — coral */
+  --cap-scale: #ff6a4d;
+  --cap-scale-solid: #ff6a4d;
+  --cap-scale-soft: color-mix(in oklab, #ff6a4d 12%, var(--c-paper));
+  --cap-scale-deep: color-mix(in oklab, #ff6a4d 66%, var(--c-ink));
+  --cap-scale-on: var(--c-ink);
+  --cap-scale-on-dark: color-mix(in oklab, #ff6a4d 46%, #ffffff);
+
+  /* Per-capability active token, set by `[data-cap]` below; defaults to Build. */
+  --cap: var(--cap-build);
+  --cap-soft: var(--cap-build-soft);
+  --cap-deep: var(--cap-build-deep);
+  --cap-on: var(--cap-build-on);
+  --cap-on-dark: var(--cap-build-on-dark);
+
+  /* Typography — Geist is owner-supplied (WOFF2); until the @font-face files
+     land, the existing system stack renders. Weight ceiling is 600. */
+  --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Apple Color Emoji', sans-serif;
+  --font-mono-geist: 'Geist Mono', ui-monospace, 'SF Mono', 'JetBrains Mono',
+    'Cascadia Code', Menlo, Consolas, monospace;
+  --weight-max: 600;
+
+  /* Text-safe vs decorative gradient signatures (DESIGN.md). */
+  --grad-text-safe: linear-gradient(100deg, var(--cap-build-deep), var(--cap-connect-deep));
+  --grad-decorative: linear-gradient(100deg, #533afd 0%, #9b6bf2 50%, #ff4d8b 100%);
+}
+
+/* Scope a capability's colour to a subtree with `data-cap="build|attract|…"`. */
+[data-cap='build']   { --cap: var(--cap-build);   --cap-soft: var(--cap-build-soft);   --cap-deep: var(--cap-build-deep);   --cap-on: var(--cap-build-on);   --cap-on-dark: var(--cap-build-on-dark); }
+[data-cap='attract'] { --cap: var(--cap-attract); --cap-soft: var(--cap-attract-soft); --cap-deep: var(--cap-attract-deep); --cap-on: var(--cap-attract-on); --cap-on-dark: var(--cap-attract-on-dark); }
+[data-cap='convert'] { --cap: var(--cap-convert); --cap-soft: var(--cap-convert-soft); --cap-deep: var(--cap-convert-deep); --cap-on: var(--cap-convert-on); --cap-on-dark: var(--cap-convert-on-dark); }
+[data-cap='retain']  { --cap: var(--cap-retain);  --cap-soft: var(--cap-retain-soft);  --cap-deep: var(--cap-retain-deep);  --cap-on: var(--cap-retain-on);  --cap-on-dark: var(--cap-retain-on-dark); }
+[data-cap='connect'] { --cap: var(--cap-connect); --cap-soft: var(--cap-connect-soft); --cap-deep: var(--cap-connect-deep); --cap-on: var(--cap-connect-on); --cap-on-dark: var(--cap-connect-on-dark); }
+[data-cap='scale']   { --cap: var(--cap-scale);   --cap-soft: var(--cap-scale-soft);   --cap-deep: var(--cap-scale-deep);   --cap-on: var(--cap-scale-on);   --cap-on-dark: var(--cap-scale-on-dark); }

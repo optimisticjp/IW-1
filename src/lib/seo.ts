@@ -23,7 +23,9 @@ export interface SeoMeta {
 }
 
 const SITE_NAME = 'Infinite Weblinks';
-const TITLE_SUFFIX = ' — Infinite Weblinks';
+// Titles are customer-facing (search results, browser tab), so no em dash
+// (FR-036). A pipe is the conventional, safe title separator.
+const TITLE_SUFFIX = ' | Infinite Weblinks';
 // Site-wide sharing image: a 1200×630 PNG (SVG is not rendered by most social
 // platforms). Brand mark, palette, and voice; no invented proof.
 const DEFAULT_OG = '/og/infinite-weblinks-default.png';

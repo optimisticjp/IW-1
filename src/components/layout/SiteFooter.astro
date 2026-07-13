@@ -1,5 +1,5 @@
 ---
-import { footerGroups } from '../../data/nav';
+import { footerColumns, legalLinks, newsletterEnabled } from '../../data/nav';
 import { home } from '../../data/home';
 import Button from '../ui/Button.astro';
 import InfinityMark from '../brand/InfinityMark.astro';
@@ -14,10 +14,20 @@ import InfinityMark from '../brand/InfinityMark.astro';
       </div>
       <p class="ft__blurb">{home.footer.blurb}</p>
       <Button href="/book-a-call" variant="primary" size="md">Book a free call</Button>
+
+      {newsletterEnabled && (
+        <form class="ft__news" method="post" aria-label="Newsletter sign-up">
+          <label class="ft__news-label" for="ft-news-email">Occasional, useful updates. No spam.</label>
+          <div class="ft__news-row">
+            <input id="ft-news-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
+            <button type="submit">Sign up</button>
+          </div>
+        </form>
+      )}
     </div>
 
     <nav class="ft__nav" aria-label="Footer">
-      {footerGroups.map((group) => (
+      {footerColumns.map((group) => (
         <div class="ft__group">
           <h2 class="ft__heading">{group.heading}</h2>
           <ul>
@@ -32,6 +42,9 @@ import InfinityMark from '../brand/InfinityMark.astro';
 
   <div class="ft__base">
     <p>{home.footer.legal}</p>
+    <ul class="ft__legal">
+      {legalLinks.map((l) => (<li><a href={l.href} class="ft__link">{l.label}</a></li>))}
+    </ul>
     <p class="ft__slogan">{home.footer.slogan}</p>
   </div>
 </footer>
@@ -47,9 +60,16 @@ import InfinityMark from '../brand/InfinityMark.astro';
   .ft__group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
   .ft__link { color: var(--fg-muted); text-decoration: none; font-size: var(--fs-small); }
   .ft__link:hover { color: var(--fg); }
-  .ft__base { max-width: var(--w-wide); margin-inline: auto; padding: 1.5rem var(--gutter); border-top: var(--bw) solid var(--rule); display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; color: var(--fg-faint); font-size: var(--fs-caption); }
+  .ft__news { display: grid; gap: 0.5rem; width: 100%; max-width: 22rem; margin-top: 0.4rem; }
+  .ft__news-label { font-size: var(--fs-caption); color: var(--fg-muted); }
+  .ft__news-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .ft__news input { flex: 1 1 12rem; min-width: 0; padding: 0.6rem 0.7rem; border-radius: var(--r-1); border: var(--bw) solid var(--rule-strong); background: var(--bg-raised); color: var(--fg); min-height: 44px; }
+  .ft__news button { padding: 0.6rem 1rem; border-radius: var(--r-1); border: 0; background: var(--accent); color: var(--accent-ink); font-weight: 600; min-height: 44px; cursor: pointer; }
+  .ft__news :focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 2px; }
+  .ft__legal { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: 0; padding: 0; }
+  .ft__base { max-width: var(--w-wide); margin-inline: auto; padding: 1.5rem var(--gutter); border-top: var(--bw) solid var(--rule); display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; align-items: center; color: var(--fg-faint); font-size: var(--fs-caption); }
   @media (min-width: 720px) {
     .ft__inner { grid-template-columns: 1fr 1.4fr; gap: 3rem; }
-    .ft__nav { grid-template-columns: repeat(3, 1fr); }
+    .ft__nav { grid-template-columns: repeat(4, 1fr); }
   }
 </style>

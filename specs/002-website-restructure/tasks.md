@@ -29,41 +29,41 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **⚠️ CRITICAL**: No page-building story can begin until this phase completes.
 
-- [ ] T001 Consolidate DESIGN.md tokens into `src/styles/tokens.css` (warm cream canvas, six capability colours with `-soft/-deep/-solid/-on/-on-dark`, text-safe vs decorative gradients, surfaces, spacing, radius, outline focus).
+- [X] T001 Consolidate DESIGN.md tokens into `src/styles/tokens.css` (warm cream canvas, six capability colours with `-soft/-deep/-solid/-on/-on-dark`, text-safe vs decorative gradients, surfaces, spacing, radius, outline focus).
   - Refs FR-043/044, DESIGN.md · Deps none · Parallel T002/T003 · Validate `npm run build`; contrast spot-check · Done when tokens resolve and the contrast matrix holds (no white on bright non-Build fills).
-- [ ] T002 [P] Define typography system in `src/styles/typography.css` (Geist Sans all roles + Geist Mono for eyebrows/nodes/signals/data, 600 weight ceiling) with self-hosted subset WOFF2 wiring and a system-font fallback.
+- [X] T002 [P] Define typography system in `src/styles/typography.css` (Geist Sans all roles + Geist Mono for eyebrows/nodes/signals/data, 600 weight ceiling) with self-hosted subset WOFF2 wiring and a system-font fallback.
   - Refs FR-043, contracts/performance-budgets.md · Deps none · Parallel T001/T003 · Validate build; fonts ≤200 KB · Done when roles render with fallback and `font-display: swap`.
-- [ ] T003 [P] Add motion primitives in `src/styles/motion.css`: Connect and Reveal families gated on `.js-ready`, with `prefers-reduced-motion` collapsing to final states and the single node-pulse loop.
+- [X] T003 [P] Add motion primitives in `src/styles/motion.css`: Connect and Reveal families gated on `.js-ready`, with `prefers-reduced-motion` collapsing to final states and the single node-pulse loop.
   - Refs FR-045 · Deps none · Parallel T001/T002 · Validate reduced-motion snapshot · Done when reveals hide only under `.js-ready` and reduced-motion shows final states.
-- [ ] T004 Wire the global stylesheet entry and reset into `src/layouts/BaseLayout.astro`, preserving the `js-ready` reveal controller (content visible by default without JS).
+- [X] T004 Wire the global stylesheet entry and reset into `src/layouts/BaseLayout.astro`, preserving the `js-ready` reveal controller (content visible by default without JS).
   - Refs FR-045/046, research.md D5 · Deps T001–T003 · Parallel none · Validate no-JS render · Done when all content is visible with scripting disabled.
-- [ ] T005 [P] Create `src/data/capabilities.ts` (six capability records: colour, descriptor, outcome hero, problems, specialist list, connection story, serviceIds, faqIds, action label, related).
+- [X] T005 [P] Create `src/data/capabilities.ts` (six capability records: colour, descriptor, outcome hero, problems, specialist list, connection story, serviceIds, faqIds, action label, related).
   - Refs FR-011/012, data-model.md, contracts/content-schemas.md · Deps none · Parallel T006–T010 · Validate `npm run check` + integrity test · Done when six unique records typecheck.
-- [ ] T006 [P] Create `src/data/services.ts` enumerating the **complete service catalogue** from data-model.md "Service catalogue" (all 25 `treatment: page` services with capability, `launchSet` and slug: 7 launch, 18 phased, plus every anchored `treatment: section` service with its parent), each record: capabilityId, treatment, launchSet, searchIntent, deliverables, connections, specialist tools, faqIds, related, action label; with canonical-placement rules.
+- [X] T006 [P] Create `src/data/services.ts` enumerating the **complete service catalogue** from data-model.md "Service catalogue" (all 25 `treatment: page` services with capability, `launchSet` and slug: 7 launch, 18 phased, plus every anchored `treatment: section` service with its parent), each record: capabilityId, treatment, launchSet, searchIntent, deliverables, connections, specialist tools, faqIds, related, action label; with canonical-placement rules.
   - Refs FR-015/016, SC-003, data-model.md Service catalogue, contracts/content-schemas.md · Deps none · Parallel T005/T007–T010 · Validate catalogue-completeness + placement integrity test · Done when all 25 dedicated services (7 `launchSet: true`: rows 1,2,7,8,12,16,20) and every section exist, each maps to exactly one capability, no duplicate slug, and placement rules hold.
-- [ ] T007 [P] Create `src/data/audiences.ts` (six audience records: situation, language, concerns, outcomes, relevantServiceIds, objections, action label, graph variant).
+- [X] T007 [P] Create `src/data/audiences.ts` (six audience records: situation, language, concerns, outcomes, relevantServiceIds, objections, action label, graph variant).
   - Refs FR-017/018, contracts/content-schemas.md · Deps none · Parallel T005/T006/T008–T010 · Validate integrity test · Done when six unique records with valid service refs typecheck.
-- [ ] T008 [P] Create `src/data/faqs.ts` (shared + per-page FAQ sets, scoped) passing the copy ban list.
+- [X] T008 [P] Create `src/data/faqs.ts` (shared + per-page FAQ sets, scoped) passing the copy ban list.
   - Refs FR-034/036 · Deps none · Parallel T005–T007/T009/T010 · Validate content-lint test · Done when unique ids and clean answers typecheck.
-- [ ] T009 [P] Create `src/data/links.ts` and `src/lib/links.ts` (internal-link/related-content maps and resolver: capability→services, service→siblings+audiences, article→1 cap+1 aud+2 articles, problem-first routing).
+- [X] T009 [P] Create `src/data/links.ts` and `src/lib/links.ts` (internal-link/related-content maps and resolver: capability→services, service→siblings+audiences, article→1 cap+1 aud+2 articles, problem-first routing).
   - Refs FR-006, data-model.md · Deps none · Parallel T005–T008/T010 · Validate link-integrity test · Done when no dangling refs resolve.
-- [ ] T010 [P] Create `src/content/config.ts` with Zod-validated `work` and `insights` collections and empty collection folders.
+- [X] T010 [P] Create `src/content/config.ts` with Zod-validated `work` and `insights` collections and empty collection folders.
   - Refs contracts/content-schemas.md, FR-031/032 · Deps none · Parallel T005–T009 · Validate `npm run check` · Done when schemas compile and reject malformed frontmatter.
-- [ ] T011 Build reusable page-section systems in `src/components/page/` (hero, recognition, principle, what-we-do, what-becomes-possible, connection, specialist-disclosure, proof, faq, related, cta) reading from data.
+- [X] T011 Build reusable page-section systems in `src/components/page/` (hero, recognition, principle, what-we-do, what-becomes-possible, connection, specialist-disclosure, proof, faq, related, cta) reading from data.
   - Refs FR-011/014/035, plan Structure Decision · Deps T001–T004 · Parallel none · Validate render test · Done when a page composes from data with no bespoke duplicate markup.
-- [ ] T012 [P] Add UI primitives `src/components/ui/Breadcrumb.astro`, `Accordion.astro`, `Tabs.astro` (keyboard-operable, single-open accordion, visible focus).
+- [X] T012 [P] Add UI primitives `src/components/ui/Breadcrumb.astro`, `Accordion.astro`, `Tabs.astro` (keyboard-operable, single-open accordion, visible focus).
   - Refs FR-005/034, contracts/seo-metadata.md · Deps T001–T004 · Parallel T011 · Validate axe + keyboard e2e · Done when each is operable by keyboard with announced state.
-- [ ] T013 Implement navigation chrome in `src/components/layout/SiteHeader.astro` and `SiteFooter.astro`: mega-menu (six capabilities + descriptors + top services + overview), full-height focus-trapped mobile sheet (Escape, pinned CTA, announced), footer columns incl. `/contact` link and env-conditional newsletter.
+- [X] T013 Implement navigation chrome in `src/components/layout/SiteHeader.astro` and `SiteFooter.astro`: mega-menu (six capabilities + descriptors + top services + overview), full-height focus-trapped mobile sheet (Escape, pinned CTA, announced), footer columns incl. `/contact` link and env-conditional newsletter.
   - Refs FR-001/002/003/004/050 · Deps T005–T007, T012 · Parallel none · Validate keyboard + a11y e2e; nav integrity test · Done when both nav modes are operable and the current item is marked.
-- [ ] T014 [P] Extend `src/lib/seo.ts` and `src/lib/schema.ts` for per-page title/description/canonical patterns and visible-only structured data incl. BreadcrumbList.
+- [X] T014 [P] Extend `src/lib/seo.ts` and `src/lib/schema.ts` for per-page title/description/canonical patterns and visible-only structured data incl. BreadcrumbList.
   - Refs FR-039/040, contracts/seo-metadata.md · Deps none · Parallel T015/T016 · Validate `tests/unit/seo.test.ts` · Done when unique metadata + a valid breadcrumb emit per page type.
-- [ ] T015 [P] Update `src/pages/robots.txt.ts` crawler allowlist (allow search + OAI-SearchBot; block GPTBot/CCBot/Google-Extended) and confirm `astro.config.mjs` sitemap excludes `/404`.
+- [X] T015 [P] Update `src/pages/robots.txt.ts` crawler allowlist (allow search + OAI-SearchBot; block GPTBot/CCBot/Google-Extended) and confirm `astro.config.mjs` sitemap excludes `/404`.
   - Refs FR-041, contracts/seo-metadata.md · Deps none · Parallel T014/T016 · Validate robots/sitemap test · Done when allow/block lists and sitemap exclusion verify.
-- [ ] T016 [P] Add baseline security headers and CSP to `public/_headers` (scoped to self + form-endpoint origin; nosniff, Referrer-Policy, Permissions-Policy, HSTS).
+- [X] T016 [P] Add baseline security headers and CSP to `public/_headers` (scoped to self + form-endpoint origin; nosniff, Referrer-Policy, Permissions-Policy, HSTS).
   - Refs FR-049, contracts/security-headers.md · Deps none · Parallel T014/T015 · Validate header check at preview · Done when CSP allows the submit path and blocks third-party JS.
-- [ ] T017 Migrate existing pages (`index`, `what-we-do`, `who-we-help`, `how-it-connects`, `book-a-call`, `map-your-stack`, `404`) onto the token system and page-section systems, preserving the `js-ready` reveal controller and the existing Growth Graph and Map Your Stack islands.
+- [X] T017 Migrate existing pages (`index`, `what-we-do`, `who-we-help`, `how-it-connects`, `book-a-call`, `map-your-stack`, `404`) onto the token system and page-section systems, preserving the `js-ready` reveal controller and the existing Growth Graph and Map Your Stack islands.
   - Refs plan Phase A, research.md D10 · Deps T001–T014 · Parallel none · Validate build + regression e2e · Done when migrated pages render on the new system with no behaviour loss.
-- [ ] T018 Add regression tests locking existing behaviour (homepage Growth Graph, goal tabs, `/book-a-call`, navigation) in `tests/unit/` and `tests/e2e/`.
+- [X] T018 Add regression tests locking existing behaviour (homepage Growth Graph, goal tabs, `/book-a-call`, navigation) in `tests/unit/` and `tests/e2e/`.
   - Refs plan Risks · Deps T017 · Parallel none · Validate `npm run test` · Done when regression suite passes green.
 
 **Checkpoint (Gate A)**: `npm run build` + `npm run check` green, chrome keyboard-operable, tokens coherent, migrated pages regress clean, no horizontal overflow. Story work can begin.

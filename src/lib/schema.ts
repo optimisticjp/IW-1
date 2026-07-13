@@ -27,6 +27,55 @@ export function webSiteSchema(siteUrl: string | URL) {
   };
 }
 
+/** WebPage schema for any indexable page (visible-only, FR-040). */
+export function webPageSchema(name: string, canonical: string, description?: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name,
+    url: canonical,
+    ...(description ? { description } : {}),
+  };
+}
+
+export interface BreadcrumbNode {
+  label: string;
+  href?: string; // omit for the current page
+}
+
+/**
+ * BreadcrumbList matching the visible breadcrumb (FR-005/040). The current
+ * page (no href) is included as the last item without a URL.
+ */
+export function breadcrumbSchema(items: BreadcrumbNode[], siteUrl: string | URL) {
+  const base = new URL(siteUrl);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.label,
+      ...(item.href ? { item: new URL(item.href, base).href.replace(/\/$/, '') } : {}),
+    })),
+  };
+}
+
+/**
+ * Service schema — only where the visible service page supports it (FR-040).
+ * No invented ratings or reviews.
+ */
+export function serviceSchema(name: string, description: string, canonical: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name,
+    description,
+    url: canonical,
+    provider: { '@type': 'Organization', name: 'Infinite Weblinks' },
+  };
+}
+
 /** Serialize one or more schema objects to a JSON-LD string. */
 export function jsonLd(...schemas: object[]): string {
   return JSON.stringify(schemas.length === 1 ? schemas[0] : schemas);
