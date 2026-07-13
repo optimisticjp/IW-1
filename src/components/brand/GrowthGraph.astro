@@ -16,22 +16,27 @@ const color = (k: string) => graphNodes.find((n) => n.key === k)!.color;
 const loopPath = (loop: string[]) =>
   'M ' + loop.map((k) => `${pos[k].x} ${pos[k].y}`).join(' L ') + ' Z';
 
-const active0 = graphGoals[0];
-// Server-render the first goal as the active, static state so the graph is a
+interface Props {
+  /** goal id to open on (audience pages start on their relevant outcome) */
+  initialGoal?: string;
+}
+const { initialGoal } = Astro.props;
+// Server-render the initial goal as the active, static state so the graph is a
 // readable connected state WITHOUT JavaScript (SC-012, FR-021). JS re-applies
 // on selection; reduced motion collapses draws to final states.
+const active0 = graphGoals.find((g) => g.id === initialGoal) ?? graphGoals[0];
 const active0Set = new Set(active0.loop);
 ---
 
 <div class="ggraph" data-active={active0.id} style={`--goal-accent:${active0.accent}`}>
   <!-- Goal tabs -->
   <div class="ggtabs" role="group" aria-label="Pick a growth goal">
-    {graphGoals.map((g, i) => (
+    {graphGoals.map((g) => (
       <button
         type="button"
         class="ggtab"
         data-goal={g.id}
-        aria-pressed={i === 0 ? 'true' : 'false'}
+        aria-pressed={g.id === active0.id ? 'true' : 'false'}
         style={`--tc:${g.accent}`}
       >{g.label}</button>
     ))}
@@ -54,8 +59,8 @@ const active0Set = new Set(active0.loop);
         <line class="ggspoke" x1={R.cx} y1={R.cy} x2={pos[n.key].x} y2={pos[n.key].y} />
       ))}
       <!-- loop paths (one per goal; the first is server-active for no-JS) -->
-      {graphGoals.map((g, i) => (
-        <g class:list={['ggloop', i === 0 && 'on']} data-goal={g.id}>
+      {graphGoals.map((g) => (
+        <g class:list={['ggloop', g.id === active0.id && 'on']} data-goal={g.id}>
           <path class="ggloop__base" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
           <path class="ggloop__draw" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
           <path class="ggloop__dots" d={loopPath(g.loop)} pathLength="100" style={`--lc:${g.accent}`} />
@@ -93,8 +98,8 @@ const active0Set = new Set(active0.loop);
 
   <!-- Mobile vertical loop (one block per goal; first server-active for no-JS) -->
   <div class="ggraph__mobile">
-    {graphGoals.map((g, i) => (
-      <ol class:list={['ggm', i === 0 && 'on']} data-goal={g.id}>
+    {graphGoals.map((g) => (
+      <ol class:list={['ggm', g.id === active0.id && 'on']} data-goal={g.id}>
         {g.loop.map((k) => (
           <li class="ggm__step" style={`--nc:${color(k)}`}>
             <span class="ggm__disc" aria-hidden="true"></span>

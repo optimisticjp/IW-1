@@ -18,6 +18,8 @@ export interface Audience {
   actionLabel: string;
   /** audience-appropriate Growth Graph goal variant */
   graphVariant: GoalId;
+  /** which of the three starting points fits this audience */
+  startingPoint: 'launch' | 'connect' | 'scale';
 }
 
 export const audiences: Audience[] = [
@@ -32,6 +34,7 @@ export const audiences: Audience[] = [
     objections: ['We have an agency already', 'We tried ads and they did not work'],
     actionLabel: 'Discuss ecommerce growth',
     graphVariant: 'more-sales',
+    startingPoint: 'scale',
   },
   {
     id: 'creators-and-experts',
@@ -44,6 +47,7 @@ export const audiences: Audience[] = [
     objections: ['I am not technical', 'I do not have a big team'],
     actionLabel: 'Discuss your setup',
     graphVariant: 'save-team-time',
+    startingPoint: 'launch',
   },
   {
     id: 'startups-and-new-brands',
@@ -56,6 +60,7 @@ export const audiences: Audience[] = [
     objections: ['We are pre-revenue', 'We move fast and cannot wait'],
     actionLabel: 'Discuss your launch',
     graphVariant: 'know-whats-working',
+    startingPoint: 'launch',
   },
   {
     id: 'growing-teams',
@@ -68,6 +73,7 @@ export const audiences: Audience[] = [
     objections: ['We have tools already', 'Our setup is complicated'],
     actionLabel: 'Support our team',
     graphVariant: 'save-team-time',
+    startingPoint: 'connect',
   },
   {
     id: 'established-teams',
@@ -80,6 +86,7 @@ export const audiences: Audience[] = [
     objections: ['We have internal teams', 'We need this to be reliable'],
     actionLabel: 'Support our team',
     graphVariant: 'know-whats-working',
+    startingPoint: 'connect',
   },
   {
     id: 'agency-partners',
@@ -92,6 +99,7 @@ export const audiences: Audience[] = [
     objections: ['We protect our client relationships', 'We need discretion'],
     actionLabel: 'Discuss agency support',
     graphVariant: 'more-sales',
+    startingPoint: 'scale',
   },
 ];
 

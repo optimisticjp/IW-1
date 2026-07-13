@@ -147,13 +147,13 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Independent Test**: Open each audience page; confirm distinct situation/concerns, relevant-service links, an audience Growth Graph variant and a matched CTA label.
 
-- [ ] T038 [US5] Create the audience route template `src/pages/who-we-help/[audience].astro` via `getStaticPaths` over `audiences.ts`.
+- [X] T038 [US5] Create the audience route template `src/pages/who-we-help/[audience].astro` via `getStaticPaths` over `audiences.ts`.
   - Refs FR-017, contracts/routes.md · Deps Gate C · Parallel none · Validate build (6 routes) · Done when all six audience routes generate.
-- [ ] T039 [P] [US5] Author the six audience records (situation, language, concerns, desired outcomes, relevant services, objections, matched action label) in playbook voice.
+- [X] T039 [P] [US5] Author the six audience records (situation, language, concerns, desired outcomes, relevant services, objections, matched action label) in playbook voice.
   - Refs FR-017/035/042, content uniqueness · Deps T038 · Parallel T041 · Validate content-lint + uniqueness test · Done when six distinct audiences read in their own language.
-- [ ] T040 [US5] Add the audience-appropriate Growth Graph variant and cross-links to the specific services each audience buys plus the overview.
+- [X] T040 [US5] Add the audience-appropriate Growth Graph variant and cross-links to the specific services each audience buys plus the overview.
   - Refs FR-018 · Deps T038/T039 · Parallel none · Validate link-integrity + reduced-motion e2e · Done when each audience links its own services and graph variant.
-- [ ] T041 [P] [US5] Add tests: distinct situations, matched CTA labels equal their destinations, valid service refs.
+- [X] T041 [P] [US5] Add tests: distinct situations, matched CTA labels equal their destinations, valid service refs.
   - Refs SC-013, plan Testing strategy · Deps T038 · Parallel T039 · Validate `npm run test` · Done when tests pass.
 
 **Checkpoint (Gate E)**: Six audience pages each self-identify a distinct situation and end on a matched CTA.
