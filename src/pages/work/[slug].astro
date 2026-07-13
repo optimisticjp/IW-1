@@ -37,7 +37,12 @@ const relatedCaps = d.capabilityTags.slice(1) as CapabilityId[];
 const touched = d.capabilityTags.map((id) => getCapability(id as CapabilityId)!).filter(Boolean);
 const audiencesTouched = d.audienceTags.map((id) => getAudience(id)!).filter(Boolean);
 
-// Related services: launch/page services under the capabilities this work touched.
+// Related services under the capabilities this work touched. Only launch
+// services have their own page; phased (page-treatment, not-yet-built) services
+// link to their capability section anchor, mirroring the mega-menu, so every
+// link resolves (no dead ends — FR-006).
+const serviceHref = (s: { id: string; capabilityId: CapabilityId; launchSet: boolean }) =>
+  s.launchSet ? routes.service(s.id) : `${routes.capability(s.capabilityId)}#svc-${s.id}`;
 const relatedServices = [
   ...new Map(
     d.capabilityTags
@@ -136,7 +141,7 @@ const schemas = [
         </div>
         <ul class="cs__svc">
           {relatedServices.map((s) => (
-            <li><a href={routes.service(s.id)} class="cs__svc-link" data-cap={s.capabilityId}>{s.name} <span aria-hidden="true">→</span></a></li>
+            <li><a href={serviceHref(s)} class="cs__svc-link" data-cap={s.capabilityId}>{s.name} <span aria-hidden="true">→</span></a></li>
           ))}
         </ul>
       </Section>

@@ -257,18 +257,42 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Purpose**: End-to-end validation, internal-link and CTA integrity, owner-dependency audit, Definition of Done, and convergence.
 
-- [ ] T073 Run the full `quickstart.md` validation (all nine scenarios) against the production build/preview.
+- [X] T073 Run the full `quickstart.md` validation (all nine scenarios) against the production build/preview.
   - Refs quickstart.md · Deps Gate I-1 · Parallel none · Validate `npm run build` + preview walkthrough · Done when every scenario passes.
-- [ ] T074 Validate cross-artifact content integrity: all internal links resolve, CTA labels match destinations, breadcrumbs correct, no dead ends in any core journey.
+- [X] T074 Validate cross-artifact content integrity: all internal links resolve, CTA labels match destinations, breadcrumbs correct, no dead ends in any core journey.
   - Refs FR-006/042, SC-013 · Deps Gate I-1 · Parallel none · Validate link/CTA integrity test · Done when journeys end on a reachable matching CTA.
-- [ ] T075 Audit owner-supplied dependencies and honest fallbacks (fonts, proof, people/photos, legal, `PUBLIC_*` endpoints); confirm nothing structural is blocked.
+- [X] T075 Audit owner-supplied dependencies and honest fallbacks (fonts, proof, people/photos, legal, `PUBLIC_*` endpoints); confirm nothing structural is blocked.
   - Refs Assumptions, plan Owner-supplied dependencies · Deps Gate I-1 · Parallel none · Validate fallback review · Done when every missing asset degrades honestly.
-- [ ] T076 Verify the Definition of Done against the constitution's fourteen principles (mobile, speed/budgets, design coherence, humanized copy, SEO, a11y, security, tests, build/lint, no stray placeholders, documented performance).
+- [X] T076 Verify the Definition of Done against the constitution's fourteen principles (mobile, speed/budgets, design coherence, humanized copy, SEO, a11y, security, tests, build/lint, no stray placeholders, documented performance).
   - Refs §XIV, plan Constitution Check · Deps T073–T075 · Parallel none · Validate DoD checklist · Done when all gates verify.
-- [ ] T077 Run `/speckit-converge` to assess the build against spec/plan and append any residual work as new tasks.
+- [X] T077 Run `/speckit-converge` to assess the build against spec/plan and append any residual work as new tasks.
   - Refs plan Phase I, CLAUDE.md workflow · Deps T076 · Parallel none · Validate converge report · Done when residual work is recorded.
 
 **Checkpoint (Final)**: Site meets the spec and the Definition of Done; residual work and owner-dependency gaps are recorded.
+
+### Launch-readiness matrix (recorded Phase 9, T075–T077)
+
+**Complete in code (no further work to build the feature):**
+- 40 routes (39 indexable + custom 404); 6 capability + 6 audience + 7 launch-service pages; full 25-service catalogue (18 phased services reachable via capability section anchors); Work/case-study, Insights/article, About, FAQ, contact and legal shells.
+- Homepage Growth Graph + Map Your Stack islands (keyboard + no-JS + reduced-motion parity); consultation + contact forms (never-false-success, submitting state, allowlist handoff).
+- Every rendered internal link, CTA and breadcrumb resolves (no dead ends). WebPage/BreadcrumbList/Service/Article/FAQPage + Organization/WebSite structured data. Env-aware robots + sitemap.
+- Security headers + CSP in `public/_headers`; zero third-party JS; no hardcoded secrets. WCAG 2.2 AA (axe-clean sitewide); 0 overflow 320–1280; asset budgets met; CWV lab LCP 68–104 ms / CLS 0. 239 tests, `astro check` 0 errors, build green.
+
+**Required before public launch (owner/ops — the site behaves honestly without them, but must not be called launch-ready until supplied):**
+- `PUBLIC_SITE_URL` — real production domain (until set, the `.example` placeholder keeps robots at Disallow / non-indexable; NOT launch-ready as-is).
+- `PUBLIC_BOOKING_ENDPOINT` — production consultation/contact delivery endpoint (until set, the form honestly reports "unconfigured" instead of a false success).
+- Legal review — `/privacy`, `/cookies`, `/terms` currently ship interface copy marked "Draft for review"; jurisdiction-specific wording must be confirmed (NOT launch-ready as drafts).
+- Actual **Lighthouse / PageSpeed Insights** mobile run (Performance/Accessibility/Best-Practices/SEO) — not runnable in this offline environment; recorded as a pre-launch validation dependency. Lab proxies (asset budgets, CWV, axe) are green; no score is fabricated.
+
+**Optional post-launch enhancements (non-blocking):**
+- Founder biography, credentials and photography (About ships clearly-labelled "Owner to supply" placeholders).
+- Permissioned named case studies (Work ships honest anonymized/interim entries with a permission-state path to named studies).
+- Geist Sans/Mono WOFF2 subset (system-font fallback in use until supplied; ≤200 KB budget reserved).
+- Newsletter provider (`PUBLIC_NEWSLETTER_ENDPOINT`) — footer opt-in stays omitted until configured (FR-050).
+- Promote phased services to dedicated pages as buyer intent justifies (currently anchored under their capability).
+
+### Convergence
+`/speckit-converge` is the recommended closing command: no residual build work remains (all T001–T077 complete); the only open items are the owner/pre-launch dependencies recorded above, which are intentional and non-structural.
 
 ---
 
