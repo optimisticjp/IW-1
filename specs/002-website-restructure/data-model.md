@@ -61,6 +61,42 @@ A specific offering under exactly one capability. Powers `services/[service]` (w
 
 **Validation**: exactly one `capabilityId`; canonical placement enforced (Landing Pages only under Convert; CRM only under Connect; AI-search is a section under SEO, never standalone GEO/AEO; testing canonical on Conversion Optimisation with Scale linking to it; Amazon advertising under Paid Advertising, management under Scale) (FR-016). Any service without unique `searchIntent` must be `treatment: section` (no thin pages, FR-015/SC-003). Launch set = exactly the seven confirmed services with `treatment: page` and `launchSet: true`.
 
+### Service catalogue (complete)
+
+The canonical service architecture is **25 dedicated pages** (`treatment: page`) across the six capabilities, of which **7 launch first** (`launchSet: true`) and **18 phase in** (`launchSet: false`); source: brief §7. Additional services render as **anchored sections** (`treatment: section`) within a parent until demand justifies a page. `services.ts` MUST enumerate every row below; slugs use the `/services/[slug]` route pattern (contracts/routes.md).
+
+| # | Service | Capability | Treatment | Launch status | Slug |
+|---|---------|-----------|-----------|---------------|------|
+| 1 | Website Design & Development | Build | page | **Launch** | `website-design-and-development` |
+| 2 | Ecommerce Development | Build | page | **Launch** | `ecommerce-development` |
+| 3 | Web & Mobile App Development | Build | page | Phased | `web-and-mobile-app-development` |
+| 4 | Website Redesign | Build | page | Phased | `website-redesign` |
+| 5 | Website Migration | Build | page | Phased | `website-migration` |
+| 6 | UI & UX Design | Build | page | Phased | `ui-and-ux-design` |
+| 7 | Paid Advertising | Attract | page | **Launch** | `paid-advertising` |
+| 8 | SEO & Search Visibility | Attract | page | **Launch** | `seo-and-search-visibility` |
+| 9 | Social Media | Attract | page | Phased | `social-media` |
+| 10 | Content Marketing | Attract | page | Phased | `content-marketing` |
+| 11 | Creator & Influencer Marketing | Attract | page | Phased | `creator-and-influencer-marketing` |
+| 12 | Conversion Optimisation | Convert | page | **Launch** | `conversion-optimisation` |
+| 13 | Landing Pages (canonical under Convert) | Convert | page | Phased | `landing-pages` |
+| 14 | Sales Funnels | Convert | page | Phased | `sales-funnels` |
+| 15 | Conversion Copywriting | Convert | page | Phased | `conversion-copywriting` |
+| 16 | Email Marketing | Retain | page | **Launch** | `email-marketing` |
+| 17 | SMS & WhatsApp Marketing | Retain | page | Phased | `sms-and-whatsapp-marketing` |
+| 18 | Loyalty Programmes | Retain | page | Phased | `loyalty-programmes` |
+| 19 | Referral & Affiliate Programmes | Retain | page | Phased | `referral-and-affiliate-programmes` |
+| 20 | Analytics & Tracking | Connect | page | **Launch** | `analytics-and-tracking` |
+| 21 | CRM Setup & Integration (canonical under Connect) | Connect | page | Phased | `crm-setup-and-integration` |
+| 22 | Dashboards & Reporting | Connect | page | Phased | `dashboards-and-reporting` |
+| 23 | Workflow Automation | Scale | page | Phased | `workflow-automation` |
+| 24 | AI Assistants & Chatbots | Scale | page | Phased | `ai-assistants-and-chatbots` |
+| 25 | Marketing Automation | Scale | page | Phased | `marketing-automation` |
+
+**Anchored sections** (`treatment: section`, rendered inside a parent, no standalone page): AI-search visibility (section of SEO & Search Visibility, never a standalone GEO/AEO service); Marketplace/Amazon advertising and advertising creative (sections of Paid Advertising); conversion reviews, forms & checkout, and A/B testing & experimentation (sections of Conversion Optimisation, the canonical testing explainer); sales-funnel types (sections of Sales Funnels); brand & marketing design (section of Build); email lifecycle, newsletter and journey types (sections of Email Marketing); customer records & segmentation (cross-link Retain → CRM Setup & Integration); server-side tracking, enhanced conversions and measurement planning (sections of Analytics & Tracking); tool connections, workflow improvement and data quality review (sections of the Connect overview); knowledge systems (section of AI Assistants & Chatbots); growth strategy, broader experimentation and marketplace management (sections of Scale, with testing linking to Conversion Optimisation).
+
+**Catalogue invariants**: exactly 25 `treatment: page` rows; exactly 7 with `launchSet: true` (rows 1, 2, 7, 8, 12, 16, 20); no duplicate slug; every section maps to a parent that exists as a page; the canonical-placement rules above hold.
+
 ## Entity: Audience (`src/data/audiences.ts`)
 
 One of six visitor situations. Powers `who-we-help/[audience]`.
@@ -132,7 +168,7 @@ Shared node set, hub, capability-coloured links (real relationships only), goals
 | priority | number | defines result order; preserved |
 | serviceLink | ServiceId or CapabilityId | where the opportunity routes |
 
-**Evaluation rules (pure, testable — `stackEval.ts`)**: a rule is `in place` when every required group is satisfied; `gap` when at least one required tool/group is selected but the rule is not fully satisfied; `not relevant` (excluded from score and results) when none of its tools are selected. Score: `relevant = inPlace + gap`; `percentage = inPlace / relevant` (zero-relevant handled safely, no divide-by-zero). Bands: 0–40% `Fragmented`; >40–70% `Partly connected`; >70–100% `Well connected`. Results cap: top 3 gaps, top 2 working, in priority order. No fake score-out-of-100; no invented statistics (FR-023/024).
+**Evaluation rules (pure, testable, in `stackEval.ts`)**: a rule is `in place` when every required group is satisfied; `gap` when at least one required tool/group is selected but the rule is not fully satisfied; `not relevant` (excluded from score and results) when none of its tools are selected. Score: `relevant = inPlace + gap`; `percentage = inPlace / relevant` (zero-relevant handled safely, no divide-by-zero). Bands: 0–40% `Fragmented`; >40–70% `Partly connected`; >70–100% `Well connected`. Results cap: top 3 gaps, top 2 working, in priority order. No fake score-out-of-100; no invented statistics (FR-023/024).
 
 ## Entity: Consultation enquiry (`src/components/forms/BookingForm.astro` + `src/lib/booking.ts`)
 
