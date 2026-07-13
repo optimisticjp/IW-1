@@ -95,7 +95,7 @@ describe('booking submission adapter', () => {
       seen = { url, init };
       return { ok: true, status: 200 };
     }) as unknown as typeof fetch;
-    const endpoint = 'https://formspree.io/f/mrevywgb';
+    const endpoint = 'https://formspree.io/f/test-form-id';
     const r = await submitBooking(valid, { endpoint, fetchImpl: recordFetch });
     expect(r.ok).toBe(true);
     expect(seen?.url).toBe(endpoint);
