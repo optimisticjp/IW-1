@@ -23,7 +23,7 @@ export const faqs: Faq[] = [
   { id: 'convert-guarantee', scope: 'capability', question: 'Can you guarantee more conversions?', answer: 'No honest agency can guarantee a result. We can make it easier for the right visitors to buy, and we will show you what changed and why.' },
   // Retain
   { id: 'retain-email', scope: 'capability', question: 'Will email annoy our customers?', answer: 'Not when it is useful. Email tied to what someone browsed or bought is welcome; generic blasts are not. We build the first kind.' },
-  { id: 'retain-crm', scope: 'capability', question: 'Do we need a CRM for this?', answer: 'For the best results, yes, because the timing depends on knowing who bought what. We can start simple and grow into it.' },
+  { id: 'retain-crm', scope: 'capability', question: 'Do we need a CRM for this?', answer: 'For the strongest results, yes, because the timing depends on knowing who bought what. We can start simple and grow into it.' },
   // Connect
   { id: 'connect-tracking', scope: 'capability', question: 'Why do our numbers never agree?', answer: 'Usually because each tool measures differently and nothing shares a source of truth. We fix the tracking so one number means one thing.' },
   { id: 'connect-crm', scope: 'capability', question: 'Which CRM should we use?', answer: 'We choose it with you based on how you sell and what you need to connect, then set it up so every customer sits in one record.' },
@@ -46,7 +46,7 @@ export const faqs: Faq[] = [
   { id: 'svc-cro-testing', scope: 'service', question: 'Do you guess or test changes?', answer: 'We test where it matters. A change is only a real improvement when the numbers back it up.' },
   { id: 'svc-cro-guarantee', scope: 'service', question: 'Can you guarantee more conversions?', answer: 'No. We make it easier for the right visitors to act and prove the result with testing.' },
   { id: 'svc-email-annoy', scope: 'service', question: 'Will email annoy our customers?', answer: 'Not when it is useful. Email tied to what someone browsed or bought is welcome; generic blasts are not.' },
-  { id: 'svc-email-crm', scope: 'service', question: 'Do we need a CRM for email to work well?', answer: 'For the best timing, yes, because the message depends on knowing who did what. We can start simple and grow into it.' },
+  { id: 'svc-email-crm', scope: 'service', question: 'Do we need a CRM for email to work well?', answer: 'For reliable timing, yes, because the message depends on knowing who did what. We can start simple and grow into it.' },
   { id: 'svc-track-why', scope: 'service', question: 'Why do our numbers never agree?', answer: 'Usually because each tool measures differently with no shared source of truth. We fix the tracking so one number means one thing.' },
   { id: 'svc-track-serverside', scope: 'service', question: 'Do we need server-side tracking?', answer: 'Often yes, because browsers now block a lot of the usual tracking. We add it where it improves accuracy, not by default.' },
 ];

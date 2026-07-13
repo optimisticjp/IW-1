@@ -4,6 +4,8 @@ import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import StackGraph from '../components/brand/StackGraph.astro';
 import { stackTools } from '../data/stackTools';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
 
 const seo = {
   title: 'Map your stack',
@@ -11,9 +13,12 @@ const seo = {
     'A quick connection self-check. Tap the tools you use and see how well they work together, and where growth is leaking. Not a technical audit, just a plain-English read in about 30 seconds.',
   path: '/map-your-stack',
 };
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, seo.description)];
 ---
 
-<BaseLayout seo={seo}>
+<BaseLayout seo={seo} schemas={schemas}>
   <!-- 1 · INTRO + SELECTOR + LIVE GRAPH (light section, dark graph panel) -->
   <Section env="paper" id="top" width="wide" pad="loose" class="mys" labelledby="mys-h">
     <div class="mys__intro">

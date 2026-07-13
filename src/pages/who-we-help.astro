@@ -4,6 +4,12 @@ import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Button from '../components/ui/Button.astro';
 import { whoWeHelp as d } from '../data/whoWeHelp';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(d.seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, d.seo.description)];
 
 const sysColor: Record<string, string> = {
   Build: 'var(--c-indigo)', Attract: 'var(--c-coral)', Convert: 'var(--c-magenta)',
@@ -22,7 +28,7 @@ const layouts: Record<string, { env: 'paper' | 'lavender' | 'mint'; aside: 'left
 const ctaVariant = (label: string) => (label === 'Book a free call' ? 'primary' : 'secondary');
 ---
 
-<BaseLayout seo={d.seo}>
+<BaseLayout seo={d.seo} schemas={schemas}>
   <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="wh" labelledby="wh-h">
     <div class="wh__hero">
@@ -103,13 +109,13 @@ const ctaVariant = (label: string) => (label === 'Book a free call' ? 'primary' 
   .aud__name { font-size: var(--fs-h2); }
   .aud__pain { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
   .aud__do { margin-top: 1.1rem; max-width: 54ch; }
-  .aud__close { margin-top: 1.1rem; font-weight: 600; color: color-mix(in oklab, var(--ac) 70%, var(--fg)); max-width: 54ch; }
+  .aud__close { margin-top: 1.1rem; font-weight: 600; color: color-mix(in oklab, var(--ac) 46%, var(--fg)); max-width: 54ch; }
   .aud__main :global(.btn) { margin-top: 1.6rem; }
 
   .aud__aside { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-4); padding: clamp(1.25rem, 1rem + 1.5vw, 1.75rem); }
   .aud__aside-lbl { font-family: var(--font-mono); font-size: var(--fs-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.9rem; }
   .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
-  .chip { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: var(--fs-small); padding: 0.45rem 0.85rem; border-radius: var(--r-pill); background: color-mix(in oklab, var(--cc) 10%, var(--bg)); border: var(--bw) solid color-mix(in oklab, var(--cc) 34%, var(--rule)); color: color-mix(in oklab, var(--cc) 60%, var(--fg)); }
+  .chip { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: var(--fs-small); padding: 0.45rem 0.85rem; border-radius: var(--r-pill); background: color-mix(in oklab, var(--cc) 10%, var(--bg)); border: var(--bw) solid color-mix(in oklab, var(--cc) 34%, var(--rule)); color: color-mix(in oklab, var(--cc) 46%, var(--fg)); }
   .chip__dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--cc); flex: none; }
   .aud__note { margin-top: 0.9rem; font-size: var(--fs-small); color: var(--fg-faint); }
 

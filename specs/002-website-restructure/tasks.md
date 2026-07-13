@@ -228,25 +228,25 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Purpose**: Apply and verify the cross-cutting quality gates (US9) across every page type built so far.
 
-- [ ] T063 Run the per-page metadata sweep across all page types (single H1 with the main promise, logical heading order, unique title/description, one canonical; filtered views canonicalise).
+- [X] T063 Run the per-page metadata sweep across all page types (single H1 with the main promise, logical heading order, unique title/description, one canonical; filtered views canonicalise).
   - Refs FR-039/040, SC-011 · Deps Phases 2–7 · Parallel T064/T065 · Validate `tests/unit/seo.test.ts` + audit · Done when every indexable page satisfies the metadata contract.
-- [ ] T064 [P] Apply and validate visible-only structured data across page types (Organization, WebSite, WebPage, BreadcrumbList, Article, Service/Product where visible).
+- [X] T064 [P] Apply and validate visible-only structured data across page types (Organization, WebSite, WebPage, BreadcrumbList, Article, Service/Product where visible).
   - Refs FR-040, contracts/seo-metadata.md · Deps Phases 2–7 · Parallel T063/T065 · Validate schema test · Done when schema matches visible content only.
-- [ ] T065 [P] Verify the sitemap (public routes, excludes 404) and robots allowlist end to end.
+- [X] T065 [P] Verify the sitemap (public routes, excludes 404) and robots allowlist end to end.
   - Refs FR-041 · Deps Phase 1 · Parallel T063/T064 · Validate robots/sitemap test · Done when allow/block and exclusion verify on the build.
-- [ ] T066 [US9] Run the accessibility gate: axe WCAG 2.2 AA on audited page types, keyboard operability (chrome, both islands, forms, accordions, tabs), outline focus, live regions, contrast matrix, and the alt-text policy.
+- [X] T066 [US9] Run the accessibility gate: axe WCAG 2.2 AA on audited page types, keyboard operability (chrome, both islands, forms, accordions, tabs), outline focus, live regions, contrast matrix, and the alt-text policy.
   - Refs FR-044/048, SC-005 · Deps Phases 2–7 · Parallel none · Validate `tests/e2e` axe + keyboard · Done when audited pages pass AA with no colour-only meaning.
-- [ ] T067 [US9] Run the responsive gate at 320/360/390/768/1024/desktop: no horizontal scroll, 44px targets, radial ≥720 / vertical <720, primary CTA never buried.
+- [X] T067 [US9] Run the responsive gate at 320/360/390/768/1024/desktop: no horizontal scroll, 44px targets, radial ≥720 / vertical <720, primary CTA never buried.
   - Refs FR-046, SC-008 · Deps Phases 2–7 · Parallel none · Validate responsive e2e + screenshots · Done when every page is overflow-free from 320px up.
-- [ ] T068 [US9] Verify no-JS and reduced-motion parity across pages and both islands (all meaning present; final states shown).
+- [X] T068 [US9] Verify no-JS and reduced-motion parity across pages and both islands (all meaning present; final states shown).
   - Refs FR-045, SC-012 · Deps Phases 2–7 · Parallel none · Validate no-JS + reduced-motion e2e · Done when meaning is equivalent without JS/motion.
-- [ ] T069 [P] Run the security gate: CSP verified against the consultation and contact submit paths, headers present, zero third-party JS at load, allowlist handoff, no hardcoded secrets or committed enquiry data.
+- [X] T069 [P] Run the security gate: CSP verified against the consultation and contact submit paths, headers present, zero third-party JS at load, allowlist handoff, no hardcoded secrets or committed enquiry data.
   - Refs FR-047/049, contracts/security-headers.md · Deps Phase 1, Phase 6 · Parallel T070/T071/T072 · Validate header/CSP check · Done when submissions succeed under CSP and no secret is exposed.
-- [ ] T070 [P] Run the performance gate: build asset sizes vs budgets (JS 30/50 KB, CSS 40 KB, fonts 200 KB, LCP image 150 KB, initial page 500 KB), Lighthouse mobile 90+, CWV; document any overage.
+- [X] T070 [P] Run the performance gate: build asset sizes vs budgets (JS 30/50 KB, CSS 40 KB, fonts 200 KB, LCP image 150 KB, initial page 500 KB), Lighthouse mobile 90+, CWV; document any overage.
   - Refs FR-051, contracts/performance-budgets.md, SC-006 · Deps Phases 2–7 · Parallel T069/T071/T072 · Validate Lighthouse + size check · Done when budgets are met or overage is documented with exact scores.
-- [ ] T071 [P] Run the copy-honesty lint across data modules and rendered output (no em dashes, superlatives, buzzwords, flagged claims, invented figures).
+- [X] T071 [P] Run the copy-honesty lint across data modules and rendered output (no em dashes, superlatives, buzzwords, flagged claims, invented figures).
   - Refs FR-036/037, SC-007 · Deps Phases 2–7 · Parallel T069/T070/T072 · Validate content-lint test · Done when the ban list is clean sitewide.
-- [ ] T072 [P] Capture visual-QA screenshots at 1440/1024/768/390/360 (reducedMotion) for key page types and both islands' states; confirm native feel, distinct gap vs active links, no overflow/overlap/clipping, no false-audit claims.
+- [X] T072 [P] Capture visual-QA screenshots at 1440/1024/768/390/360 (reducedMotion) for key page types and both islands' states; confirm native feel, distinct gap vs active links, no overflow/overlap/clipping, no false-audit claims.
   - Refs quickstart.md Screenshot QA · Deps Phases 2–7 · Parallel T069/T070/T071 · Validate manual screenshot review · Done when all captures are clean.
 
 **Checkpoint (Gate I-1)**: All cross-cutting gates green; exact Lighthouse/CWV recorded; a11y, security and honesty verified.

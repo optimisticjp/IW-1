@@ -175,7 +175,7 @@ export const home = {
       { q: 'Do I need to know exactly which service I need?', a: 'No. Tell us what you are trying to achieve, what is not working or what is taking too much time. We will help identify the right starting point.' },
       { q: 'Can you handle the complete digital side of a business?', a: 'Yes. We can support everything from brand and website creation to marketing, customer journeys, analytics, automation and ongoing improvement. The exact scope depends on what the business needs.' },
       { q: 'Can you work with our existing team?', a: 'Yes. We can add specialist skills, take ownership of a specific area or work across several teams when the problem sits between them.' },
-      { q: 'Can we start with one project?', a: 'Yes. A focused project is often the best starting point and can expand later when it makes sense.' },
+      { q: 'Can we start with one project?', a: 'Yes. A focused project is often the right starting point and can expand later when it makes sense.' },
       { q: 'Do you only work with ecommerce brands?', a: 'No. We work with ecommerce brands, creators, experts, startups, service businesses and established teams. Ecommerce appears often in our examples because the links between acquisition, conversion and retention are easy to see.' },
     ],
   },

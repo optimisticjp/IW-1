@@ -8,9 +8,15 @@ import Constellation from '../components/brand/Constellation.astro';
 import GrowthGraph from '../components/brand/GrowthGraph.astro';
 import InfinityMark from '../components/brand/InfinityMark.astro';
 import { home } from '../data/home';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(home.meta, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, home.meta.description)];
 ---
 
-<BaseLayout seo={home.meta} siteSchema>
+<BaseLayout seo={home.meta} siteSchema schemas={schemas}>
   <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="hero" labelledby="hero-h">
     <div class="hero__grid">

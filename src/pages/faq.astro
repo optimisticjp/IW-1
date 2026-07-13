@@ -84,9 +84,10 @@ const schemas = [
   .fq__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
   .fq__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
   .fq__group { max-width: 48rem; }
-  .fq__group-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+  .fq__group-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1rem; }
   .fq__group-h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h3); letter-spacing: var(--tracking-tight); margin: 0 0 1rem; }
   .fq__group-head .fq__group-h { margin: 0; }
-  .fq__more { font-weight: 600; font-size: var(--fs-small); color: var(--cap-deep); text-decoration: none; white-space: nowrap; }
+  /* ≥44px hit area (WCAG 2.2 SC 2.5.8 target size) without changing type scale. */
+  .fq__more { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: var(--fs-small); color: var(--cap-deep); text-decoration: none; white-space: nowrap; }
   .fq__more:hover { text-decoration: underline; }
 </style>

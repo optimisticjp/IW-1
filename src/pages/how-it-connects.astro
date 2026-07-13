@@ -4,6 +4,12 @@ import Section from '../components/layout/Section.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Button from '../components/ui/Button.astro';
 import { howItConnects as d } from '../data/howItConnects';
+import { webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const meta = buildSeo(d.seo, site);
+const schemas = [webPageSchema(meta.title, meta.canonical, d.seo.description)];
 
 const accentVar: Record<string, string> = {
   indigo: 'var(--c-indigo)', violet: 'var(--c-violet)', magenta: 'var(--c-magenta)',
@@ -58,7 +64,7 @@ const anatomy = {
 };
 ---
 
-<BaseLayout seo={d.seo}>
+<BaseLayout seo={d.seo} schemas={schemas}>
   <!-- 1 · HERO -->
   <Section env="paper" id="top" width="wide" pad="loose" class="hc" labelledby="hc-h">
     <div class="hc__hero">

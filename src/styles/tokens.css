@@ -40,6 +40,8 @@
   --rule-strong: color-mix(in oklab, var(--c-ink) 20%, var(--c-paper));
   --link: var(--c-indigo);
   --accent: var(--c-indigo);
+  /* AA-safe accent for TEXT (per-env override where the accent is a light hue). */
+  --accent-text: var(--c-indigo);
   --accent-ink: #ffffff;
   --accent-2: var(--c-magenta);
   --focus: var(--c-indigo);
@@ -149,7 +151,9 @@
   --cap-convert: #f5a623;
   --cap-convert-solid: #f5a623;
   --cap-convert-soft: color-mix(in oklab, #f5a623 14%, var(--c-paper));
-  --cap-convert-deep: color-mix(in oklab, #f5a623 62%, var(--c-ink));
+  /* amber is a light hue; darkened to clear WCAG AA (4.5:1) as small text on
+     both paper and convert-soft (verified via axe, Phase 8 / FR-044). */
+  --cap-convert-deep: color-mix(in oklab, #f5a623 52%, var(--c-ink));
   --cap-convert-on: var(--c-ink);       /* amber always takes ink text */
   --cap-convert-on-dark: color-mix(in oklab, #f5a623 60%, #ffffff);
 
@@ -157,7 +161,9 @@
   --cap-retain: #12b886;
   --cap-retain-solid: #12b886;
   --cap-retain-soft: color-mix(in oklab, #12b886 12%, var(--c-paper));
-  --cap-retain-deep: color-mix(in oklab, #12b886 70%, var(--c-ink));
+  /* darkened to clear WCAG AA (4.5:1) as small text on paper and retain-soft
+     (verified via axe, Phase 8 / FR-044). */
+  --cap-retain-deep: color-mix(in oklab, #12b886 62%, var(--c-ink));
   --cap-retain-on: var(--c-ink);
   --cap-retain-on-dark: color-mix(in oklab, #12b886 50%, #ffffff);
 
