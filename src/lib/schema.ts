@@ -62,6 +62,30 @@ export function breadcrumbSchema(items: BreadcrumbNode[], siteUrl: string | URL)
 }
 
 /**
+ * Article schema for an Insights piece (FR-032/040). Uses the visible
+ * question/standfirst and the last-reviewed date; no invented author counts or
+ * ratings. `dateModified` reflects the honest review date.
+ */
+export function articleSchema(input: {
+  headline: string;
+  description: string;
+  canonical: string;
+  dateModified: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: input.headline,
+    description: input.description,
+    url: input.canonical,
+    dateModified: input.dateModified,
+    author: { '@type': 'Organization', name: 'Infinite Weblinks' },
+    publisher: { '@type': 'Organization', name: 'Infinite Weblinks' },
+    mainEntityOfPage: input.canonical,
+  };
+}
+
+/**
  * Service schema — only where the visible service page supports it (FR-040).
  * No invented ratings or reviews.
  */
@@ -73,6 +97,22 @@ export function serviceSchema(name: string, description: string, canonical: stri
     description,
     url: canonical,
     provider: { '@type': 'Organization', name: 'Infinite Weblinks' },
+  };
+}
+
+/**
+ * FAQPage schema (FR-034/040) built from visible question/answer pairs only.
+ * Never includes questions that are not rendered on the page.
+ */
+export function faqPageSchema(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
   };
 }
 

@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import { capabilities, getCapability } from '../../data/capabilities';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+const entries = (await getCollection('insights')).sort(
+  (a, b) => b.data.lastReviewed.getTime() - a.data.lastReviewed.getTime(),
+);
+
+// Topic categories that actually have at least one article, so we never show an
+// empty category. Categories map to capabilities (the site's shared vocabulary).
+const usedCaps = new Set(entries.map((e) => e.data.capabilityTag));
+const categories = capabilities.filter((c) => usedCaps.has(c.id));
+
+const dateFmt = (date: Date) =>
+  new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
+
+const seo = {
+  title: 'Insights',
+  description: 'Plain answers to the questions businesses actually ask about websites, growth and connected tools. No jargon, no fear tactics, no invented numbers.',
+  path: '/insights',
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Insights' }];
+const schemas = [webPageSchema('Insights | Infinite Weblinks', canonical, seo.description), breadcrumbSchema(crumbs, site)];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <Section env="paper" width="wide" class="ins" labelledby="ins-h">
+    <div class="ins__head">
+      <Eyebrow>Insights</Eyebrow>
+      <h1 id="ins-h" class="ins__h1">Straight answers to the questions we get asked most.</h1>
+      <p class="ins__lead">Each article answers one real question in plain language, with the common pitfalls, a quick self-check and the sources behind it. We write to be useful, not to sell fear.</p>
+    </div>
+
+    <!-- Topic categories (client-side filter; canonical stays /insights) -->
+    <div class="ins__filters" data-ins-filters>
+      <fieldset class="ins__fs">
+        <legend>Filter by topic</legend>
+        <div class="ins__chips">
+          <button type="button" class="ins__chip is-on" data-value="all" aria-pressed="true">All topics</button>
+          {categories.map((c) => (<button type="button" class="ins__chip" data-value={c.id} aria-pressed="false">{c.name}</button>))}
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="ins__empty" id="ins-empty" role="status" aria-live="polite" hidden>No articles in that topic yet. <a href="/insights">Browse all insights</a>.</p>
+
+    <ul class="ins__grid" id="ins-grid">
+      {entries.map((e) => (
+        <li class="ins__card" data-cap-tag={e.data.capabilityTag}>
+          <a class="ins__link" href={routes.article(e.id)} data-cap={e.data.capabilityTag}>
+            <span class="ins__cat"><span class="ins__catdot" aria-hidden="true"></span>{getCapability(e.data.capabilityTag)?.name}</span>
+            <span class="ins__title">{e.data.questionTitle}</span>
+            <span class="ins__stand">{e.data.standfirst}</span>
+            <span class="ins__meta">Reviewed {dateFmt(e.data.lastReviewed)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+</BaseLayout>
+
+<style>
+  .ins__head { max-width: 48rem; }
+  .ins__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .ins__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 56ch; }
+  .ins__filters { margin-top: 2rem; }
+  .ins__fs { border: 0; padding: 0; margin: 0; }
+  .ins__fs legend { font-family: var(--font-body); font-size: var(--fs-caption); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-faint); margin-bottom: 0.5rem; }
+  .ins__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .ins__chip { appearance: none; background: var(--bg-raised); border: var(--bw) solid var(--rule-strong); color: var(--fg); border-radius: var(--r-pill); padding: 0.45rem 0.9rem; font: inherit; font-size: var(--fs-small); font-weight: 600; cursor: pointer; min-height: 44px; }
+  .ins__chip.is-on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .ins__chip:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 2px; }
+  .ins__empty { margin-top: 1.6rem; color: var(--fg-muted); }
+  .ins__empty[hidden] { display: none; }
+  .ins__empty a { color: var(--link); font-weight: 600; }
+  .ins__grid { list-style: none; padding: 0; margin: 1.6rem 0 0; display: grid; gap: 1.25rem; }
+  .ins__card[hidden] { display: none; }
+  .ins__link { display: grid; gap: 0.5rem; text-decoration: none; color: var(--fg); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-left: 4px solid var(--cap); border-radius: var(--r-3); box-shadow: var(--shadow-1); padding: 1.3rem; height: 100%; }
+  .ins__link:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); transition: transform var(--dur-micro), box-shadow var(--dur-2); }
+  .ins__cat { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--cap-deep); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+  .ins__catdot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--cap); flex: none; }
+  .ins__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); }
+  .ins__stand { color: var(--fg-muted); font-size: var(--fs-small); }
+  .ins__meta { color: var(--fg-faint); font-size: var(--fs-caption); margin-top: 0.2rem; }
+  @media (min-width: 640px) { .ins__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .ins__grid { grid-template-columns: repeat(3, 1fr); } }
+</style>
+
+<script>
+  const root = document.querySelector('[data-ins-filters]');
+  const grid = document.getElementById('ins-grid');
+  const empty = document.getElementById('ins-empty');
+  if (root && grid) {
+    const apply = (value: string) => {
+      let shown = 0;
+      grid.querySelectorAll<HTMLElement>('.ins__card').forEach((card) => {
+        const ok = value === 'all' || card.dataset.capTag === value;
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      if (empty) empty.hidden = shown !== 0;
+    };
+    root.querySelectorAll<HTMLButtonElement>('.ins__chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        root.querySelectorAll<HTMLButtonElement>('.ins__chip').forEach((c) => {
+          const on = c === chip;
+          c.classList.toggle('is-on', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        apply(chip.dataset.value || 'all');
+      });
+    });
+  }
+</script>

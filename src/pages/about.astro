@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import CtaBand from '../components/page/CtaBand.astro';
+import { breadcrumbSchema, webPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+const seo = {
+  title: 'About',
+  description: 'Why Infinite Weblinks exists: to take the digital side off talented people and connect the parts for larger teams, honestly and without over-promising.',
+  path: '/about',
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'About' }];
+const schemas = [webPageSchema('About | Infinite Weblinks', canonical, seo.description), breadcrumbSchema(crumbs, site)];
+
+// Operating philosophy — the principles the rest of the site already lives by.
+const philosophy = [
+  { h: 'Outcomes before tools', p: 'We start with the result you want, then choose the smallest set of tools that gets there. New software is a last resort, not a first reflex.' },
+  { h: 'Connect what you have', p: 'Most businesses do not have a tool problem; they have a connection problem. Joining what already exists usually beats buying more.' },
+  { h: 'Honest by default', p: 'We would rather show real work with details removed than invent numbers. No guaranteed results, no borrowed logos, no fear tactics.' },
+  { h: 'Measure, then decide', p: 'A change counts as an improvement only when the numbers back it up. We test where it matters instead of redesigning on a hunch.' },
+];
+
+// Plain five-step process — the same language used across the site.
+const process = [
+  { h: 'Understand', p: 'We learn your business, your customers and what "better" would actually mean for you.' },
+  { h: 'Map', p: 'We map the tools and steps you already have, and find where growth is leaking between them.' },
+  { h: 'Build and connect', p: 'We build what is missing and connect the parts so they share information and work as one.' },
+  { h: 'Measure', p: 'We fix the tracking so one number means one thing, and you can see what is really happening.' },
+  { h: 'Improve', p: 'We keep testing the parts that matter, so the system gets better over time rather than standing still.' },
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <!-- Hero -->
+  <Section env="paper" width="content" class="ab" labelledby="ab-h">
+    <div class="ab__head u-reveal">
+      <Eyebrow>About</Eyebrow>
+      <h1 id="ab-h" class="ab__h1">We handle the digital side, and connect the parts.</h1>
+      <p class="ab__lead">Infinite Weblinks exists for two kinds of people: talented individuals who would rather do their work than wrestle with technology, and larger teams whose tools have stopped talking to each other. The job is the same for both: make the digital side work as one connected system.</p>
+    </div>
+  </Section>
+
+  <!-- Two-audience story -->
+  <Section env="lavender" width="wide" class="ab" labelledby="ab-two-h">
+    <div class="u-reveal">
+      <Eyebrow>Who we are for</Eyebrow>
+      <h2 id="ab-two-h" class="ab__sec-h">One promise, two starting points.</h2>
+    </div>
+    <div class="ab__two">
+      <div class="ab__card u-reveal">
+        <h3 class="ab__card-h">For entrepreneurs and experts</h3>
+        <p>You are excellent at what you do, and the technology keeps getting in the way. You do not want to become a marketer or a developer. You want the digital side handled so you can focus on the work, with a setup that runs without you being the bottleneck.</p>
+      </div>
+      <div class="ab__card u-reveal">
+        <h3 class="ab__card-h">For growing and established teams</h3>
+        <p>You have plenty of tools and plenty of reports, but they were added at different times and do not agree. Decisions get slower because nobody trusts the numbers. You want the parts connected, one source of truth, and a partner who is honest about what will and will not move the needle.</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Operating philosophy -->
+  <Section env="paper" width="wide" class="ab" labelledby="ab-phil-h">
+    <div class="u-reveal">
+      <Eyebrow>How we work</Eyebrow>
+      <h2 id="ab-phil-h" class="ab__sec-h">The principles behind every decision.</h2>
+    </div>
+    <ul class="ab__phil">
+      {philosophy.map((x) => (
+        <li class="ab__phil-item u-reveal">
+          <h3 class="ab__phil-h">{x.h}</h3>
+          <p>{x.p}</p>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <!-- Five-step process -->
+  <Section env="mint" width="wide" class="ab" labelledby="ab-proc-h">
+    <div class="u-reveal">
+      <Eyebrow>The process</Eyebrow>
+      <h2 id="ab-proc-h" class="ab__sec-h">Five plain steps, every time.</h2>
+    </div>
+    <ol class="ab__proc">
+      {process.map((s, i) => (
+        <li class="ab__proc-item u-reveal">
+          <span class="ab__proc-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h3 class="ab__proc-h">{s.h}</h3>
+            <p>{s.p}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- People & credentials (honest, with structured owner placeholders) -->
+  <Section env="paper" width="wide" class="ab" labelledby="ab-people-h">
+    <div class="u-reveal">
+      <Eyebrow>The people</Eyebrow>
+      <h2 id="ab-people-h" class="ab__sec-h">Real people, shown once we can show them properly.</h2>
+      <p class="ab__note">We would rather leave this honest and unfinished than fill it with stock photos and invented awards. The blocks below are placeholders for the owner to supply real photography, biography and credentials before launch.</p>
+    </div>
+    <div class="ab__people">
+      <figure class="ab__person u-reveal">
+        <div class="ab__photo" role="img" aria-label="Placeholder for owner-supplied portrait photograph">
+          <span class="ab__photo-tag">Photo to supply</span>
+        </div>
+        <figcaption class="ab__person-body">
+          <h3 class="ab__person-h">Founder</h3>
+          <p class="ab__ph" data-owner="bio">Owner to supply: a short, honest biography covering your background, why Infinite Weblinks exists, and the kind of work you most enjoy. No superlatives, no invented titles.</p>
+          <ul class="ab__cred">
+            <li class="ab__ph" data-owner="credentials">Owner to supply: genuine credentials, certifications or partner statuses (for example platform certifications). List only what can be verified.</li>
+          </ul>
+        </figcaption>
+      </figure>
+      <div class="ab__values u-reveal">
+        <h3 class="ab__person-h">What you can rely on today</h3>
+        <ul class="ab__val">
+          <li>Plain-English explanations, not jargon.</li>
+          <li>Honest scope and timelines before we start.</li>
+          <li>No guaranteed rankings, returns or conversions.</li>
+          <li>Your data requested only to reply, and never sold.</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <!-- CTA -->
+  <CtaBand
+    heading="Start a conversation."
+    body="Tell us where you are and what feels difficult. No pressure, no jargon, and no obligation to buy anything."
+    primary={{ label: 'Book a free call', href: '/book-a-call' }}
+    secondary={{ label: 'Send a message', href: '/contact' }}
+  />
+</BaseLayout>
+
+<style>
+  .ab__head { max-width: 46rem; }
+  .ab__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .ab__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 58ch; }
+  .ab__sec-h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 24ch; }
+  .ab__note { color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
+
+  .ab__two { display: grid; gap: 1.1rem; margin-top: 1.6rem; }
+  .ab__card { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.5rem; box-shadow: var(--shadow-1); }
+  .ab__card-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0 0 0.6rem; }
+  .ab__card p { color: var(--fg-muted); margin: 0; }
+  @media (min-width: 760px) { .ab__two { grid-template-columns: 1fr 1fr; } }
+
+  .ab__phil { list-style: none; padding: 0; margin: 1.6rem 0 0; display: grid; gap: 1.1rem; }
+  .ab__phil-item { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; }
+  .ab__phil-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0 0 0.4rem; }
+  .ab__phil-item p { color: var(--fg-muted); margin: 0; }
+  @media (min-width: 760px) { .ab__phil { grid-template-columns: 1fr 1fr; } }
+
+  .ab__proc { list-style: none; padding: 0; margin: 1.6rem 0 0; display: grid; gap: 1.2rem; max-width: 46rem; }
+  .ab__proc-item { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+  .ab__proc-n { font-family: var(--font-mono); font-size: var(--fs-h4); font-weight: 600; color: var(--accent); line-height: 1.1; }
+  .ab__proc-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0; }
+  .ab__proc-item p { color: var(--fg-muted); margin: 0.3rem 0 0; }
+
+  .ab__people { display: grid; gap: 1.4rem; margin-top: 1.6rem; }
+  .ab__person { margin: 0; background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
+  .ab__photo { aspect-ratio: 4 / 3; border-radius: var(--r-2); background: var(--bg-inset); border: var(--bw) dashed var(--rule-strong); display: grid; place-items: center; }
+  .ab__photo-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); text-transform: uppercase; letter-spacing: var(--tracking-label); }
+  .ab__person-body { margin-top: 1rem; }
+  .ab__person-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0 0 0.5rem; }
+  .ab__cred { margin: 0.8rem 0 0; padding-left: 1.1rem; color: var(--fg-muted); display: grid; gap: 0.4rem; }
+  .ab__ph { color: var(--fg-faint); font-style: italic; }
+  .ab__values { background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); padding: 1.4rem; box-shadow: var(--shadow-1); }
+  .ab__val { margin: 0.6rem 0 0; padding-left: 1.1rem; color: var(--fg-muted); display: grid; gap: 0.45rem; }
+  @media (min-width: 760px) { .ab__people { grid-template-columns: 3fr 2fr; align-items: start; } }
+</style>

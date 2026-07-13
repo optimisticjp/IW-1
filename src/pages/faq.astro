@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import Accordion from '../components/ui/Accordion.astro';
+import CtaBand from '../components/page/CtaBand.astro';
+import { capabilities } from '../data/capabilities';
+import { faqs } from '../data/faqs';
+import { routes } from '../data/links';
+import { breadcrumbSchema, webPageSchema, faqPageSchema } from '../lib/schema';
+import { buildSeo } from '../lib/seo';
+
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+// The basics (home scope) plus one group per capability, each linking to the
+// detailed page. Every rendered Q&A also feeds the FAQPage schema (FR-034/040).
+const basics = faqs.filter((f) => f.scope === 'home');
+const capGroups = capabilities
+  .map((c) => ({
+    cap: c,
+    items: faqs.filter((f) => f.scope === 'capability' && f.id.startsWith(`${c.id}-`)),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const allVisible = [...basics, ...capGroups.flatMap((g) => g.items)];
+
+const seo = {
+  title: 'Frequently asked questions',
+  description: 'Straight answers to the questions we get asked most, about timelines, budgets, guarantees, tracking and how the parts connect.',
+  path: '/faq',
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'FAQ' }];
+const schemas = [
+  webPageSchema('Frequently asked questions | Infinite Weblinks', canonical, seo.description),
+  faqPageSchema(allVisible.map((f) => ({ question: f.question, answer: f.answer }))),
+  breadcrumbSchema(crumbs, site),
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+  <Section env="paper" width="content" class="fq" labelledby="fq-h">
+    <div class="fq__head u-reveal">
+      <Eyebrow>FAQ</Eyebrow>
+      <h1 id="fq-h" class="fq__h1">Questions, answered honestly.</h1>
+      <p class="fq__lead">If your question is not here, ask us on a call. We would rather give you a straight answer than a sales pitch. Only one answer opens at a time to keep things easy to scan.</p>
+    </div>
+  </Section>
+
+  <!-- The basics -->
+  <Section env="lavender" width="content" class="fq" labelledby="fq-basics-h">
+    <div class="fq__group">
+      <h2 id="fq-basics-h" class="fq__group-h">The basics</h2>
+      <Accordion name="faq-hub" items={basics.map((f) => ({ q: f.question, a: f.answer }))} />
+    </div>
+  </Section>
+
+  <!-- One group per capability, each linking to its detailed page -->
+  {capGroups.map((g) => (
+    <Section env="paper" width="content" class="fq" labelledby={`fq-${g.cap.id}-h`}>
+      <div class="fq__group" data-cap={g.cap.id}>
+        <div class="fq__group-head">
+          <h2 id={`fq-${g.cap.id}-h`} class="fq__group-h">{g.cap.name}</h2>
+          <a class="fq__more" href={routes.capability(g.cap.id)}>More on {g.cap.name.toLowerCase()} <span aria-hidden="true">→</span></a>
+        </div>
+        <Accordion name="faq-hub" items={g.items.map((f) => ({ q: f.question, a: f.answer }))} />
+      </div>
+    </Section>
+  ))}
+
+  <CtaBand
+    heading="Still have a question?"
+    body="Ask it directly. A short call is often the fastest way to a clear answer, with no obligation."
+    primary={{ label: 'Book a free call', href: '/book-a-call' }}
+    secondary={{ label: 'Send a message', href: '/contact' }}
+  />
+</BaseLayout>
+
+<style>
+  .fq__head { max-width: 44rem; }
+  .fq__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .fq__lead { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; max-width: 54ch; }
+  .fq__group { max-width: 48rem; }
+  .fq__group-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+  .fq__group-h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h3); letter-spacing: var(--tracking-tight); margin: 0 0 1rem; }
+  .fq__group-head .fq__group-h { margin: 0; }
+  .fq__more { font-weight: 600; font-size: var(--fs-small); color: var(--cap-deep); text-decoration: none; white-space: nowrap; }
+  .fq__more:hover { text-decoration: underline; }
+</style>

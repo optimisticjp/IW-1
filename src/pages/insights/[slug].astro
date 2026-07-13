@@ -1,0 +1,192 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../components/layout/Section.astro';
+import Eyebrow from '../../components/ui/Eyebrow.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import CtaBand from '../../components/page/CtaBand.astro';
+import { getCapability } from '../../data/capabilities';
+import { getAudience } from '../../data/audiences';
+import { routes } from '../../data/links';
+import { breadcrumbSchema, webPageSchema, articleSchema } from '../../lib/schema';
+import { buildSeo } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('insights');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<'insights'> };
+const { Content } = await render(entry);
+const d = entry.data;
+const site = Astro.site ?? new URL('https://www.infiniteweblinks.example');
+
+const capability = getCapability(d.capabilityTag)!;
+const audience = getAudience(d.audienceTag)!;
+
+// Cluster links: exactly 1 capability + 1 audience + 2 articles (FR-032). The
+// two related articles must exist; unresolved slugs are dropped rather than
+// rendered as dead links.
+const allArticles = await getCollection('insights');
+const relatedArticles = d.relatedArticleSlugs
+  .map((slug) => allArticles.find((a) => a.id === slug))
+  .filter((a): a is (typeof allArticles)[number] => Boolean(a));
+
+const dateFmt = (date: Date) =>
+  new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
+const isoDate = d.lastReviewed.toISOString().slice(0, 10);
+
+const path = routes.article(entry.id);
+const seo = {
+  title: d.questionTitle,
+  description: d.standfirst,
+  path,
+  ogType: 'article' as const,
+};
+const canonical = buildSeo(seo, site).canonical;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Insights', href: '/insights' },
+  { label: d.questionTitle },
+];
+const schemas = [
+  webPageSchema(`${d.questionTitle} | Infinite Weblinks`, canonical, d.standfirst),
+  articleSchema({ headline: d.h1, description: d.standfirst, canonical, dateModified: isoDate }),
+  breadcrumbSchema(crumbs, site),
+];
+---
+
+<BaseLayout seo={seo} schemas={schemas}>
+  <div data-cap={d.capabilityTag}>
+    <!-- Breadcrumb -->
+    <Section env="paper" pad="tight" width="wide"><Breadcrumb items={crumbs} /></Section>
+
+    <!-- Header -->
+    <Section env="paper" width="content" class="art" labelledby="art-h">
+      <div class="art__head u-reveal">
+        <Eyebrow>Insights · {capability.name}</Eyebrow>
+        <h1 id="art-h" class="art__h1">{d.h1}</h1>
+        <p class="art__stand">{d.standfirst}</p>
+        <p class="art__meta">Last reviewed <time datetime={isoDate}>{dateFmt(d.lastReviewed)}</time></p>
+      </div>
+    </Section>
+
+    <!-- Key points (quick answer) -->
+    <Section env="lavender" width="content" class="art" labelledby="art-key-h">
+      <div class="u-reveal art__box">
+        <h2 id="art-key-h" class="art__box-h">The short version</h2>
+        <ul class="art__key">
+          {d.keyPoints.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- Plain answer (editorial body) -->
+    <Section env="paper" width="content" class="art">
+      <div class="art__prose u-reveal"><Content /></div>
+    </Section>
+
+    <!-- Common pitfalls -->
+    <Section env="paper" width="content" class="art" labelledby="art-pit-h">
+      <div class="u-reveal">
+        <Eyebrow>Common pitfalls</Eyebrow>
+        <h2 id="art-pit-h" class="art__sec-h">Where this usually goes wrong.</h2>
+        <ul class="art__pit">
+          {d.pitfalls.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- Self-check -->
+    <Section env="mint" width="content" class="art" labelledby="art-self-h">
+      <div class="u-reveal art__box">
+        <h2 id="art-self-h" class="art__box-h">A quick self-check</h2>
+        <p class="art__self">{d.selfCheck}</p>
+      </div>
+    </Section>
+
+    <!-- Cluster links: 1 capability + 1 audience + 2 articles -->
+    <Section env="paper" width="wide" class="art" labelledby="art-more-h">
+      <div class="u-reveal">
+        <Eyebrow>Keep reading</Eyebrow>
+        <h2 id="art-more-h" class="art__sec-h">Where this fits, and what to read next.</h2>
+      </div>
+      <div class="art__cluster">
+        <a class="art__cl" href={routes.capability(capability.id)} data-cap={capability.id}>
+          <span class="art__cl-k">Capability</span>
+          <span class="art__cl-t">{capability.name}</span>
+          <span class="art__cl-d">{capability.descriptor}</span>
+        </a>
+        <a class="art__cl" href={routes.audience(audience.id)}>
+          <span class="art__cl-k">Who it helps</span>
+          <span class="art__cl-t">{audience.name}</span>
+          <span class="art__cl-d">{audience.situation}</span>
+        </a>
+        {relatedArticles.map((a) => (
+          <a class="art__cl" href={routes.article(a.id)} data-cap={a.data.capabilityTag}>
+            <span class="art__cl-k">Article</span>
+            <span class="art__cl-t">{a.data.questionTitle}</span>
+            <span class="art__cl-d">{a.data.standfirst}</span>
+          </a>
+        ))}
+      </div>
+    </Section>
+
+    <!-- Sources -->
+    <Section env="paper" pad="tight" width="content" class="art" labelledby="art-src-h">
+      <div class="u-reveal art__src">
+        <h2 id="art-src-h" class="art__src-h">Sources</h2>
+        <ul class="art__src-list">
+          {d.sources.map((s) => (
+            <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </Section>
+
+    <!-- CTA -->
+    <CtaBand
+      heading="Have a question this did not answer?"
+      body="Ask us directly. A short call is often faster than more reading, and there is no pressure to buy anything."
+      primary={{ label: 'Book a free call', href: '/book-a-call' }}
+      secondary={{ label: 'Read more insights', href: '/insights' }}
+    />
+  </div>
+</BaseLayout>
+
+<style>
+  .art__head { max-width: 44rem; }
+  .art__h1 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--tracking-display); margin: 0.4rem 0 0; overflow-wrap: break-word; }
+  .art__stand { font-size: var(--fs-lead); color: var(--fg-muted); margin-top: 1rem; }
+  .art__meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--fg-faint); margin-top: 0.8rem; }
+
+  .art__box { max-width: 44rem; border: var(--bw) solid var(--rule); border-left: 4px solid var(--cap); border-radius: var(--r-3); padding: 1.4rem 1.5rem; background: var(--bg-raised); }
+  .art__box-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0; }
+  .art__key { margin: 0.9rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; color: var(--fg-muted); }
+  .art__self { margin: 0.8rem 0 0; color: var(--fg-muted); }
+
+  .art__prose { max-width: 40rem; }
+  .art__prose :global(h2) { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h3); margin: 1.8rem 0 0.6rem; }
+  .art__prose :global(p) { margin: 0 0 1rem; color: var(--fg-muted); }
+  .art__prose :global(ul) { margin: 0 0 1rem; padding-left: 1.2rem; display: grid; gap: 0.4rem; color: var(--fg-muted); }
+  .art__prose :global(strong) { color: var(--fg); }
+
+  .art__sec-h { font-family: var(--font-display); font-weight: var(--weight-display); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--tracking-display); margin-top: 0.6rem; max-width: 24ch; }
+  .art__pit { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: 0.7rem; max-width: 44rem; }
+  .art__pit li { position: relative; padding-left: 1.6rem; color: var(--fg-muted); }
+  .art__pit li::before { content: '!'; position: absolute; left: 0; top: -0.05em; width: 1.1rem; height: 1.1rem; display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--cap-on); background: var(--cap); border-radius: 50%; }
+
+  .art__cluster { display: grid; gap: 1rem; margin-top: 1.5rem; }
+  .art__cl { display: grid; gap: 0.3rem; text-decoration: none; color: var(--fg); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-top: 4px solid var(--cap); border-radius: var(--r-3); padding: 1.2rem; box-shadow: var(--shadow-1); }
+  .art__cl:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); transition: transform var(--dur-micro), box-shadow var(--dur-2); }
+  .art__cl-k { font-family: var(--font-mono); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--cap-deep); }
+  .art__cl-t { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); }
+  .art__cl-d { color: var(--fg-muted); font-size: var(--fs-small); }
+  @media (min-width: 640px) { .art__cluster { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .art__cluster { grid-template-columns: repeat(4, 1fr); } }
+
+  .art__src { max-width: 44rem; }
+  .art__src-h { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h4); margin: 0; }
+  .art__src-list { margin: 0.7rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; color: var(--fg-muted); }
+  .art__src-list a { color: var(--link); }
+</style>

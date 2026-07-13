@@ -201,23 +201,23 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Independent Test**: Filter Work with no match (honest empty state); open a case study (six-part, no invented figures); open an article (question title, honest H1, sources, cluster links); read About and FAQ.
 
-- [ ] T054 [US6] Build the Work index `src/pages/work/index.astro` with capability and audience filters, an honest empty state, and an honest interim state while proof is limited.
+- [X] T054 [US6] Build the Work index `src/pages/work/index.astro` with capability and audience filters, an honest empty state, and an honest interim state while proof is limited.
   - Refs FR-031, SC-007, Edge Cases · Deps Gate A, T010 · Parallel none · Validate empty-state e2e · Done when filters resolve and empty combinations show an honest message.
-- [ ] T055 [US6] Build the case-study template `src/pages/work/[slug].astro` from `content/work` (six-part narrative, scoped graph, related-service links, permission state).
+- [X] T055 [US6] Build the case-study template `src/pages/work/[slug].astro` from `content/work` (six-part narrative, scoped graph, related-service links, permission state).
   - Refs FR-031 · Deps T054 · Parallel none · Validate schema + render test · Done when a case study renders the six-part structure with a scoped graph.
-- [ ] T056 [P] [US6] Add anonymized proof with placeholder connection-map art carrying honest alt text (never implies a real client/result); no invented figures anywhere.
+- [X] T056 [P] [US6] Add anonymized proof with placeholder connection-map art carrying honest alt text (never implies a real client/result); no invented figures anywhere.
   - Refs FR-037/048, SC-007 · Deps T055 · Parallel T062 · Validate honesty lint + alt-text check · Done when anonymized art is honest and figure-free.
-- [ ] T057 [US7] Build the Insights index `src/pages/insights/index.astro` with topic categories and canonicalised category/tag views (not indexable thin pages).
+- [X] T057 [US7] Build the Insights index `src/pages/insights/index.astro` with topic categories and canonicalised category/tag views (not indexable thin pages).
   - Refs FR-032/040 · Deps Gate A, T010 · Parallel none · Validate canonical test · Done when filtered views canonicalise to the base index.
-- [ ] T058 [US7] Build the article template `src/pages/insights/[slug].astro` (question title, honest H1, key points, plain answer, pitfalls without fear language, self-check, sources, last-reviewed date, cluster links to 1 capability + 1 audience + 2 articles).
+- [X] T058 [US7] Build the article template `src/pages/insights/[slug].astro` (question title, honest H1, key points, plain answer, pitfalls without fear language, self-check, sources, last-reviewed date, cluster links to 1 capability + 1 audience + 2 articles).
   - Refs FR-032, contracts/content-schemas.md · Deps T057 · Parallel none · Validate schema + link-rule test · Done when an article satisfies the cluster link rule and carries sources + review date.
-- [ ] T059 [US8] Build About `src/pages/about.astro` (two-audience story, operating philosophy, plain five-step process, honest credentials; real people/photos where available, no invented awards/counts/superlatives).
+- [X] T059 [US8] Build About `src/pages/about.astro` (two-audience story, operating philosophy, plain five-step process, honest credentials; real people/photos where available, no invented awards/counts/superlatives).
   - Refs FR-033, SC-007 · Deps Gate A · Parallel none · Validate copy-lint (no superlatives) · Done when About reads honestly with safe fallbacks for missing assets.
-- [ ] T060 [P] Build the FAQ hub `src/pages/faq.astro` with single-open accordions (expanded state maintained, accessible).
+- [X] T060 [P] Build the FAQ hub `src/pages/faq.astro` with single-open accordions (expanded state maintained, accessible).
   - Refs FR-034 · Deps T012 · Parallel T061 · Validate accordion a11y e2e · Done when the hub is keyboard-operable with announced state.
-- [ ] T061 [P] Build utility/legal shells `src/pages/privacy.astro`, `cookies.astro`, `terms.astro` (interface copy) with the Privacy data-handling disclosure (no server-side storage; email delivery; retention).
+- [X] T061 [P] Build utility/legal shells `src/pages/privacy.astro`, `cookies.astro`, `terms.astro` (interface copy) with the Privacy data-handling disclosure (no server-side storage; email delivery; retention).
   - Refs FR-047, Assumptions (legal deferred) · Deps Gate A · Parallel T060 · Validate render test · Done when shells ship interface copy and Privacy discloses the enquiry data flow.
-- [ ] T062 [P] Add tests: content-collection schema shape, Work/Insights empty and canonical states, no-invented-figures lint.
+- [X] T062 [P] Add tests: content-collection schema shape, Work/Insights empty and canonical states, no-invented-figures lint.
   - Refs plan Testing strategy · Deps T055/T058 · Parallel T056 · Validate `npm run test` · Done when tests pass.
 
 **Checkpoint (Gate G/H)**: Editorial surfaces are honest and schema-valid; About/FAQ/legal shells ship with safe fallbacks; no invented proof.
