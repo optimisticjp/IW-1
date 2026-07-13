@@ -41,6 +41,7 @@ The dev server prints the local URL, usually `http://localhost:4321`.
 | `npm run check` | Runs Astro and TypeScript diagnostics. |
 | `npm run test` | Runs the Vitest unit and contract tests. |
 | `npm run build` | Builds the static site into `dist/`. |
+| `npm run verify:launch` | Builds and checks the production output for launch blockers. See `docs/LAUNCH_CHECKLIST.md`. |
 | `npm run preview` | Serves the built `dist/` output locally. |
 | `npm run test:a11y` | Runs the built-site accessibility, no-JS, responsive and performance-budget audit script. |
 
@@ -120,6 +121,12 @@ npm run test:a11y
 
 ```bash
 npm run build
+```
+
+Before launch, run the production readiness checker and follow the beginner-friendly launch guide in [`docs/LAUNCH_CHECKLIST.md`](docs/LAUNCH_CHECKLIST.md):
+
+```bash
+npm run verify:launch
 ```
 
 The generated static site is written to `dist/`. Use `npm run preview` to inspect the built output locally.
