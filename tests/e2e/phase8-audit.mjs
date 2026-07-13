@@ -8,7 +8,7 @@
 // targets, keyboard focus/operation, reduced-motion final states, no-JS parity,
 // and CWV lab (LCP/CLS). Chromium path + axe-core are resolved from the repo.
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import pw from 'playwright-core';
 
@@ -16,7 +16,8 @@ const require = createRequire(import.meta.url);
 const AXE = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 const { chromium } = pw;
 const BASE = process.env.BASE_URL || 'http://localhost:4321';
-const CHROME = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+const DEFAULT_CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+const CHROME = process.env.CHROME_PATH || (existsSync(DEFAULT_CHROME) ? DEFAULT_CHROME : chromium.executablePath());
 
 // Every indexable route + the 404, discovered from the sitemap would be ideal;
 // hardcoded here to keep the runner self-contained and deterministic.
@@ -55,7 +56,7 @@ const axeSummary = [];
 // mid-transition frame of a below-the-fold card (which axe would read as the
 // text blended toward the background).
 for (const route of AXE_ROUTES) {
-  const ctx = await browser.newContext({ viewport: { width: 1024, height: 900 }, reducedMotion: 'reduce' });
+  const ctx = await browser.newContext({ viewport: { width: 1024, height: 900 }, reducedMotion: 'reduce', bypassCSP: true });
   const page = await ctx.newPage();
   await page.goto(BASE + route, { waitUntil: 'networkidle' });
   await page.addScriptTag({ content: AXE });

@@ -87,7 +87,9 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
     backdrop-filter: saturate(1.3) blur(12px);
     border-bottom: var(--bw) solid var(--rule);
   }
+  .hdr--mnav-open { backdrop-filter: none; }
   .hdr__bar {
+    position: relative;
     max-width: var(--w-wide); margin-inline: auto;
     padding: 0.7rem var(--gutter); display: flex; align-items: center; gap: 1rem;
   }
@@ -96,7 +98,7 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
 
   .nav-d { display: none; }
   .nav-d__list { display: flex; align-items: center; gap: clamp(1rem, 0.4rem + 1.6vw, 2rem); list-style: none; margin: 0; padding: 0; }
-  .nav-d__item { position: relative; }
+  .nav-d__item { position: static; }
   .nav-d__link { position: relative; display: inline-flex; align-items: center; gap: 0.3rem; color: var(--fg); text-decoration: none; font-weight: 500; font-size: var(--fs-small); padding: 0.35rem 0; cursor: pointer; }
   .nav-d__link[aria-current='page'] { color: var(--accent); }
   .nav-d__link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-2) var(--ease-out); }
@@ -109,8 +111,8 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
   .mega__summary:focus-visible { outline: var(--bw-2) solid var(--focus); outline-offset: 3px; border-radius: var(--r-1); }
   .mega__chev { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform var(--dur-micro) var(--ease-out); }
   .mega[open] .mega__chev { transform: rotate(-135deg) translateY(-1px); }
-  .mega__panel { position: absolute; left: var(--gutter); right: var(--gutter); top: calc(100% + 10px); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-pop); padding: 1.4rem; z-index: var(--z-overlay); }
-  .mega__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem 1.6rem; }
+  .mega__panel { position: absolute; left: var(--gutter); right: var(--gutter); top: calc(100% + 10px); max-width: calc(var(--w-wide) - (2 * var(--gutter))); background: var(--bg-raised); border: var(--bw) solid var(--rule); border-radius: var(--r-3); box-shadow: var(--shadow-pop); padding: 1.4rem; z-index: var(--z-overlay); }
+  .mega__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem 1.6rem; }
   .mega__cap { font-weight: 700; color: var(--cap-deep); text-decoration: none; font-size: var(--fs-small); }
   .mega__desc { color: var(--fg-muted); font-size: var(--fs-caption); margin: 0.15rem 0 0.4rem; }
   .mega__svc { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
@@ -120,14 +122,14 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
 
   .hdr__cta { display: none; }
 
-  .hdr__toggle { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; margin-left: auto; border-radius: var(--r-2); border: var(--bw) solid var(--rule-strong); background: none; cursor: pointer; }
+  .hdr__toggle { position: relative; z-index: calc(var(--z-nav) + 1); display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; margin-left: auto; border-radius: var(--r-2); border: var(--bw) solid var(--rule-strong); background: color-mix(in oklab, var(--bg-raised) 92%, transparent); cursor: pointer; }
   .hdr__bars { display: grid; gap: 4px; width: 20px; }
   .hdr__bars i { display: block; height: 2px; background: var(--fg); border-radius: 2px; transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-micro); }
   .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
   .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(2) { opacity: 0; }
   .hdr__toggle[aria-expanded='true'] .hdr__bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-  .mnav { position: fixed; inset: 0; z-index: var(--z-nav); background: var(--bg); color: var(--fg); padding: 5rem var(--gutter) 2rem; overflow-y: auto; }
+  .mnav { position: fixed; inset: 0; z-index: var(--z-nav); background: var(--bg); color: var(--fg); padding: calc(4.75rem + env(safe-area-inset-top)) var(--gutter) calc(2rem + env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; }
   .mnav[hidden] { display: none; }
   .mnav__inner { display: grid; gap: 1.4rem; max-width: 30rem; margin-inline: auto; }
   .mnav__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
@@ -147,31 +149,4 @@ const restNav = primaryNav.filter((i) => i.href !== '/what-we-do');
   @media (max-width: 899px) { .mega__panel { position: static; box-shadow: none; padding: 0.5rem 0 0; border: 0; } .nav-d { display: none; } }
 </style>
 
-<script>
-  const toggle = document.getElementById('nav-toggle');
-  const panel = document.getElementById('mobile-nav');
-  if (toggle && panel) {
-    const focusables = () => Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), summary'));
-    const open = () => { panel.hidden = false; toggle.setAttribute('aria-expanded', 'true'); toggle.setAttribute('aria-label', 'Close menu'); document.body.style.overflow = 'hidden'; focusables()[0]?.focus(); };
-    const close = (rf = true) => { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open menu'); document.body.style.overflow = ''; if (rf) toggle.focus(); };
-    toggle.addEventListener('click', () => (toggle.getAttribute('aria-expanded') === 'true' ? close() : open()));
-    panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) close(false); });
-    document.addEventListener('keydown', (e) => {
-      if (panel.hidden) return;
-      if (e.key === 'Escape') { e.preventDefault(); close(); }
-      if (e.key === 'Tab') {
-        const f = focusables(); if (!f.length) return;
-        const first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); (last as HTMLElement).focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); (first as HTMLElement).focus(); }
-      }
-    });
-    window.matchMedia('(min-width: 900px)').addEventListener('change', (ev) => { if (ev.matches && !panel.hidden) close(false); });
-  }
-
-  // Desktop mega-menu: close on Escape and on outside click for a clean feel.
-  document.querySelectorAll<HTMLDetailsElement>('.mega').forEach((mega) => {
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mega.open) { mega.open = false; mega.querySelector('summary')?.focus(); } });
-    document.addEventListener('click', (e) => { if (mega.open && !mega.contains(e.target as Node)) mega.open = false; });
-  });
-</script>
+<script is:inline type="module" src="/js/site-header.js"></script>
