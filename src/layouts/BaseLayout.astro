@@ -10,15 +10,16 @@ interface Props {
   seo: SeoInput;
   /** include Organization + WebSite JSON-LD (site-wide, used on home) */
   siteSchema?: boolean;
+  /** per-page structured data (visible-only): WebPage, BreadcrumbList, Service */
+  schemas?: object[];
 }
-const { seo, siteSchema = false } = Astro.props;
-const meta = buildSeo(seo, Astro.site ?? 'https://www.infiniteweblinks.example');
-const structured = siteSchema
-  ? jsonLd(
-      organizationSchema(Astro.site ?? 'https://www.infiniteweblinks.example'),
-      webSiteSchema(Astro.site ?? 'https://www.infiniteweblinks.example')
-    )
-  : null;
+const { seo, siteSchema = false, schemas = [] } = Astro.props;
+const site = Astro.site ?? 'https://www.infiniteweblinks.example';
+const meta = buildSeo(seo, site);
+const blocks: object[] = [];
+if (siteSchema) blocks.push(organizationSchema(site), webSiteSchema(site));
+for (const s of schemas) blocks.push(s);
+const structured = blocks.length ? jsonLd(...blocks) : null;
 ---
 
 <!doctype html>

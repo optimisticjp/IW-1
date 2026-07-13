@@ -24,6 +24,15 @@ export function siblingServices(slug: string): Service[] {
   return services.filter((s) => s.capabilityId === svc.capabilityId && s.id !== slug && s.treatment === 'page');
 }
 
+/** Audiences that buy from a capability, derived from its services. */
+export function audiencesForCapability(id: CapabilityId): AudienceId[] {
+  const set = new Set<AudienceId>();
+  for (const svc of services.filter((s) => s.capabilityId === id)) {
+    for (const a of svc.primaryAudienceIds) set.add(a);
+  }
+  return [...set];
+}
+
 /** The capabilities an audience buys from, derived from its relevant services. */
 export function capabilitiesForAudience(id: AudienceId): CapabilityId[] {
   const aud = audiences.find((a) => a.id === id);

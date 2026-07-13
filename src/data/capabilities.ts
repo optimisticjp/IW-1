@@ -15,6 +15,10 @@ export interface Capability {
   outcomeHero: string;
   /** recognisable problems this capability answers (distinct per capability) */
   problems: string[];
+  /** a useful, plain-English principle the capability is built on */
+  principle: string;
+  /** what becomes possible when this capability is in place */
+  becomesPossible: string[];
   /** progressive-disclosure specialist detail */
   specialistList: string[];
   /** how this capability supports the other five */
@@ -35,6 +39,8 @@ export const capabilities: Capability[] = [
     name: 'Build',
     descriptor: 'Websites, stores and apps that are ready to grow.',
     outcomeHero: 'A website or store that works well and is built to connect to everything else.',
+    principle: 'A site is not finished when it looks good. It is finished when it is fast, clear and ready to connect to your other tools.',
+    becomesPossible: ['A clear reason for visitors to trust you and act', 'Clean data flowing to analytics and your CRM', 'A foundation you will not have to rebuild in a year'],
     problems: [
       'Your current site looks fine but does not turn visitors into customers.',
       'You are launching and need a store or site that will not need rebuilding in a year.',
@@ -64,6 +70,8 @@ export const capabilities: Capability[] = [
     name: 'Attract',
     descriptor: 'Ads, search and content that bring the right people.',
     outcomeHero: 'A steady flow of the right visitors, from channels you can actually measure.',
+    principle: 'Traffic is only useful when it is the right traffic, sent somewhere that converts and gets measured.',
+    becomesPossible: ['Relevant attention instead of vanity metrics', 'Channels you can compare by real results', 'A plan for search and AI-assisted discovery'],
     problems: [
       'You are spending on ads but cannot tell what is working.',
       'You rank for nothing and rely on word of mouth.',
@@ -92,6 +100,8 @@ export const capabilities: Capability[] = [
     name: 'Convert',
     descriptor: 'Turn more of your visitors into customers.',
     outcomeHero: 'More of the visitors you already have becoming customers, without more ad spend.',
+    principle: 'The cheapest growth is helping more of the visitors you already have take the next step.',
+    becomesPossible: ['More value from the same traffic', 'Changes proven by testing, not opinion', 'A clearer path to buy or enquire'],
     problems: [
       'People visit but very few buy or enquire.',
       'Your checkout or enquiry form loses people halfway.',
@@ -119,6 +129,8 @@ export const capabilities: Capability[] = [
     name: 'Retain',
     descriptor: 'Keep customers and bring them back.',
     outcomeHero: 'Customers who come back and buy again, so each first sale is worth more.',
+    principle: 'A first sale is the start of a relationship, not the end of one.',
+    becomesPossible: ['More repeat business from existing customers', 'Messages timed to what people actually did', 'A reason for customers to come back'],
     problems: [
       'You win a customer once and never hear from them again.',
       'Your email is generic and opens keep dropping.',
@@ -146,6 +158,8 @@ export const capabilities: Capability[] = [
     name: 'Connect',
     descriptor: 'Make your tools work as one system.',
     outcomeHero: 'Your tools sharing the same information, so your numbers finally agree.',
+    principle: 'You do not need more tools. You need the ones you have to share the same information.',
+    becomesPossible: ['One number that means one thing', 'Every customer in a single record', 'Reporting you can make decisions on'],
     problems: [
       'Every tool reports a different number and you trust none of them.',
       'Customer data is scattered across apps that do not talk.',
@@ -172,6 +186,8 @@ export const capabilities: Capability[] = [
     name: 'Scale',
     descriptor: 'Automation and AI that save your team time.',
     outcomeHero: 'Less manual work, so your team spends time on the things only people can do.',
+    principle: 'Automation and AI are only useful on top of connected, reliable data.',
+    becomesPossible: ['Hours back from repetitive work', 'Help that runs on real customer data', 'Growth without a matching rise in admin'],
     problems: [
       'Your team loses hours to repetitive manual tasks.',
       'You want to use AI but do not know where it actually helps.',

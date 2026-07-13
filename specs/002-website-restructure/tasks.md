@@ -103,17 +103,17 @@ Single static project. `src/` (data, content, components, layouts, lib, pages, s
 
 **Independent Test**: Open each capability page; confirm the shared section sequence, its own colour/problems/proof/FAQ, the sibling switcher and the connection story.
 
-- [ ] T027 [US4] Create the capability route template `src/pages/what-we-do/[capability].astro` via `getStaticPaths` over `capabilities.ts`, composing the page-section systems.
+- [X] T027 [US4] Create the capability route template `src/pages/what-we-do/[capability].astro` via `getStaticPaths` over `capabilities.ts`, composing the page-section systems.
   - Refs FR-011, plan Structure Decision · Deps Gate A · Parallel none · Validate build (6 routes) · Done when all six capability routes generate.
-- [ ] T028 [US4] Implement the shared section sequence (hero → recognition → principle → what we do → what becomes possible → connection → specialist detail → proof → FAQ → CTA) with per-capability colour, sibling switcher and connection story.
+- [X] T028 [US4] Implement the shared section sequence (hero → recognition → principle → what we do → what becomes possible → connection → specialist detail → proof → FAQ → CTA) with per-capability colour, sibling switcher and connection story.
   - Refs FR-011/012/013 · Deps T027 · Parallel none · Validate capability-integrity + render tests · Done when six pages share sequence but differ in content.
-- [ ] T029 [P] [US4] Author distinct capability copy (Build, Attract, Convert, Retain, Connect, Scale) in `capabilities.ts` in playbook voice, with non-identical problem/specialist/FAQ sets.
+- [X] T029 [P] [US4] Author distinct capability copy (Build, Attract, Convert, Retain, Connect, Scale) in `capabilities.ts` in playbook voice, with non-identical problem/specialist/FAQ sets.
   - Refs FR-035/036, content uniqueness · Deps T027 · Parallel T030/T032 · Validate content-lint + uniqueness test · Done when no sibling copy is identical and the ban list is clean.
-- [ ] T030 [P] [US4] Add the lighter capability Growth Graph variant (supports-the-other-five story).
+- [X] T030 [P] [US4] Add the lighter capability Growth Graph variant (supports-the-other-five story).
   - Refs FR-020 · Deps T022 · Parallel T029/T032 · Validate reduced-motion e2e · Done when the variant renders accessibly at capability depth.
-- [ ] T031 [US4] Wire the mega-menu to `capabilities.ts` (columns, descriptors, top service links, overview link).
+- [X] T031 [US4] Wire the mega-menu to `capabilities.ts` (columns, descriptors, top service links, overview link).
   - Refs FR-002 · Deps T013/T028 · Parallel none · Validate nav integrity + keyboard e2e · Done when the menu reflects live capability data.
-- [ ] T032 [P] [US4] Add capability-integrity tests (colour resolves, non-identical sets, bidirectional service refs) and a contrast-matrix check in `tests/unit/`.
+- [X] T032 [P] [US4] Add capability-integrity tests (colour resolves, non-identical sets, bidirectional service refs) and a contrast-matrix check in `tests/unit/`.
   - Refs plan Testing strategy, FR-044 · Deps T028 · Parallel T029/T030 · Validate `npm run test` · Done when tests pass.
 
 **Checkpoint (Gate C)**: Six capability pages share the sequence, differ in content, pass contrast and canonical-placement expectations.

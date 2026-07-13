@@ -41,10 +41,16 @@ export const megaMenu: MegaColumn[] = capabilities.map((cap) => ({
   name: cap.name,
   descriptor: cap.descriptor,
   href: routes.capability(cap.id),
+  // Launch services link to their dedicated route; phased services link to the
+  // matching section on the capability page so no menu link 404s on an unbuilt
+  // route (FR-015; "no broken journeys from unbuilt phased routes").
   services: servicesForCapability(cap.id)
     .filter((s) => s.treatment === 'page')
     .slice(0, 3)
-    .map((s) => ({ label: s.name, href: routes.service(s.id) })),
+    .map((s) => ({
+      label: s.name,
+      href: s.launchSet ? routes.service(s.id) : `${routes.capability(cap.id)}#svc-${s.id}`,
+    })),
 }));
 
 export const megaOverview = { label: 'All capabilities', href: routes.whatWeDo() };
